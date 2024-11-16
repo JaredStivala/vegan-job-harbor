@@ -9,7 +9,7 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      jobs: {
+      veganjobs: {
         Row: {
           company_name: string | null
           description: string | null
