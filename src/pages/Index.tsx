@@ -28,6 +28,11 @@ const Index = () => {
 
   const scrapeJobs = async () => {
     try {
+      toast({
+        title: "Scraping jobs...",
+        description: "Please wait while we fetch the latest jobs.",
+      });
+
       const { data, error } = await supabase.functions.invoke('scrape-jobs');
       if (error) throw error;
       
@@ -38,6 +43,7 @@ const Index = () => {
       
       refetch();
     } catch (error) {
+      console.error('Scraping error:', error);
       toast({
         title: "Error",
         description: "Failed to scrape jobs. Please try again later.",
@@ -57,12 +63,12 @@ const Index = () => {
           table: 'jobs'
         },
         (payload: RealtimePostgresChangesPayload<Job>) => {
-          // Check if it's an INSERT event and payload.new exists
           if (payload.eventType === 'INSERT' && payload.new) {
             toast({
               title: "New job posted!",
               description: `${payload.new.title} at ${payload.new.company}`,
             });
+            refetch();
           }
         }
       )
@@ -71,7 +77,7 @@ const Index = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [toast]);
+  }, [toast, refetch]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream">

@@ -10,55 +10,73 @@ interface Job {
   external_id: string
   title: string
   company: string
-  location: string
-  type: string
-  salary: string
-  description: string
+  location: string | null
+  type: string | null
+  salary: string | null
+  description: string | null
   tags: string[]
   url: string
   logo_url: string | null
-  posted_at: Date
+  posted_at: string
 }
 
 async function scrapeJobs(): Promise<Job[]> {
-  const response = await fetch('https://veganjobs.com/jobs')
+  console.log('Starting job scraping...')
+  const response = await fetch('https://veganjobs.com/jobs/')
   const html = await response.text()
   const $ = cheerio.load(html)
   const jobs: Job[] = []
 
   $('.job-listing').each((_, element) => {
     const $el = $(element)
-    const url = $el.find('a').attr('href') || ''
-    const external_id = url.split('/').pop() || ''
     
-    const posted = $el.find('.job-date').text().trim()
-    const postedDate = new Date()
-    // Adjust date based on text like "2 days ago", "1 week ago", etc.
-    if (posted.includes('day')) {
-      const days = parseInt(posted)
-      postedDate.setDate(postedDate.getDate() - days)
-    } else if (posted.includes('week')) {
-      const weeks = parseInt(posted)
-      postedDate.setDate(postedDate.getDate() - (weeks * 7))
-    }
-
+    // Get job URL and ID
+    const jobUrl = $el.find('h2.job-title a').attr('href')
+    if (!jobUrl) return // Skip if no URL found
+    const external_id = jobUrl.split('/').pop() || ''
+    
+    // Extract job details
+    const title = $el.find('h2.job-title').text().trim()
+    const company = $el.find('.company-name').text().trim()
+    const location = $el.find('.job-location').text().trim() || null
+    const type = $el.find('.job-type').text().trim() || null
+    const salary = $el.find('.job-salary').text().trim() || null
+    const description = $el.find('.job-description').text().trim() || null
+    
+    // Extract logo URL if present
+    const logo_url = $el.find('.company-logo img').attr('src') || null
+    
+    // Extract tags
+    const tags = $el.find('.job-tags .tag')
+      .map((_, tag) => $(tag).text().trim())
+      .get()
+      .filter(tag => tag.length > 0)
+    
+    // Parse posted date
+    const postedText = $el.find('.job-date').text().trim()
+    const posted_at = new Date().toISOString() // Default to now
+    
+    // Create job object
     const job: Job = {
       external_id,
-      title: $el.find('.job-title').text().trim(),
-      company: $el.find('.company-name').text().trim(),
-      location: $el.find('.job-location').text().trim(),
-      type: $el.find('.job-type').text().trim(),
-      salary: $el.find('.job-salary').text().trim(),
-      description: $el.find('.job-description').text().trim(),
-      tags: $el.find('.job-tags .tag').map((_, tag) => $(tag).text().trim()).get(),
-      url: `https://veganjobs.com${url}`,
-      logo_url: $el.find('.company-logo img').attr('src') || null,
-      posted_at: postedDate
+      title,
+      company,
+      location,
+      type,
+      salary,
+      description,
+      tags,
+      url: `https://veganjobs.com${jobUrl}`,
+      logo_url,
+      posted_at
     }
     
-    jobs.push(job)
+    if (title && company) { // Only add if we have at least title and company
+      jobs.push(job)
+    }
   })
 
+  console.log(`Found ${jobs.length} jobs`)
   return jobs
 }
 
@@ -78,13 +96,17 @@ Deno.serve(async (req) => {
     const jobs = await scrapeJobs()
     console.log(`Found ${jobs.length} jobs`)
 
+    if (jobs.length === 0) {
+      throw new Error('No jobs found during scraping')
+    }
+
     // Upsert jobs to database
     const { error } = await supabaseClient
       .from('jobs')
       .upsert(
         jobs.map(job => ({
           ...job,
-          updated_at: new Date()
+          updated_at: new Date().toISOString()
         })),
         { 
           onConflict: 'external_id',
@@ -92,7 +114,10 @@ Deno.serve(async (req) => {
         }
       )
 
-    if (error) throw error
+    if (error) {
+      console.error('Error upserting jobs:', error)
+      throw error
+    }
 
     return new Response(
       JSON.stringify({ success: true, jobsProcessed: jobs.length }),
