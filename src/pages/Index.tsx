@@ -1,41 +1,51 @@
 import { JobFilters } from "@/components/JobFilters";
 import { JobCard } from "@/components/JobCard";
 import { Button } from "@/components/ui/button";
-
-const MOCK_JOBS = [
-  {
-    title: "Vegan Chef",
-    company: "Green Kitchen",
-    location: "Worldwide",
-    type: "Full-time",
-    salary: "$50k - $70k",
-    posted: "2d ago",
-    tags: ["Food Service", "Cooking"],
-    verified: true,
-  },
-  {
-    title: "Plant-Based Food Scientist",
-    company: "VegTech Solutions",
-    location: "Remote",
-    type: "Full-time",
-    salary: "$80k - $120k",
-    posted: "1d ago",
-    tags: ["Research", "Food Science"],
-    verified: true,
-  },
-  {
-    title: "Vegan Restaurant Manager",
-    company: "Pure Food",
-    location: "Los Angeles, CA",
-    type: "Full-time",
-    salary: "$60k - $80k",
-    posted: "3d ago",
-    tags: ["Management", "Food Service"],
-    verified: false,
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
+import { useEffect } from "react";
 
 const Index = () => {
+  const { toast } = useToast();
+
+  const { data: jobs, isLoading, error } = useQuery({
+    queryKey: ['jobs'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('jobs')
+        .select('*')
+        .order('posted_at', { ascending: false });
+      
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  // Subscribe to realtime updates
+  useEffect(() => {
+    const channel = supabase
+      .channel('jobs_changes')
+      .on('postgres_changes', 
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'jobs' 
+        }, 
+        (payload) => {
+          toast({
+            title: "New job posted!",
+            description: `${payload.new.title} at ${payload.new.company}`,
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [toast]);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream">
       {/* Header */}
@@ -80,7 +90,7 @@ const Index = () => {
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
                 <span className="text-sage bg-sage/10 px-2 py-1 rounded-full text-sm">
-                  {MOCK_JOBS.length}
+                  {jobs?.length || 0}
                 </span>
               </div>
               <Button variant="outline" className="border-sage hover:bg-sage/10">
@@ -88,9 +98,27 @@ const Index = () => {
               </Button>
             </div>
             
-            {MOCK_JOBS.map((job, index) => (
-              <JobCard key={index} {...job} />
-            ))}
+            {isLoading ? (
+              <div className="text-center py-8">Loading jobs...</div>
+            ) : error ? (
+              <div className="text-center py-8 text-red-500">Error loading jobs</div>
+            ) : jobs?.length === 0 ? (
+              <div className="text-center py-8">No jobs found</div>
+            ) : (
+              jobs?.map((job) => (
+                <JobCard
+                  key={job.id}
+                  title={job.title}
+                  company={job.company}
+                  location={job.location}
+                  type={job.type}
+                  salary={job.salary}
+                  posted={new Date(job.posted_at).toLocaleDateString()}
+                  tags={job.tags || []}
+                  logo={job.logo_url}
+                />
+              ))
+            )}
           </div>
         </div>
       </div>
