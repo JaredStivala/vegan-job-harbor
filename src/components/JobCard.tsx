@@ -12,6 +12,7 @@ interface JobCardProps {
   tags: string[];
   verified?: boolean;
   logo?: string;
+  url: string;
 }
 
 export const JobCard = ({
@@ -24,9 +25,10 @@ export const JobCard = ({
   tags,
   verified = false,
   logo,
+  url,
 }: JobCardProps) => {
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-all border border-sage/10 group cursor-pointer">
+    <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-all border border-sage/10 group">
       <div className="flex items-start gap-4">
         <div className="w-12 h-12 rounded-lg bg-cream flex items-center justify-center">
           {logo ? (
@@ -66,12 +68,20 @@ export const JobCard = ({
             </Badge>
           </div>
           
-          <div className="flex flex-wrap gap-2">
-            {tags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="bg-sage/5 hover:bg-sage/10">
-                {tag}
-              </Badge>
-            ))}
+          <div className="flex items-center justify-between">
+            <div className="flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <Badge key={tag} variant="secondary" className="bg-sage/5 hover:bg-sage/10">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+            <Button
+              onClick={() => window.open(url, '_blank')}
+              className="bg-sage hover:bg-sage-dark"
+            >
+              Apply
+            </Button>
           </div>
         </div>
       </div>

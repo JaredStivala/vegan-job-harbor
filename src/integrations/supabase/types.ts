@@ -11,51 +11,30 @@ export type Database = {
     Tables: {
       jobs: {
         Row: {
-          company: string
-          created_at: string | null
+          company_name: string | null
           description: string | null
-          external_id: string | null
           id: string
           location: string | null
-          logo_url: string | null
-          posted_at: string
+          page_title: string | null
           salary: string | null
-          tags: string[] | null
-          title: string
-          type: string | null
-          updated_at: string | null
           url: string
         }
         Insert: {
-          company: string
-          created_at?: string | null
+          company_name?: string | null
           description?: string | null
-          external_id?: string | null
           id?: string
           location?: string | null
-          logo_url?: string | null
-          posted_at: string
+          page_title?: string | null
           salary?: string | null
-          tags?: string[] | null
-          title: string
-          type?: string | null
-          updated_at?: string | null
           url: string
         }
         Update: {
-          company?: string
-          created_at?: string | null
+          company_name?: string | null
           description?: string | null
-          external_id?: string | null
           id?: string
           location?: string | null
-          logo_url?: string | null
-          posted_at?: string
+          page_title?: string | null
           salary?: string | null
-          tags?: string[] | null
-          title?: string
-          type?: string | null
-          updated_at?: string | null
           url?: string
         }
         Relationships: []

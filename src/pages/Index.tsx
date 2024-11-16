@@ -4,80 +4,25 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
-import { useEffect } from "react";
 import { Database } from "@/integrations/supabase/types";
-import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 
 type Job = Database['public']['Tables']['jobs']['Row'];
 
 const Index = () => {
   const { toast } = useToast();
 
-  const { data: jobs, isLoading, error, refetch } = useQuery({
+  const { data: jobs, isLoading, error } = useQuery({
     queryKey: ['jobs'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('jobs')
         .select('*')
-        .order('posted_at', { ascending: false });
+        .order('created_at', { ascending: false });
       
       if (error) throw error;
       return data;
     }
   });
-
-  const scrapeJobs = async () => {
-    try {
-      toast({
-        title: "Scraping jobs...",
-        description: "Please wait while we fetch the latest jobs.",
-      });
-
-      const { data, error } = await supabase.functions.invoke('scrape-jobs');
-      if (error) throw error;
-      
-      toast({
-        title: "Success!",
-        description: `Successfully scraped ${data.jobsProcessed} jobs`,
-      });
-      
-      refetch();
-    } catch (error) {
-      console.error('Scraping error:', error);
-      toast({
-        title: "Error",
-        description: "Failed to scrape jobs. Please try again later.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  useEffect(() => {
-    const channel = supabase
-      .channel('jobs_changes')
-      .on<Job>(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'jobs'
-        },
-        (payload: RealtimePostgresChangesPayload<Job>) => {
-          if (payload.eventType === 'INSERT' && payload.new) {
-            toast({
-              title: "New job posted!",
-              description: `${payload.new.title} at ${payload.new.company}`,
-            });
-            refetch();
-          }
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [toast, refetch]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream">
@@ -109,12 +54,6 @@ const Index = () => {
             <p className="text-3xl font-light">
               Join the plant-based <span className="text-cream">revolution</span>
             </p>
-            <Button 
-              onClick={scrapeJobs} 
-              className="bg-cream hover:bg-cream/90 text-sage-dark"
-            >
-              Refresh Jobs
-            </Button>
           </div>
         </div>
       </div>
@@ -147,14 +86,14 @@ const Index = () => {
               jobs?.map((job) => (
                 <JobCard
                   key={job.id}
-                  title={job.title}
-                  company={job.company}
+                  title={job.page_title || 'Untitled Position'}
+                  company={job.company_name || 'Company Not Specified'}
                   location={job.location || 'Location not specified'}
-                  type={job.type || 'Type not specified'}
+                  type={'Full-time'} // Default value since it's not in the DB
                   salary={job.salary || 'Salary not specified'}
-                  posted={new Date(job.posted_at).toLocaleDateString()}
-                  tags={job.tags || []}
-                  logo={job.logo_url}
+                  posted={new Date().toLocaleDateString()} // Using current date as fallback
+                  tags={[]}
+                  url={job.url}
                 />
               ))
             )}
