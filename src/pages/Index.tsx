@@ -17,7 +17,7 @@ const Index = () => {
       const { data, error } = await supabase
         .from('jobs')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('id', { ascending: false });
       
       if (error) throw error;
       return data;
