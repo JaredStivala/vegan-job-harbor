@@ -1,4 +1,3 @@
-import { SearchBar } from "@/components/SearchBar";
 import { JobFilters } from "@/components/JobFilters";
 import { JobCard } from "@/components/JobCard";
 import { Button } from "@/components/ui/button";
@@ -38,39 +37,35 @@ const MOCK_JOBS = [
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-sage/5">
+    <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream">
       {/* Header */}
       <header className="border-b border-sage/10">
         <div className="container flex justify-between items-center py-4">
           <h1 className="text-2xl font-bold text-sage-dark">VeganJobs</h1>
           <div className="flex gap-4">
-            <Button variant="ghost">Health Insurance</Button>
             <Button variant="ghost">Log in</Button>
-            <Button className="bg-red-500 hover:bg-red-600">Post a job</Button>
+            <Button className="bg-sage hover:bg-sage-dark">Post a job</Button>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <div className="relative bg-center bg-cover min-h-[500px] flex items-center" style={{ backgroundImage: 'url("/placeholder.svg")' }}>
-        <div className="absolute inset-0 bg-black/40" />
+      <div 
+        className="relative bg-center bg-cover min-h-[500px] flex items-center" 
+        style={{ 
+          backgroundImage: 'url("https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=2400&q=80")',
+          backgroundPosition: 'center 40%'
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-sage-dark/80 to-sage/40" />
         <div className="container relative z-10 text-center text-white">
-          <h2 className="text-5xl font-bold mb-4">
-            find a <span className="text-sage">vegan job</span>
-          </h2>
-          <p className="text-3xl font-light mb-8">
-            work from <span className="text-sage">anywhere</span>
-          </p>
-          <SearchBar />
-        </div>
-      </div>
-
-      {/* Trusted By Section */}
-      <div className="border-y border-sage/10 bg-white/50 py-8">
-        <div className="container">
-          <p className="text-center text-sage mb-6">Trusted by leading companies</p>
-          <div className="flex justify-center items-center gap-8 opacity-50">
-            {/* Add company logos here */}
+          <div className="max-w-2xl mx-auto space-y-6 animate-fade-in">
+            <h2 className="text-5xl font-bold mb-4">
+              Find Your Next <span className="text-cream">Vegan Career</span>
+            </h2>
+            <p className="text-3xl font-light">
+              Join the plant-based <span className="text-cream">revolution</span>
+            </p>
           </div>
         </div>
       </div>
@@ -88,7 +83,9 @@ const Index = () => {
                   {MOCK_JOBS.length}
                 </span>
               </div>
-              <Button variant="outline">Sort by: Latest</Button>
+              <Button variant="outline" className="border-sage hover:bg-sage/10">
+                Sort by: Latest
+              </Button>
             </div>
             
             {MOCK_JOBS.map((job, index) => (
