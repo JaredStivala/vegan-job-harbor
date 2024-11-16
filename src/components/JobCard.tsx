@@ -1,13 +1,16 @@
-import { Building2, MapPin, Clock } from "lucide-react";
+import { Building2, MapPin, Clock, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 interface JobCardProps {
   title: string;
   company: string;
   location: string;
   type: string;
+  salary: string;
   posted: string;
-  source: string;
+  tags: string[];
+  verified?: boolean;
   logo?: string;
 }
 
@@ -16,12 +19,14 @@ export const JobCard = ({
   company,
   location,
   type,
+  salary,
   posted,
-  source,
+  tags,
+  verified = false,
   logo,
 }: JobCardProps) => {
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow border border-sage/10">
+    <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-all border border-sage/10 group cursor-pointer">
       <div className="flex items-start gap-4">
         <div className="w-12 h-12 rounded-lg bg-cream flex items-center justify-center">
           {logo ? (
@@ -32,25 +37,41 @@ export const JobCard = ({
         </div>
         
         <div className="flex-1">
-          <h3 className="font-semibold text-lg text-sage-dark mb-1">{title}</h3>
-          <p className="text-sage mb-3">{company}</p>
-          
-          <div className="flex flex-wrap gap-3 text-sm text-sage mb-4">
-            <span className="flex items-center gap-1">
-              <MapPin className="w-4 h-4" />
-              {location}
-            </span>
-            <span className="flex items-center gap-1">
-              <Clock className="w-4 h-4" />
+          <div className="flex items-start justify-between mb-2">
+            <div>
+              <h3 className="font-semibold text-lg text-sage-dark group-hover:text-sage transition-colors">
+                {title}
+                {verified && (
+                  <CheckCircle2 className="inline-block w-4 h-4 ml-2 text-green-500" />
+                )}
+              </h3>
+              <p className="text-sage">{company}</p>
+            </div>
+            <span className="text-sm text-sage bg-sage/5 px-3 py-1 rounded-full">
               {posted}
             </span>
           </div>
           
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-sage">via {source}</span>
-            <Button className="bg-accent hover:bg-accent/90">
-              Apply Now
-            </Button>
+          <div className="flex flex-wrap gap-2 mb-4">
+            <Badge variant="outline" className="bg-white">
+              <MapPin className="w-3 h-3 mr-1" />
+              {location}
+            </Badge>
+            <Badge variant="outline" className="bg-white">
+              <Clock className="w-3 h-3 mr-1" />
+              {type}
+            </Badge>
+            <Badge variant="outline" className="bg-white">
+              {salary}
+            </Badge>
+          </div>
+          
+          <div className="flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <Badge key={tag} variant="secondary" className="bg-sage/5 hover:bg-sage/10">
+                {tag}
+              </Badge>
+            ))}
           </div>
         </div>
       </div>
