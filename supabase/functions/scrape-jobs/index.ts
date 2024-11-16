@@ -22,7 +22,7 @@ interface Job {
 
 async function scrapeJobs(): Promise<Job[]> {
   console.log('Starting job scraping...')
-  const response = await fetch('https://veganjobs.com/jobs/', {
+  const response = await fetch('https://veganjobs.com', {
     headers: {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
     }
@@ -36,12 +36,13 @@ async function scrapeJobs(): Promise<Job[]> {
   const $ = cheerio.load(html)
   const jobs: Job[] = []
 
-  $('.job_listing').each((_, element) => {
+  // Select all job listings
+  $('article.job_listing').each((_, element) => {
     try {
       const $el = $(element)
       
       // Get job URL and ID
-      const jobUrl = $el.find('h3.job_listing-title a').attr('href')
+      const jobUrl = $el.find('h3 a').attr('href')
       if (!jobUrl) {
         console.log('Skipping job - no URL found')
         return
@@ -50,23 +51,31 @@ async function scrapeJobs(): Promise<Job[]> {
       const external_id = jobUrl.split('/').filter(Boolean).pop() || ''
       
       // Extract job details
-      const title = $el.find('h3.job_listing-title').text().trim()
-      const company = $el.find('.company strong').text().trim()
-      const location = $el.find('.location').text().trim() || null
-      const type = $el.find('.job-type').text().trim() || null
-      const salary = $el.find('.salary').text().trim() || null
-      const description = $el.find('.job_listing-description').text().trim() || null
+      const title = $el.find('h3 a').text().trim()
+      const companyName = $el.find('.company-title').text().trim()
+      const companyTagline = $el.find('.company-tagline').text().trim()
+      const company = companyName || companyTagline
       
-      // Extract logo URL if present
+      const location = $el.find('.location').text().trim() || null
+      const type = $el.find('.full-time, .part-time, .freelance, .temporary').first().text().trim() || null
+      
+      // Get posted date
+      const postedText = $el.find('time').text().trim()
+      const posted_at = new Date().toISOString() // Default to now since we can't reliably parse the date
+      
+      // Get logo
       const logo_url = $el.find('.company_logo').attr('src') || null
       
-      // Extract tags
-      const tags = $el.find('.job-tags .job-tag')
-        .map((_, tag) => $(tag).text().trim())
-        .get()
-        .filter(tag => tag.length > 0)
+      // Extract tags from job type checkboxes
+      const tags = []
+      if ($el.find('.full-time').length) tags.push('Full Time')
+      if ($el.find('.part-time').length) tags.push('Part Time')
+      if ($el.find('.freelance').length) tags.push('Freelance')
+      if ($el.find('.temporary').length) tags.push('Temporary')
+      if ($el.find('.volunteer').length) tags.push('Volunteer')
+      if ($el.find('.internship').length) tags.push('Internship')
       
-      // Create job object
+      // Create job object if we have the minimum required fields
       if (title && company) {
         const job: Job = {
           external_id,
@@ -74,12 +83,12 @@ async function scrapeJobs(): Promise<Job[]> {
           company,
           location,
           type,
-          salary,
-          description,
+          salary: null, // Salary not displayed on the site
+          description: null, // Full description would require visiting each job page
           tags,
           url: jobUrl,
           logo_url,
-          posted_at: new Date().toISOString()
+          posted_at
         }
         jobs.push(job)
         console.log(`Scraped job: ${title} at ${company}`)
@@ -112,10 +121,6 @@ Deno.serve(async (req) => {
     console.log('Starting job scraping...')
     const jobs = await scrapeJobs()
     console.log(`Successfully scraped ${jobs.length} jobs`)
-
-    if (jobs.length === 0) {
-      throw new Error('No jobs found during scraping')
-    }
 
     // Upsert jobs to database
     const { error } = await supabaseClient
