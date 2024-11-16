@@ -8,7 +8,7 @@ import { Database } from "@/integrations/supabase/types";
 import { SearchBar } from "@/components/SearchBar";
 import { Briefcase, Building2, Users } from "lucide-react";
 
-type Job = Database['public']['Tables']['jobs']['Row'];
+type Job = Database['public']['Tables']['veganjobs']['Row'];
 
 const Index = () => {
   const { toast } = useToast();
@@ -17,7 +17,7 @@ const Index = () => {
     queryKey: ['jobs'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('jobs')
+        .from('veganjobs')
         .select('*');
       
       if (error) throw error;
