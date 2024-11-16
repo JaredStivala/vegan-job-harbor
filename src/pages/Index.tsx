@@ -36,7 +36,7 @@ const Index = () => {
         description: `Successfully scraped ${data.jobsProcessed} jobs`,
       });
       
-      refetch(); // Refresh the jobs list
+      refetch();
     } catch (error) {
       toast({
         title: "Error",
@@ -46,7 +46,6 @@ const Index = () => {
     }
   };
 
-  // Subscribe to realtime updates
   useEffect(() => {
     const channel = supabase
       .channel('jobs_changes')
@@ -58,7 +57,8 @@ const Index = () => {
           table: 'jobs'
         },
         (payload: RealtimePostgresChangesPayload<Job>) => {
-          if (payload.new) {
+          // Check if it's an INSERT event and payload.new exists
+          if (payload.eventType === 'INSERT' && payload.new) {
             toast({
               title: "New job posted!",
               description: `${payload.new.title} at ${payload.new.company}`,
