@@ -25,6 +25,9 @@ export default {
         },
         cream: "#F9F7F4",
         accent: "#9b87f5",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        border: "hsl(var(--border))",
       },
       keyframes: {
         "accordion-down": {
