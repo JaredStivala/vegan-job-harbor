@@ -16,7 +16,7 @@ type RealtimePayload = {
 const Index = () => {
   const { toast } = useToast();
 
-  const { data: jobs, isLoading, error } = useQuery<Job[]>({
+  const { data: jobs, isLoading, error, refetch } = useQuery({
     queryKey: ['jobs'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -28,6 +28,26 @@ const Index = () => {
       return data;
     }
   });
+
+  const scrapeJobs = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('scrape-jobs');
+      if (error) throw error;
+      
+      toast({
+        title: "Success!",
+        description: `Successfully scraped ${data.jobsProcessed} jobs`,
+      });
+      
+      refetch(); // Refresh the jobs list
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to scrape jobs. Please try again later.",
+        variant: "destructive",
+      });
+    }
+  };
 
   // Subscribe to realtime updates
   useEffect(() => {
@@ -83,6 +103,12 @@ const Index = () => {
             <p className="text-3xl font-light">
               Join the plant-based <span className="text-cream">revolution</span>
             </p>
+            <Button 
+              onClick={scrapeJobs} 
+              className="bg-cream hover:bg-cream/90 text-sage-dark"
+            >
+              Refresh Jobs
+            </Button>
           </div>
         </div>
       </div>
