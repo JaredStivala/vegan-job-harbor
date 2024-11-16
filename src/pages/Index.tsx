@@ -6,10 +6,26 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect } from "react";
 
+interface Job {
+  id: string;
+  title: string;
+  company: string;
+  location: string | null;
+  type: string | null;
+  salary: string | null;
+  description: string | null;
+  tags: string[] | null;
+  url: string;
+  logo_url: string | null;
+  posted_at: string;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
 const Index = () => {
   const { toast } = useToast();
 
-  const { data: jobs, isLoading, error } = useQuery({
+  const { data: jobs, isLoading, error } = useQuery<Job[]>({
     queryKey: ['jobs'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -32,7 +48,7 @@ const Index = () => {
           schema: 'public', 
           table: 'jobs' 
         }, 
-        (payload) => {
+        (payload: any) => {
           toast({
             title: "New job posted!",
             description: `${payload.new.title} at ${payload.new.company}`,
@@ -110,9 +126,9 @@ const Index = () => {
                   key={job.id}
                   title={job.title}
                   company={job.company}
-                  location={job.location}
-                  type={job.type}
-                  salary={job.salary}
+                  location={job.location || 'Location not specified'}
+                  type={job.type || 'Type not specified'}
+                  salary={job.salary || 'Salary not specified'}
                   posted={new Date(job.posted_at).toLocaleDateString()}
                   tags={job.tags || []}
                   logo={job.logo_url}
