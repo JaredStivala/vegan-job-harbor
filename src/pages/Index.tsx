@@ -6,12 +6,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect } from "react";
 import { Database } from "@/integrations/supabase/types";
+import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 
 type Job = Database['public']['Tables']['jobs']['Row'];
-type RealtimePayload = {
-  new: Job;
-  eventType: 'INSERT' | 'UPDATE' | 'DELETE';
-};
 
 const Index = () => {
   const { toast } = useToast();
@@ -53,17 +50,20 @@ const Index = () => {
   useEffect(() => {
     const channel = supabase
       .channel('jobs_changes')
-      .on('postgres_changes', 
-        { 
-          event: '*', 
-          schema: 'public', 
-          table: 'jobs' 
-        }, 
-        (payload: RealtimePayload) => {
-          toast({
-            title: "New job posted!",
-            description: `${payload.new.title} at ${payload.new.company}`,
-          });
+      .on<Job>(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'jobs'
+        },
+        (payload: RealtimePostgresChangesPayload<Job>) => {
+          if (payload.new) {
+            toast({
+              title: "New job posted!",
+              description: `${payload.new.title} at ${payload.new.company}`,
+            });
+          }
         }
       )
       .subscribe();
