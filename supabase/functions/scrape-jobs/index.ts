@@ -22,87 +22,132 @@ interface Job {
 
 async function scrapeJobs(): Promise<Job[]> {
   console.log('Starting job scraping...')
-  const response = await fetch('https://veganjobs.com', {
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    }
-  })
   
-  if (!response.ok) {
-    throw new Error(`Failed to fetch jobs: ${response.status} ${response.statusText}`)
+  // Try multiple URLs in case one fails
+  const urls = [
+    'https://veganjobs.com/jobs/',
+    'https://veganjobs.com'
+  ]
+  
+  let html = ''
+  let response = null
+  
+  // Try each URL until one works
+  for (const url of urls) {
+    try {
+      console.log(`Attempting to fetch from ${url}`)
+      response = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+          'Accept-Language': 'en-US,en;q=0.5',
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      })
+      
+      if (response.ok) {
+        html = await response.text()
+        console.log(`Successfully fetched HTML from ${url}`)
+        break
+      }
+      
+      console.log(`Failed to fetch from ${url}: ${response.status} ${response.statusText}`)
+    } catch (error) {
+      console.error(`Error fetching ${url}:`, error)
+    }
   }
   
-  const html = await response.text()
+  if (!html) {
+    throw new Error(`Failed to fetch jobs from any URL. Last status: ${response?.status}`)
+  }
+  
   const $ = cheerio.load(html)
   const jobs: Job[] = []
-
-  // Select all job listings
-  $('article.job_listing').each((_, element) => {
-    try {
-      const $el = $(element)
+  
+  // Try different selectors for job listings
+  const jobSelectors = [
+    'article.job_listing',
+    '.job_listing',
+    '.job-listing',
+    '.job-post'
+  ]
+  
+  let foundJobs = false
+  
+  for (const selector of jobSelectors) {
+    console.log(`Trying selector: ${selector}`)
+    const elements = $(selector)
+    
+    if (elements.length > 0) {
+      console.log(`Found ${elements.length} jobs with selector ${selector}`)
+      foundJobs = true
       
-      // Get job URL and ID
-      const jobUrl = $el.find('h3 a').attr('href')
-      if (!jobUrl) {
-        console.log('Skipping job - no URL found')
-        return
-      }
-      
-      const external_id = jobUrl.split('/').filter(Boolean).pop() || ''
-      
-      // Extract job details
-      const title = $el.find('h3 a').text().trim()
-      const companyName = $el.find('.company-title').text().trim()
-      const companyTagline = $el.find('.company-tagline').text().trim()
-      const company = companyName || companyTagline
-      
-      const location = $el.find('.location').text().trim() || null
-      const type = $el.find('.full-time, .part-time, .freelance, .temporary').first().text().trim() || null
-      
-      // Get posted date
-      const postedText = $el.find('time').text().trim()
-      const posted_at = new Date().toISOString() // Default to now since we can't reliably parse the date
-      
-      // Get logo
-      const logo_url = $el.find('.company_logo').attr('src') || null
-      
-      // Extract tags from job type checkboxes
-      const tags = []
-      if ($el.find('.full-time').length) tags.push('Full Time')
-      if ($el.find('.part-time').length) tags.push('Part Time')
-      if ($el.find('.freelance').length) tags.push('Freelance')
-      if ($el.find('.temporary').length) tags.push('Temporary')
-      if ($el.find('.volunteer').length) tags.push('Volunteer')
-      if ($el.find('.internship').length) tags.push('Internship')
-      
-      // Create job object if we have the minimum required fields
-      if (title && company) {
-        const job: Job = {
-          external_id,
-          title,
-          company,
-          location,
-          type,
-          salary: null, // Salary not displayed on the site
-          description: null, // Full description would require visiting each job page
-          tags,
-          url: jobUrl,
-          logo_url,
-          posted_at
+      elements.each((_, element) => {
+        try {
+          const $el = $(element)
+          
+          // Try different selectors for job URL
+          const jobUrl = $el.find('h3 a, .job-title a, .title a').first().attr('href')
+          if (!jobUrl) {
+            console.log('Skipping job - no URL found')
+            return
+          }
+          
+          const external_id = jobUrl.split('/').filter(Boolean).pop() || ''
+          
+          // Try different selectors for job details
+          const title = $el.find('h3 a, .job-title a, .title a').first().text().trim()
+          const companyEl = $el.find('.company-title, .company strong, .company-name')
+          const company = companyEl.text().trim()
+          
+          const location = $el.find('.location, .job-location').text().trim() || null
+          const type = $el.find('.job-type, .full-time, .part-time').first().text().trim() || null
+          
+          // Get logo
+          const logo_url = $el.find('.company_logo, .company-logo img').first().attr('src') || null
+          
+          // Extract tags
+          const tags = []
+          const typeClasses = ['full-time', 'part-time', 'freelance', 'temporary', 'volunteer', 'internship']
+          typeClasses.forEach(className => {
+            if ($el.find(`.${className}`).length) {
+              tags.push(className.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '))
+            }
+          })
+          
+          if (title && company) {
+            const job: Job = {
+              external_id,
+              title,
+              company,
+              location,
+              type,
+              salary: null,
+              description: null,
+              tags,
+              url: jobUrl.startsWith('http') ? jobUrl : `https://veganjobs.com${jobUrl}`,
+              logo_url,
+              posted_at: new Date().toISOString()
+            }
+            jobs.push(job)
+            console.log(`Scraped job: ${title} at ${company}`)
+          }
+        } catch (error) {
+          console.error('Error processing job listing:', error)
         }
-        jobs.push(job)
-        console.log(`Scraped job: ${title} at ${company}`)
-      }
-    } catch (error) {
-      console.error('Error processing job listing:', error)
+      })
+      
+      break // Exit loop if we found jobs with this selector
     }
-  })
-
-  console.log(`Found ${jobs.length} jobs`)
-  if (jobs.length === 0) {
-    throw new Error('No jobs found - check if selectors are still valid')
   }
   
+  if (!foundJobs) {
+    console.log('HTML content preview:', html.substring(0, 500))
+    throw new Error('No job listings found with any selector')
+  }
+  
+  console.log(`Found ${jobs.length} jobs`)
   return jobs
 }
 
@@ -112,7 +157,6 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // Create Supabase client
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
@@ -122,7 +166,6 @@ Deno.serve(async (req) => {
     const jobs = await scrapeJobs()
     console.log(`Successfully scraped ${jobs.length} jobs`)
 
-    // Upsert jobs to database
     const { error } = await supabaseClient
       .from('jobs')
       .upsert(
