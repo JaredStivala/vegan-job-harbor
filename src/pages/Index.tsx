@@ -16,8 +16,7 @@ const Index = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('jobs')
-        .select('*')
-        .order('id', { ascending: false });
+        .select('*');
       
       if (error) throw error;
       return data;
