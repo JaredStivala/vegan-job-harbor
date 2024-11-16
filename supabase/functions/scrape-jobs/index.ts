@@ -22,61 +22,78 @@ interface Job {
 
 async function scrapeJobs(): Promise<Job[]> {
   console.log('Starting job scraping...')
-  const response = await fetch('https://veganjobs.com/jobs/')
+  const response = await fetch('https://veganjobs.com/jobs/', {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+  })
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch jobs: ${response.status} ${response.statusText}`)
+  }
+  
   const html = await response.text()
   const $ = cheerio.load(html)
   const jobs: Job[] = []
 
-  $('.job-listing').each((_, element) => {
-    const $el = $(element)
-    
-    // Get job URL and ID
-    const jobUrl = $el.find('h2.job-title a').attr('href')
-    if (!jobUrl) return // Skip if no URL found
-    const external_id = jobUrl.split('/').pop() || ''
-    
-    // Extract job details
-    const title = $el.find('h2.job-title').text().trim()
-    const company = $el.find('.company-name').text().trim()
-    const location = $el.find('.job-location').text().trim() || null
-    const type = $el.find('.job-type').text().trim() || null
-    const salary = $el.find('.job-salary').text().trim() || null
-    const description = $el.find('.job-description').text().trim() || null
-    
-    // Extract logo URL if present
-    const logo_url = $el.find('.company-logo img').attr('src') || null
-    
-    // Extract tags
-    const tags = $el.find('.job-tags .tag')
-      .map((_, tag) => $(tag).text().trim())
-      .get()
-      .filter(tag => tag.length > 0)
-    
-    // Parse posted date
-    const postedText = $el.find('.job-date').text().trim()
-    const posted_at = new Date().toISOString() // Default to now
-    
-    // Create job object
-    const job: Job = {
-      external_id,
-      title,
-      company,
-      location,
-      type,
-      salary,
-      description,
-      tags,
-      url: `https://veganjobs.com${jobUrl}`,
-      logo_url,
-      posted_at
-    }
-    
-    if (title && company) { // Only add if we have at least title and company
-      jobs.push(job)
+  $('.job_listing').each((_, element) => {
+    try {
+      const $el = $(element)
+      
+      // Get job URL and ID
+      const jobUrl = $el.find('h3.job_listing-title a').attr('href')
+      if (!jobUrl) {
+        console.log('Skipping job - no URL found')
+        return
+      }
+      
+      const external_id = jobUrl.split('/').filter(Boolean).pop() || ''
+      
+      // Extract job details
+      const title = $el.find('h3.job_listing-title').text().trim()
+      const company = $el.find('.company strong').text().trim()
+      const location = $el.find('.location').text().trim() || null
+      const type = $el.find('.job-type').text().trim() || null
+      const salary = $el.find('.salary').text().trim() || null
+      const description = $el.find('.job_listing-description').text().trim() || null
+      
+      // Extract logo URL if present
+      const logo_url = $el.find('.company_logo').attr('src') || null
+      
+      // Extract tags
+      const tags = $el.find('.job-tags .job-tag')
+        .map((_, tag) => $(tag).text().trim())
+        .get()
+        .filter(tag => tag.length > 0)
+      
+      // Create job object
+      if (title && company) {
+        const job: Job = {
+          external_id,
+          title,
+          company,
+          location,
+          type,
+          salary,
+          description,
+          tags,
+          url: jobUrl,
+          logo_url,
+          posted_at: new Date().toISOString()
+        }
+        jobs.push(job)
+        console.log(`Scraped job: ${title} at ${company}`)
+      }
+    } catch (error) {
+      console.error('Error processing job listing:', error)
     }
   })
 
   console.log(`Found ${jobs.length} jobs`)
+  if (jobs.length === 0) {
+    throw new Error('No jobs found - check if selectors are still valid')
+  }
+  
   return jobs
 }
 
@@ -94,7 +111,7 @@ Deno.serve(async (req) => {
 
     console.log('Starting job scraping...')
     const jobs = await scrapeJobs()
-    console.log(`Found ${jobs.length} jobs`)
+    console.log(`Successfully scraped ${jobs.length} jobs`)
 
     if (jobs.length === 0) {
       throw new Error('No jobs found during scraping')
