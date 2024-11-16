@@ -5,22 +5,13 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect } from "react";
+import { Database } from "@/integrations/supabase/types";
 
-interface Job {
-  id: string;
-  title: string;
-  company: string;
-  location: string | null;
-  type: string | null;
-  salary: string | null;
-  description: string | null;
-  tags: string[] | null;
-  url: string;
-  logo_url: string | null;
-  posted_at: string;
-  created_at: string | null;
-  updated_at: string | null;
-}
+type Job = Database['public']['Tables']['jobs']['Row'];
+type RealtimePayload = {
+  new: Job;
+  eventType: 'INSERT' | 'UPDATE' | 'DELETE';
+};
 
 const Index = () => {
   const { toast } = useToast();
@@ -48,7 +39,7 @@ const Index = () => {
           schema: 'public', 
           table: 'jobs' 
         }, 
-        (payload: any) => {
+        (payload: RealtimePayload) => {
           toast({
             title: "New job posted!",
             description: `${payload.new.title} at ${payload.new.company}`,
