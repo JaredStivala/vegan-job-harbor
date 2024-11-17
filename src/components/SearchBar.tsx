@@ -5,10 +5,10 @@ import { Badge } from "./ui/badge";
 interface SearchBarProps {
   tags: string[];
   onTagSelect: (tag: string) => void;
-  selectedTag: string | null;
+  selectedTags: string[];
 }
 
-export const SearchBar = ({ tags, onTagSelect, selectedTag }: SearchBarProps) => {
+export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -32,9 +32,9 @@ export const SearchBar = ({ tags, onTagSelect, selectedTag }: SearchBarProps) =>
             {tags.map((tag) => (
               <Badge
                 key={tag}
-                variant={selectedTag === tag ? "default" : "secondary"}
+                variant={selectedTags.includes(tag) ? "default" : "secondary"}
                 className={`cursor-pointer ${
-                  selectedTag === tag ? "bg-sage" : "bg-sage/5 hover:bg-sage/10"
+                  selectedTags.includes(tag) ? "bg-sage" : "bg-sage/5 hover:bg-sage/10"
                 }`}
                 onClick={() => onTagSelect(tag)}
               >

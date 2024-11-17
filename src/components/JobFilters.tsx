@@ -2,7 +2,12 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-export const JobFilters = () => {
+interface JobFiltersProps {
+  selectedTags: string[];
+  onTagSelect: (tag: string) => void;
+}
+
+export const JobFilters = ({ selectedTags, onTagSelect }: JobFiltersProps) => {
   const { data: jobs, isLoading } = useQuery({
     queryKey: ['jobs'],
     queryFn: async () => {
@@ -40,9 +45,10 @@ export const JobFilters = () => {
           {allTags.map((tag) => (
             <Button
               key={tag}
-              variant="outline"
+              variant={selectedTags.includes(tag) ? "default" : "outline"}
               size="sm"
-              className="bg-white hover:bg-sage/10"
+              className={selectedTags.includes(tag) ? "bg-sage hover:bg-sage-dark" : "bg-white hover:bg-sage/10"}
+              onClick={() => onTagSelect(tag)}
             >
               {tag}
             </Button>

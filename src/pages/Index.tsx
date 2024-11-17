@@ -5,12 +5,13 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { JobCard } from "@/components/JobCard";
 import { SearchBar } from "@/components/SearchBar";
+import { JobFilters } from "@/components/JobFilters";
 import { useToast } from "@/components/ui/use-toast";
 import { useState, useMemo } from "react";
 
 const Index = () => {
   const { toast } = useToast();
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const { data: jobs, isLoading, error } = useQuery({
     queryKey: ['jobs'],
@@ -41,15 +42,24 @@ const Index = () => {
     return Array.from(tags);
   }, [jobs]);
 
-  // Filter jobs by selected tag
+  // Filter jobs by selected tags
   const filteredJobs = useMemo(() => {
-    if (!selectedTag) return jobs;
-    return jobs?.filter(job => job.tags?.includes(selectedTag));
-  }, [jobs, selectedTag]);
+    if (!selectedTags.length) return jobs;
+    return jobs?.filter(job => 
+      selectedTags.every(tag => job.tags?.includes(tag))
+    );
+  }, [jobs, selectedTags]);
 
   const handleTagSelect = (tag: string) => {
-    setSelectedTag(prevTag => prevTag === tag ? null : tag);
+    setSelectedTags(prev => {
+      if (prev.includes(tag)) {
+        return prev.filter(t => t !== tag);
+      }
+      return [...prev, tag];
+    });
   };
+
+  // ... keep existing code (header and hero section)
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream">
@@ -99,7 +109,7 @@ const Index = () => {
             <SearchBar 
               tags={allTags}
               onTagSelect={handleTagSelect}
-              selectedTag={selectedTag}
+              selectedTags={selectedTags}
             />
 
             <div className="grid grid-cols-3 gap-4">
@@ -125,20 +135,10 @@ const Index = () => {
       <div className="container py-12">
         <div className="flex flex-col md:flex-row gap-8">
           <aside className="md:w-64 shrink-0">
-            <div className="flex flex-col gap-6 w-full">
-              <div>
-                <h3 className="font-semibold mb-3 text-sage-dark">Active Filters</h3>
-                {selectedTag && (
-                  <Badge 
-                    variant="default" 
-                    className="bg-sage cursor-pointer"
-                    onClick={() => setSelectedTag(null)}
-                  >
-                    {selectedTag} ×
-                  </Badge>
-                )}
-              </div>
-            </div>
+            <JobFilters 
+              selectedTags={selectedTags}
+              onTagSelect={handleTagSelect}
+            />
           </aside>
           
           <div className="flex-1 space-y-6">
