@@ -28,21 +28,25 @@ const Index = () => {
         });
         throw error;
       }
-      return data;
-    }
+      return data || []; // Ensure we always return an array
+    },
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    refetchOnWindowFocus: false, // Prevent refetch on window focus
   });
 
   const allTags = useMemo(() => {
+    if (!jobs) return [];
     const tags = new Set<string>();
-    jobs?.forEach(job => {
+    jobs.forEach(job => {
       job.tags?.forEach(tag => tags.add(tag));
     });
     return Array.from(tags);
   }, [jobs]);
 
   const filteredJobs = useMemo(() => {
+    if (!jobs) return [];
     if (!selectedTags.length) return jobs;
-    return jobs?.filter(job => 
+    return jobs.filter(job => 
       selectedTags.every(tag => job.tags?.includes(tag))
     );
   }, [jobs, selectedTags]);
@@ -55,6 +59,8 @@ const Index = () => {
       return [...prev, tag];
     });
   };
+
+  // ... keep existing code (header and hero section JSX)
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream">
@@ -141,7 +147,7 @@ const Index = () => {
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
                 <span className="text-sage bg-sage/10 px-2 py-1 rounded-full text-sm">
-                  {filteredJobs?.length || 0}
+                  {filteredJobs.length}
                 </span>
               </div>
               <Button variant="outline" className="border-sage hover:bg-sage/10">
@@ -156,7 +162,7 @@ const Index = () => {
               </div>
             ) : error ? (
               <div className="text-center py-12 text-red-500">Error loading jobs</div>
-            ) : !filteredJobs || filteredJobs.length === 0 ? (
+            ) : filteredJobs.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-lg border border-sage/10">
                 <Briefcase className="w-12 h-12 text-sage/50 mx-auto mb-4" />
                 <p className="text-sage-dark font-medium">No jobs found</p>
