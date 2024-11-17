@@ -18,7 +18,10 @@ export const JobFilters = () => {
         .select('*')
         .order('name');
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching tags:', error);
+        throw error;
+      }
       return data as Tag[];
     }
   });
@@ -32,8 +35,7 @@ export const JobFilters = () => {
     return acc;
   }, {} as Record<string, string[]>) || {};
 
-  const categories = ['All', ...Object.keys(tagsByCategory)];
-  const locations = ["Remote", "On-site", "Hybrid"];
+  const categories = Object.keys(tagsByCategory);
 
   if (isLoading) {
     return <div className="animate-pulse space-y-4">
@@ -48,53 +50,23 @@ export const JobFilters = () => {
 
   return (
     <div className="flex flex-col gap-6 w-full md:w-64">
-      <div>
-        <h3 className="font-semibold mb-3 text-sage-dark">Categories</h3>
-        <div className="flex flex-wrap gap-2">
-          {categories.map((category) => (
-            <Button
-              key={category}
-              variant="outline"
-              className="bg-white hover:bg-sage/10"
-            >
-              {category}
-            </Button>
-          ))}
-        </div>
-
-        {Object.entries(tagsByCategory).map(([category, categoryTags]) => (
-          <div key={category} className="mt-4">
-            <h4 className="text-sm font-medium text-sage-dark mb-2">{category} Tags</h4>
-            <div className="flex flex-wrap gap-2">
-              {categoryTags.map((tag) => (
-                <Button
-                  key={tag}
-                  variant="outline"
-                  size="sm"
-                  className="bg-white hover:bg-sage/10"
-                >
-                  {tag}
-                </Button>
-              ))}
-            </div>
+      {categories.map((category) => (
+        <div key={category}>
+          <h3 className="font-semibold mb-3 text-sage-dark">{category}</h3>
+          <div className="flex flex-wrap gap-2">
+            {tagsByCategory[category].map((tag) => (
+              <Button
+                key={tag}
+                variant="outline"
+                size="sm"
+                className="bg-white hover:bg-sage/10"
+              >
+                {tag}
+              </Button>
+            ))}
           </div>
-        ))}
-      </div>
-      
-      <div>
-        <h3 className="font-semibold mb-3 text-sage-dark">Location Type</h3>
-        <div className="flex flex-wrap gap-2">
-          {locations.map((location) => (
-            <Button
-              key={location}
-              variant="outline"
-              className="bg-white hover:bg-sage/10"
-            >
-              {location}
-            </Button>
-          ))}
         </div>
-      </div>
+      ))}
     </div>
   );
 };

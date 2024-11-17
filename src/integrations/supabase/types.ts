@@ -20,6 +20,7 @@ export type Database = {
           page_title: string | null
           salary: string | null
           tags: string[] | null
+          updated_at: string | null
           url: string
         }
         Insert: {
@@ -32,6 +33,7 @@ export type Database = {
           page_title?: string | null
           salary?: string | null
           tags?: string[] | null
+          updated_at?: string | null
           url: string
         }
         Update: {
@@ -44,6 +46,7 @@ export type Database = {
           page_title?: string | null
           salary?: string | null
           tags?: string[] | null
+          updated_at?: string | null
           url?: string
         }
         Relationships: []
