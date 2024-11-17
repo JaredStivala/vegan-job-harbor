@@ -32,6 +32,25 @@ export const JobCard = ({
 }: JobCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  const formatDescription = (text: string) => {
+    // Split the text into sections based on common patterns
+    const sections = text.split(/(?=Overview|Location|Hours|Holidays|Salary|Start date|Reports to|Contract type)/g);
+    
+    return sections.map((section, index) => {
+      // Find the title (if any) at the start of the section
+      const titleMatch = section.match(/^(Overview|Location|Hours|Holidays|Salary|Start date|Reports to|Contract type)/);
+      const title = titleMatch ? titleMatch[0] : '';
+      const content = titleMatch ? section.slice(title.length) : section;
+      
+      return (
+        <div key={index} className="mb-4">
+          {title && <h4 className="font-semibold text-sage-dark mb-2">{title}</h4>}
+          <p className="text-gray-600 leading-relaxed">{content.trim()}</p>
+        </div>
+      );
+    });
+  };
+
   return (
     <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-all border border-sage/10 group">
       <div 
@@ -104,11 +123,11 @@ export const JobCard = ({
         {description && (
           <div
             className={`overflow-hidden transition-all duration-300 ease-in-out ${
-              isExpanded ? 'max-h-96 mt-6 opacity-100' : 'max-h-0 opacity-0'
+              isExpanded ? 'max-h-[2000px] mt-6 opacity-100' : 'max-h-0 opacity-0'
             }`}
           >
-            <div className="prose prose-sage max-w-none">
-              <p className="text-gray-600 whitespace-pre-line">{description}</p>
+            <div className="prose prose-sage max-w-none bg-cream/50 p-6 rounded-lg">
+              {formatDescription(description)}
             </div>
           </div>
         )}
