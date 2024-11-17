@@ -31,16 +31,18 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
     return () => document.removeEventListener("keydown", down);
   }, []);
 
+  const scrollToJobs = () => {
+    const jobsSection = document.querySelector('#jobs-section');
+    if (jobsSection) {
+      jobsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const handleTagSelect = (tag: string) => {
     onTagSelect(tag);
     setOpen(false);
     // Scroll to jobs section after a small delay to ensure the UI has updated
-    setTimeout(() => {
-      const jobsSection = document.querySelector('#jobs-section');
-      if (jobsSection) {
-        jobsSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
+    setTimeout(scrollToJobs, 100);
   };
 
   return (
