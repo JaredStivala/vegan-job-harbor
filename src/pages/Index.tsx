@@ -18,9 +18,17 @@ const Index = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('veganjobs')
-        .select('*');
+        .select('*')
+        .order('date_posted', { ascending: false });
       
-      if (error) throw error;
+      if (error) {
+        toast({
+          title: "Error loading jobs",
+          description: error.message,
+          variant: "destructive",
+        });
+        throw error;
+      }
       return data;
     }
   });
@@ -118,7 +126,7 @@ const Index = () => {
               </div>
             ) : error ? (
               <div className="text-center py-12 text-red-500">Error loading jobs</div>
-            ) : jobs?.length === 0 ? (
+            ) : !jobs || jobs.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-lg border border-sage/10">
                 <Briefcase className="w-12 h-12 text-sage/50 mx-auto mb-4" />
                 <p className="text-sage-dark font-medium">No jobs found</p>
@@ -126,7 +134,7 @@ const Index = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {jobs?.map((job) => (
+                {jobs.map((job) => (
                   <JobCard
                     key={job.id}
                     title={job.page_title || 'Untitled Position'}
