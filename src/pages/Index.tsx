@@ -12,7 +12,7 @@ const Index = () => {
   const { toast } = useToast();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  const { data: jobs, isLoading, error } = useQuery({
+  const { data: jobs = [], isLoading, error } = useQuery({
     queryKey: ['jobs'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -28,14 +28,15 @@ const Index = () => {
         });
         throw error;
       }
-      return data || []; // Ensure we always return an array
+      
+      return data ?? [];
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
     refetchOnWindowFocus: false, // Prevent refetch on window focus
+    initialData: [], // Provide initial data to prevent undefined
   });
 
   const allTags = useMemo(() => {
-    if (!jobs) return [];
     const tags = new Set<string>();
     jobs.forEach(job => {
       job.tags?.forEach(tag => tags.add(tag));
@@ -44,7 +45,6 @@ const Index = () => {
   }, [jobs]);
 
   const filteredJobs = useMemo(() => {
-    if (!jobs) return [];
     if (!selectedTags.length) return jobs;
     return jobs.filter(job => 
       selectedTags.every(tag => job.tags?.includes(tag))
@@ -59,8 +59,6 @@ const Index = () => {
       return [...prev, tag];
     });
   };
-
-  // ... keep existing code (header and hero section JSX)
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream">
@@ -115,8 +113,8 @@ const Index = () => {
 
             <div className="grid grid-cols-3 gap-4">
               {[
-                { icon: Building2, label: 'Companies', value: jobs?.length || 0 },
-                { icon: Briefcase, label: 'Active Jobs', value: jobs?.length || 0 },
+                { icon: Building2, label: 'Companies', value: jobs.length },
+                { icon: Briefcase, label: 'Active Jobs', value: jobs.length },
                 { icon: Users, label: 'Candidates', value: '1000+' }
               ].map((stat, index) => (
                 <div 
