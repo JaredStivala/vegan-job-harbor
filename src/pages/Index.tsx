@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { Database } from "@/integrations/supabase/types";
 import { SearchBar } from "@/components/SearchBar";
-import { Briefcase, Building2, Users, Code2, Leaf } from "lucide-react";
+import { Briefcase, Building2, Users, Code2, Terminal } from "lucide-react";
 
 type Job = Database['public']['Tables']['veganjobs']['Row'];
 
@@ -41,50 +41,52 @@ const Index = () => {
       </header>
 
       {/* Hero Section */}
-      <div 
-        className="relative bg-center bg-cover min-h-[500px] flex items-center overflow-hidden" 
-        style={{ 
-          backgroundImage: 'url("https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&w=2400&q=80")',
-          backgroundPosition: 'center'
-        }}
-      >
-        {/* Overlay with tech pattern */}
-        <div className="absolute inset-0 bg-gradient-to-r from-sage-dark/95 to-sage/90">
-          <div className="absolute inset-0" style={{ 
-            backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.05"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-            opacity: 0.1
-          }} />
-        </div>
+      <div className="relative bg-[#0A0F1C] overflow-hidden">
+        {/* Animated grid background */}
+        <div 
+          className="absolute inset-0 opacity-[0.15]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Cpath d='M0 0h40v40H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20z'/%3E%3C/g%3E%3C/svg%3E")`,
+            animation: 'move-background 20s linear infinite'
+          }}
+        />
 
-        <div className="container relative z-10">
-          <div className="max-w-2xl mx-auto space-y-8 text-center">
-            <div className="space-y-6 animate-fade-in">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <Code2 className="w-8 h-8 text-cream animate-pulse" />
-                <Leaf className="w-8 h-8 text-cream" />
+        <div className="container relative z-10 py-24">
+          <div className="max-w-3xl mx-auto space-y-10 text-center">
+            <div className="space-y-6">
+              <div className="inline-flex items-center justify-center px-4 py-1.5 mb-4 rounded-full bg-sage/10 text-accent border border-accent/20 backdrop-blur-sm">
+                <Terminal className="w-4 h-4 mr-2" />
+                <span className="text-sm font-medium">Tech + Compassion</span>
               </div>
-              <h2 className="text-5xl font-bold text-white">
-                Find Your Next <span className="bg-gradient-to-r from-accent to-accent/70 bg-clip-text text-transparent">Vegan Career</span>
-              </h2>
-              <p className="text-2xl font-light text-white/90">
-                Join the <span className="font-medium text-accent">plant-based</span> revolution
+              
+              <h1 className="text-6xl font-bold tracking-tight">
+                <span className="text-white">Find Your Next</span>
+                <div className="mt-2">
+                  <span className="bg-gradient-to-r from-[#4ADE80] to-[#22D3EE] bg-clip-text text-transparent">
+                    Vegan Tech Career
+                  </span>
+                </div>
+              </h1>
+              
+              <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+                Join the intersection of technology and compassion. Build a career that matters.
               </p>
             </div>
             
             <SearchBar />
 
-            <div className="flex justify-center gap-8 text-white/90">
-              <div className="flex items-center gap-2 bg-sage-dark/30 px-4 py-2 rounded-lg backdrop-blur-sm">
-                <Building2 className="w-5 h-5 text-accent" />
-                <span>{jobs?.length || 0} Companies</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-12">
+              <div className="flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-white/[0.03] border border-white/10 backdrop-blur-sm hover:bg-white/[0.05] transition-colors">
+                <Building2 className="w-5 h-5 text-[#4ADE80]" />
+                <span className="text-white/90 font-medium">{jobs?.length || 0} Companies</span>
               </div>
-              <div className="flex items-center gap-2 bg-sage-dark/30 px-4 py-2 rounded-lg backdrop-blur-sm">
-                <Briefcase className="w-5 h-5 text-accent" />
-                <span>{jobs?.length || 0} Active Jobs</span>
+              <div className="flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-white/[0.03] border border-white/10 backdrop-blur-sm hover:bg-white/[0.05] transition-colors">
+                <Code2 className="w-5 h-5 text-[#22D3EE]" />
+                <span className="text-white/90 font-medium">{jobs?.length || 0} Active Jobs</span>
               </div>
-              <div className="flex items-center gap-2 bg-sage-dark/30 px-4 py-2 rounded-lg backdrop-blur-sm">
-                <Users className="w-5 h-5 text-accent" />
-                <span>1000+ Candidates</span>
+              <div className="flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-white/[0.03] border border-white/10 backdrop-blur-sm hover:bg-white/[0.05] transition-colors">
+                <Users className="w-5 h-5 text-[#A78BFA]" />
+                <span className="text-white/90 font-medium">1000+ Candidates</span>
               </div>
             </div>
           </div>
