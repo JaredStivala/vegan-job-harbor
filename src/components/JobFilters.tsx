@@ -2,40 +2,24 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-type Tag = {
-  id: string;
-  name: string;
-  category: string;
-  created_at: string;
-};
-
 export const JobFilters = () => {
-  const { data: tags, isLoading } = useQuery({
-    queryKey: ['tags'],
+  const { data: jobs, isLoading } = useQuery({
+    queryKey: ['jobs'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('tags')
-        .select('*')
-        .order('name');
+        .from('veganjobs')
+        .select('tags');
       
       if (error) {
-        console.error('Error fetching tags:', error);
+        console.error('Error fetching jobs:', error);
         throw error;
       }
-      return data as Tag[];
+      return data;
     }
   });
 
-  // Group tags by category
-  const tagsByCategory = tags?.reduce((acc, tag) => {
-    if (!acc[tag.category]) {
-      acc[tag.category] = [];
-    }
-    acc[tag.category].push(tag.name);
-    return acc;
-  }, {} as Record<string, string[]>) || {};
-
-  const categories = Object.keys(tagsByCategory);
+  // Extract unique tags from all jobs
+  const allTags = Array.from(new Set(jobs?.flatMap(job => job.tags || []) || []));
 
   if (isLoading) {
     return <div className="animate-pulse space-y-4">
@@ -50,23 +34,21 @@ export const JobFilters = () => {
 
   return (
     <div className="flex flex-col gap-6 w-full md:w-64">
-      {categories.map((category) => (
-        <div key={category}>
-          <h3 className="font-semibold mb-3 text-sage-dark">{category}</h3>
-          <div className="flex flex-wrap gap-2">
-            {tagsByCategory[category].map((tag) => (
-              <Button
-                key={tag}
-                variant="outline"
-                size="sm"
-                className="bg-white hover:bg-sage/10"
-              >
-                {tag}
-              </Button>
-            ))}
-          </div>
+      <div>
+        <h3 className="font-semibold mb-3 text-sage-dark">Tags</h3>
+        <div className="flex flex-wrap gap-2">
+          {allTags.map((tag) => (
+            <Button
+              key={tag}
+              variant="outline"
+              size="sm"
+              className="bg-white hover:bg-sage/10"
+            >
+              {tag}
+            </Button>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
   );
 };
