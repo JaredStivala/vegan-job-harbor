@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { Database } from "@/integrations/supabase/types";
 import { SearchBar } from "@/components/SearchBar";
-import { Briefcase, Building2, Users } from "lucide-react";
+import { Briefcase, Building2, Users, Sprout } from "lucide-react";
 
 type Job = Database['public']['Tables']['veganjobs']['Row'];
 
@@ -42,42 +42,60 @@ const Index = () => {
 
       {/* Hero Section */}
       <div 
-        className="relative bg-center bg-cover min-h-[500px] flex items-center" 
+        className="relative bg-center bg-cover min-h-[600px] flex items-center overflow-hidden" 
         style={{ 
           backgroundImage: 'url("https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=2400&q=80")',
           backgroundPosition: 'center 40%'
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-sage-dark/90 to-sage/60" />
+        {/* Animated background overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-sage-dark/95 to-sage/90">
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_500px_at_50%_50%,#4F6F52,transparent)]" />
+        </div>
+
         <div className="container relative z-10">
-          <div className="max-w-2xl mx-auto space-y-8 text-center">
+          <div className="max-w-2xl mx-auto space-y-12 text-center">
             <div className="space-y-6 animate-fade-in">
-              <h2 className="text-5xl font-bold text-white">
-                Find Your Next <span className="text-cream">Vegan Career</span>
+              <div className="inline-block p-2 px-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-cream mb-4">
+                <span className="flex items-center gap-2">
+                  <Sprout className="w-4 h-4" />
+                  <span>Join the plant-based revolution</span>
+                </span>
+              </div>
+              <h2 className="text-6xl font-bold text-white leading-tight">
+                Find Your Next{' '}
+                <span className="bg-gradient-to-r from-cream to-white bg-clip-text text-transparent">
+                  Vegan Career
+                </span>
               </h2>
-              <p className="text-2xl font-light text-white/90">
-                Join the plant-based <span className="text-cream">revolution</span>
+              <p className="text-2xl font-light text-white/80">
+                Discover opportunities that align with your values
               </p>
             </div>
             
             <SearchBar />
 
-            <div className="flex justify-center gap-8 text-white/90">
-              <div className="flex items-center gap-2">
-                <Building2 className="w-5 h-5" />
-                <span>{jobs?.length || 0} Companies</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Briefcase className="w-5 h-5" />
-                <span>{jobs?.length || 0} Active Jobs</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Users className="w-5 h-5" />
-                <span>1000+ Candidates</span>
-              </div>
+            <div className="grid grid-cols-3 gap-6 mt-12">
+              {[
+                { icon: Building2, label: 'Companies', value: jobs?.length || 0 },
+                { icon: Briefcase, label: 'Active Jobs', value: jobs?.length || 0 },
+                { icon: Users, label: 'Candidates', value: '1000+' }
+              ].map((stat, index) => (
+                <div 
+                  key={index}
+                  className="flex flex-col items-center p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors"
+                >
+                  <stat.icon className="w-6 h-6 text-cream mb-2" />
+                  <span className="text-2xl font-bold text-white">{stat.value}</span>
+                  <span className="text-white/70">{stat.label}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
+
+        {/* Decorative elements */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-cream to-transparent" />
       </div>
       
       {/* Main Content */}
