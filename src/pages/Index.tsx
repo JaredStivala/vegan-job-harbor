@@ -31,15 +31,17 @@ const Index = () => {
       
       return data ?? [];
     },
-    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-    refetchOnWindowFocus: false, // Prevent refetch on window focus
-    initialData: [], // Provide initial data to prevent undefined
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+    initialData: [],
   });
 
   const allTags = useMemo(() => {
     const tags = new Set<string>();
     jobs.forEach(job => {
-      job.tags?.forEach(tag => tags.add(tag));
+      if (Array.isArray(job.tags)) {
+        job.tags.forEach(tag => tags.add(tag));
+      }
     });
     return Array.from(tags);
   }, [jobs]);
@@ -47,7 +49,7 @@ const Index = () => {
   const filteredJobs = useMemo(() => {
     if (!selectedTags.length) return jobs;
     return jobs.filter(job => 
-      selectedTags.every(tag => job.tags?.includes(tag))
+      job.tags && Array.isArray(job.tags) && selectedTags.every(tag => job.tags.includes(tag))
     );
   }, [jobs, selectedTags]);
 
@@ -177,7 +179,7 @@ const Index = () => {
                     type={'Full-time'}
                     salary={job.salary || 'Salary not specified'}
                     posted={job.date_posted ? new Date(job.date_posted).toLocaleDateString() : 'Recently'}
-                    tags={job.tags || ['Vegan']}
+                    tags={Array.isArray(job.tags) ? job.tags : ['Vegan']}
                     url={job.url}
                     description={job.description}
                   />
