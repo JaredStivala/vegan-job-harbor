@@ -40,21 +40,20 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero Section */}
       <div 
-        className="relative bg-center bg-cover min-h-[600px] flex items-center overflow-hidden" 
+        className="relative bg-center bg-cover py-24 flex items-center overflow-hidden" 
         style={{ 
           backgroundImage: 'url("https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=2400&q=80")',
-          backgroundPosition: 'center 40%'
+          backgroundPosition: 'center 40%',
+          minHeight: '600px'
         }}
       >
-        {/* Simplified background overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-sage-dark/70 to-sage/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-sage-dark/60 to-sage/40" />
 
         <div className="container relative z-10">
           <div className="max-w-2xl mx-auto space-y-12 text-center">
-            <div className="space-y-6 animate-fade-in">
-              <div className="inline-block p-2 px-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-cream mb-4">
+            <div className="space-y-6">
+              <div className="inline-block p-2 px-4 rounded-full bg-white/20 backdrop-blur-sm text-white mb-4">
                 <span className="flex items-center gap-2">
                   <Sprout className="w-4 h-4" />
                   <span>Join the plant-based revolution</span>
@@ -62,11 +61,11 @@ const Index = () => {
               </div>
               <h2 className="text-6xl font-bold text-white leading-tight">
                 Find Your Next{' '}
-                <span className="bg-gradient-to-r from-cream to-white bg-clip-text text-transparent">
+                <span className="text-cream">
                   Vegan Career
                 </span>
               </h2>
-              <p className="text-2xl font-light text-white/80">
+              <p className="text-2xl text-white/90">
                 Discover opportunities that align with your values
               </p>
             </div>
@@ -81,19 +80,16 @@ const Index = () => {
               ].map((stat, index) => (
                 <div 
                   key={index}
-                  className="flex flex-col items-center p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors"
+                  className="p-6 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/15 transition-colors"
                 >
-                  <stat.icon className="w-6 h-6 text-cream mb-2" />
-                  <span className="text-2xl font-bold text-white">{stat.value}</span>
-                  <span className="text-white/70">{stat.label}</span>
+                  <stat.icon className="w-8 h-8 text-white mb-3 mx-auto" />
+                  <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
+                  <div className="text-white/80">{stat.label}</div>
                 </div>
               ))}
             </div>
           </div>
         </div>
-
-        {/* Decorative elements */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-cream to-transparent" />
       </div>
       
       {/* Main Content */}
