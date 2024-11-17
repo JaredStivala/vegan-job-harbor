@@ -48,10 +48,8 @@ const Index = () => {
           backgroundPosition: 'center 40%'
         }}
       >
-        {/* Animated background overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-sage-dark/95 to-sage/90">
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_500px_at_50%_50%,#4F6F52,transparent)]" />
-        </div>
+        {/* Simplified background overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-sage-dark/70 to-sage/60" />
 
         <div className="container relative z-10">
           <div className="max-w-2xl mx-auto space-y-12 text-center">
