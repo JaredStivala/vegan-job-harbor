@@ -40,12 +40,3 @@
 .read-the-docs {
   color: #888;
 }
-
-@keyframes move-background {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 100px 100px;
-  }
-}

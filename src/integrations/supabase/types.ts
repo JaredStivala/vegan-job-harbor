@@ -9,41 +9,83 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      job_tags: {
+        Row: {
+          job_id: string
+          tag_id: string
+        }
+        Insert: {
+          job_id: string
+          tag_id: string
+        }
+        Update: {
+          job_id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_tags_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "veganjobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tags: {
+        Row: {
+          category: Database["public"]["Enums"]["job_category"]
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["job_category"]
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["job_category"]
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       veganjobs: {
         Row: {
           company_name: string | null
-          date_closes: string | null
-          date_posted: string | null
           description: string | null
           id: string
           location: string | null
           page_title: string | null
           salary: string | null
-          tags: string[] | null
           url: string
         }
         Insert: {
           company_name?: string | null
-          date_closes?: string | null
-          date_posted?: string | null
           description?: string | null
           id?: string
           location?: string | null
           page_title?: string | null
           salary?: string | null
-          tags?: string[] | null
           url: string
         }
         Update: {
           company_name?: string | null
-          date_closes?: string | null
-          date_posted?: string | null
           description?: string | null
           id?: string
           location?: string | null
           page_title?: string | null
           salary?: string | null
-          tags?: string[] | null
           url?: string
         }
         Relationships: []
