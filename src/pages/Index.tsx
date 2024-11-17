@@ -92,7 +92,6 @@ const Index = () => {
         </div>
       </div>
       
-      {/* Main Content */}
       <div className="container py-12">
         <div className="flex flex-col md:flex-row gap-8">
           <aside className="md:w-64 shrink-0">
@@ -126,7 +125,7 @@ const Index = () => {
                 <p className="text-sage text-sm mt-1">Check back later for new opportunities</p>
               </div>
             ) : (
-              <div className="space-y-4 animate-fade-in">
+              <div className="space-y-4">
                 {jobs?.map((job) => (
                   <JobCard
                     key={job.id}
@@ -135,8 +134,8 @@ const Index = () => {
                     location={job.location || 'Location not specified'}
                     type={'Full-time'}
                     salary={job.salary || 'Salary not specified'}
-                    posted="Just now"
-                    tags={['Vegan', 'Remote']}
+                    posted={job.date_posted ? new Date(job.date_posted).toLocaleDateString() : 'Recently'}
+                    tags={job.tags || ['Vegan']}
                     url={job.url}
                     description={job.description}
                   />
