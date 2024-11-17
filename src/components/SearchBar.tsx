@@ -14,10 +14,9 @@ interface SearchBarProps {
   tags: string[];
   onTagSelect: (tag: string) => void;
   selectedTags: string[];
-  jobs?: any[];
 }
 
-export const SearchBar = ({ tags, onTagSelect, selectedTags, jobs = [] }: SearchBarProps) => {
+export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -32,17 +31,6 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags, jobs = [] }: Search
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  const jobTitles = jobs?.map(job => ({
-    title: job.page_title || 'Untitled Position',
-    type: job.type || 'Job',
-    url: job.url
-  })) || [];
-
-  const handleSelect = (url: string) => {
-    window.open(url, '_blank');
-    setOpen(false);
-  };
-
   return (
     <div className="relative w-full max-w-2xl mx-auto">
       <div className="relative">
@@ -50,7 +38,7 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags, jobs = [] }: Search
           onClick={() => setOpen(true)}
           className="w-full px-6 py-4 pl-14 text-lg rounded-full border-2 border-sage focus:border-sage focus:ring-2 focus:ring-sage/20 outline-none transition-all bg-white shadow-lg text-left text-muted-foreground"
         >
-          Search vegan jobs...
+          Search vegan jobs by tags...
           <kbd className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
             <span className="text-xs">⌘</span>K
           </kbd>
@@ -61,51 +49,35 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags, jobs = [] }: Search
       <CommandDialog open={open} onOpenChange={setOpen}>
         <Command className="rounded-lg border shadow-md">
           <CommandInput 
-            placeholder="Type to search..." 
+            placeholder="Type to search tags..." 
             value={search}
             onValueChange={setSearch}
           />
           <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup heading="Jobs">
-              {jobTitles
-                .filter(job => 
-                  job.title.toLowerCase().includes(search.toLowerCase())
+            <CommandEmpty>No tags found.</CommandEmpty>
+            <CommandGroup heading="Available Tags">
+              {tags
+                .filter(tag => 
+                  tag.toLowerCase().includes(search.toLowerCase())
                 )
-                .map((job, index) => (
+                .map((tag) => (
                   <CommandItem
-                    key={index}
-                    value={job.title}
-                    onSelect={() => handleSelect(job.url)}
+                    key={tag}
+                    value={tag}
+                    onSelect={() => {
+                      onTagSelect(tag);
+                      setOpen(false);
+                    }}
                     className="cursor-pointer"
                   >
-                    <Search className="mr-2 h-4 w-4" />
-                    <span>{job.title}</span>
+                    <span className="mr-2">#</span>
+                    <span>{tag}</span>
+                    {selectedTags.includes(tag) && (
+                      <span className="ml-auto text-sage">Selected</span>
+                    )}
                   </CommandItem>
                 ))}
             </CommandGroup>
-            {search.length > 0 && (
-              <CommandGroup heading="Tags">
-                {tags
-                  .filter(tag => 
-                    tag.toLowerCase().includes(search.toLowerCase())
-                  )
-                  .map((tag) => (
-                    <CommandItem
-                      key={tag}
-                      value={tag}
-                      onSelect={() => {
-                        onTagSelect(tag);
-                        setOpen(false);
-                      }}
-                      className="cursor-pointer"
-                    >
-                      <span className="mr-2">#</span>
-                      <span>{tag}</span>
-                    </CommandItem>
-                  ))}
-              </CommandGroup>
-            )}
           </CommandList>
         </Command>
       </CommandDialog>
