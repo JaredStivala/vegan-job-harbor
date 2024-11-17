@@ -1,6 +1,5 @@
 import { Briefcase, Building2, Users, Sprout } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { JobCard } from "@/components/JobCard";
@@ -41,7 +40,6 @@ const Index = () => {
     return Array.from(tags);
   }, [jobs]);
 
-  // Filter jobs by selected tags
   const filteredJobs = useMemo(() => {
     if (!selectedTags.length) return jobs;
     return jobs?.filter(job => 
@@ -107,6 +105,7 @@ const Index = () => {
               tags={allTags}
               onTagSelect={handleTagSelect}
               selectedTags={selectedTags}
+              jobs={jobs}
             />
 
             <div className="grid grid-cols-3 gap-4">
