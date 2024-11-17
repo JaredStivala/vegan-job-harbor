@@ -12,8 +12,9 @@ const Index = () => {
   const { toast } = useToast();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  const { data: jobs = [], isLoading, error } = useQuery({
-    queryKey: ['jobs'],
+  // Fetch vegan jobs
+  const { data: veganJobs = [] } = useQuery({
+    queryKey: ['veganjobs'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('veganjobs')
@@ -22,7 +23,7 @@ const Index = () => {
       
       if (error) {
         toast({
-          title: "Error loading jobs",
+          title: "Error loading vegan jobs",
           description: error.message,
           variant: "destructive",
         });
@@ -35,6 +36,34 @@ const Index = () => {
     refetchOnWindowFocus: false,
     initialData: [],
   });
+
+  // Fetch animal advocacy jobs
+  const { data: advocacyJobs = [] } = useQuery({
+    queryKey: ['animaladvocacy'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('animaladvocacy')
+        .select('*')
+        .order('date_posted', { ascending: false });
+      
+      if (error) {
+        toast({
+          title: "Error loading advocacy jobs",
+          description: error.message,
+          variant: "destructive",
+        });
+        throw error;
+      }
+      
+      return data ?? [];
+    },
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+    initialData: [],
+  });
+
+  // Combine all jobs
+  const jobs = useMemo(() => [...veganJobs, ...advocacyJobs], [veganJobs, advocacyJobs]);
 
   const allTags = useMemo(() => {
     const tags = new Set<string>();
@@ -155,13 +184,11 @@ const Index = () => {
               </Button>
             </div>
             
-            {isLoading ? (
+            {(!veganJobs.length && !advocacyJobs.length) ? (
               <div className="text-center py-12">
                 <div className="animate-spin w-8 h-8 border-4 border-sage border-t-transparent rounded-full mx-auto mb-4" />
                 <p className="text-sage-dark">Loading jobs...</p>
               </div>
-            ) : error ? (
-              <div className="text-center py-12 text-red-500">Error loading jobs</div>
             ) : filteredJobs.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-lg border border-sage/10">
                 <Briefcase className="w-12 h-12 text-sage/50 mx-auto mb-4" />
