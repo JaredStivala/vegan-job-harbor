@@ -18,13 +18,13 @@ interface JobCardProps {
 }
 
 export const JobCard = ({
-  title = "Position Available",
-  company = "Hiring Company",
-  location = "Remote",
-  type = "Full-time",
-  salary = "Competitive",
-  posted = "Recently",
-  tags = ["Vegan"],
+  title,
+  company,
+  location,
+  type,
+  salary,
+  posted,
+  tags,
   verified = false,
   logo,
   url,
@@ -32,7 +32,6 @@ export const JobCard = ({
 }: JobCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Format description into sections
   const formatDescription = (text: string) => {
     // Extended list of common section headers in job descriptions
     const sectionPatterns = [
@@ -103,13 +102,6 @@ export const JobCard = ({
       );
     });
   };
-
-  // Check if the job has minimal required information
-  const hasMinimalInfo = title !== "Position Available" || company !== "Hiring Company";
-
-  if (!hasMinimalInfo) {
-    return null; // Don't render cards with insufficient information
-  }
 
   return (
     <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-all border border-sage/10 group">

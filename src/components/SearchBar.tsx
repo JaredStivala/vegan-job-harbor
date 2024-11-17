@@ -31,17 +31,6 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  const handleTagSelect = (tag: string) => {
-    onTagSelect(tag);
-    setOpen(false);
-    
-    // Scroll to jobs section
-    const jobsSection = document.getElementById('jobs-section');
-    if (jobsSection) {
-      jobsSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
     <div className="relative w-full max-w-2xl mx-auto">
       <div className="relative">
@@ -75,7 +64,10 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
                   <CommandItem
                     key={tag}
                     value={tag}
-                    onSelect={() => handleTagSelect(tag)}
+                    onSelect={() => {
+                      onTagSelect(tag);
+                      setOpen(false);
+                    }}
                     className="cursor-pointer"
                   >
                     <span className="mr-2">#</span>
