@@ -31,6 +31,18 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
     return () => document.removeEventListener("keydown", down);
   }, []);
 
+  const handleTagSelect = (tag: string) => {
+    onTagSelect(tag);
+    setOpen(false);
+    // Scroll to jobs section after a small delay to ensure the UI has updated
+    setTimeout(() => {
+      const jobsSection = document.querySelector('#jobs-section');
+      if (jobsSection) {
+        jobsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
   return (
     <div className="relative w-full max-w-2xl mx-auto">
       <div className="relative">
@@ -64,10 +76,7 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
                   <CommandItem
                     key={tag}
                     value={tag}
-                    onSelect={() => {
-                      onTagSelect(tag);
-                      setOpen(false);
-                    }}
+                    onSelect={() => handleTagSelect(tag)}
                     className="cursor-pointer"
                   >
                     <span className="mr-2">#</span>

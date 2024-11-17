@@ -127,7 +127,7 @@ const Index = () => {
         </div>
       </div>
       
-      <div className="container py-12">
+      <div id="jobs-section" className="container py-12">
         <div className="flex flex-col md:flex-row gap-8">
           <aside className="md:w-64 shrink-0">
             <JobFilters 
