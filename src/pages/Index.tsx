@@ -105,7 +105,6 @@ const Index = () => {
               tags={allTags}
               onTagSelect={handleTagSelect}
               selectedTags={selectedTags}
-              jobs={jobs}
             />
 
             <div className="grid grid-cols-3 gap-4">
