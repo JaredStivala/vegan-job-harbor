@@ -13,7 +13,7 @@ const Index = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   // Fetch vegan jobs
-  const { data: veganJobs = [] } = useQuery({
+  const { data: veganJobs = [], isLoading: isLoadingVegan } = useQuery({
     queryKey: ['veganjobs'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -38,7 +38,7 @@ const Index = () => {
   });
 
   // Fetch animal advocacy jobs
-  const { data: advocacyJobs = [] } = useQuery({
+  const { data: advocacyJobs = [], isLoading: isLoadingAdvocacy } = useQuery({
     queryKey: ['animaladvocacy'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -184,7 +184,7 @@ const Index = () => {
               </Button>
             </div>
             
-            {(!veganJobs.length && !advocacyJobs.length) ? (
+            {(isLoadingVegan || isLoadingAdvocacy) ? (
               <div className="text-center py-12">
                 <div className="animate-spin w-8 h-8 border-4 border-sage border-t-transparent rounded-full mx-auto mb-4" />
                 <p className="text-sage-dark">Loading jobs...</p>
