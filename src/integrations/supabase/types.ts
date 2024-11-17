@@ -9,6 +9,57 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      job_tags: {
+        Row: {
+          job_id: string
+          tag_id: string
+        }
+        Insert: {
+          job_id: string
+          tag_id: string
+        }
+        Update: {
+          job_id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_tags_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "veganjobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tags: {
+        Row: {
+          category: Database["public"]["Enums"]["job_category"]
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["job_category"]
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["job_category"]
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       veganjobs: {
         Row: {
           company_name: string | null
@@ -47,7 +98,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      job_category: "Food Service" | "Tech" | "Retail" | "Non-Profit" | "Other"
     }
     CompositeTypes: {
       [_ in never]: never

@@ -2,6 +2,13 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
+type Tag = {
+  id: string;
+  name: string;
+  category: string;
+  created_at: string;
+};
+
 export const JobFilters = () => {
   const { data: tags, isLoading } = useQuery({
     queryKey: ['tags'],
@@ -12,7 +19,7 @@ export const JobFilters = () => {
         .order('name');
       
       if (error) throw error;
-      return data;
+      return data as Tag[];
     }
   });
 
