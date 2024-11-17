@@ -33,7 +33,6 @@ const Index = () => {
     }
   });
 
-  // Extract unique tags from all jobs
   const allTags = useMemo(() => {
     const tags = new Set<string>();
     jobs?.forEach(job => {
@@ -58,8 +57,6 @@ const Index = () => {
       return [...prev, tag];
     });
   };
-
-  // ... keep existing code (header and hero section)
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream">
@@ -172,7 +169,7 @@ const Index = () => {
                 {filteredJobs.map((job) => (
                   <JobCard
                     key={job.id}
-                    title={job.page_title || 'Untitled Position'}
+                    title={job.page_title || 'No Title Available'}
                     company={job.company_name || 'Company Not Specified'}
                     location={job.location || 'Location not specified'}
                     type={'Full-time'}
