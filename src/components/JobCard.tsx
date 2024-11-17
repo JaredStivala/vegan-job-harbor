@@ -33,19 +33,71 @@ export const JobCard = ({
   const [isExpanded, setIsExpanded] = useState(false);
 
   const formatDescription = (text: string) => {
-    // Split the text into sections based on common patterns
-    const sections = text.split(/(?=Overview|Location|Hours|Holidays|Salary|Start date|Reports to|Contract type)/g);
+    // Extended list of common section headers in job descriptions
+    const sectionPatterns = [
+      'Overview',
+      'About Us',
+      'About the Role',
+      'About the Position',
+      'Job Description',
+      'Responsibilities',
+      'Key Responsibilities',
+      'Requirements',
+      'Required Skills',
+      'Qualifications',
+      'Required Qualifications',
+      'Preferred Qualifications',
+      'Experience',
+      'Required Experience',
+      'Skills',
+      'Key Skills',
+      'Benefits',
+      'What We Offer',
+      'Perks',
+      'Company Benefits',
+      'Location',
+      'Hours',
+      'Working Hours',
+      'Schedule',
+      'Work Schedule',
+      'Holidays',
+      'Salary',
+      'Compensation',
+      'Start Date',
+      'Start date',
+      'Reports to',
+      'Contract type',
+      'Employment Type',
+      'How to Apply',
+      'Application Process',
+      'Next Steps'
+    ].join('|');
+
+    // Create a regex pattern that matches any of the section headers
+    const regex = new RegExp(`(?=${sectionPatterns})`, 'g');
+    
+    // Split the text into sections based on the patterns
+    const sections = text.split(regex);
     
     return sections.map((section, index) => {
-      // Find the title (if any) at the start of the section
-      const titleMatch = section.match(/^(Overview|Location|Hours|Holidays|Salary|Start date|Reports to|Contract type)/);
+      // Find the title at the start of the section
+      const titleMatch = section.match(new RegExp(`^(${sectionPatterns})`));
       const title = titleMatch ? titleMatch[0] : '';
       const content = titleMatch ? section.slice(title.length) : section;
       
+      // Only render sections that have content
+      if (!content.trim()) return null;
+      
       return (
-        <div key={index} className="mb-4">
-          {title && <h4 className="font-semibold text-sage-dark mb-2">{title}</h4>}
-          <p className="text-gray-600 leading-relaxed">{content.trim()}</p>
+        <div key={index} className="mb-6 last:mb-0">
+          {title && (
+            <h4 className="font-semibold text-sage-dark mb-3 text-lg">
+              {title}
+            </h4>
+          )}
+          <p className="text-gray-600 leading-relaxed whitespace-pre-line">
+            {content.trim()}
+          </p>
         </div>
       );
     });
