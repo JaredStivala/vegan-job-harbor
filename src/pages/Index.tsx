@@ -27,7 +27,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream">
-      {/* Header */}
       <header className="border-b border-sage/10 bg-white/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container flex justify-between items-center py-4">
           <h1 className="text-2xl font-bold text-sage-dark flex items-center gap-2">
@@ -80,7 +79,7 @@ const Index = () => {
           </div>
         </div>
       </div>
-
+      
       {/* Main Content */}
       <div className="container py-12">
         <div className="flex flex-col md:flex-row gap-8">
@@ -127,6 +126,7 @@ const Index = () => {
                     posted="Just now"
                     tags={['Vegan', 'Remote']}
                     url={job.url}
+                    description={job.description}
                   />
                 ))}
               </div>
