@@ -27,7 +27,7 @@ const Index = () => {
           description: error.message,
           variant: "destructive",
         });
-        throw error;
+        return [];
       }
       
       return data ?? [];
@@ -52,7 +52,7 @@ const Index = () => {
           description: error.message,
           variant: "destructive",
         });
-        throw error;
+        return [];
       }
       
       return data ?? [];
@@ -63,12 +63,15 @@ const Index = () => {
   });
 
   // Combine all jobs
-  const jobs = useMemo(() => [...veganJobs, ...advocacyJobs], [veganJobs, advocacyJobs]);
+  const jobs = useMemo(() => {
+    const allJobs = [...veganJobs, ...advocacyJobs];
+    return allJobs.filter(job => job !== null);
+  }, [veganJobs, advocacyJobs]);
 
   const allTags = useMemo(() => {
     const tags = new Set<string>();
     jobs.forEach(job => {
-      if (Array.isArray(job.tags)) {
+      if (job && Array.isArray(job.tags)) {
         job.tags.forEach(tag => tags.add(tag));
       }
     });
