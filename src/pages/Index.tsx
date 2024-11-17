@@ -1,17 +1,16 @@
-import { JobFilters } from "@/components/JobFilters";
-import { JobCard } from "@/components/JobCard";
+import { Briefcase, Building2, Users, Sprout } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
-import { Database } from "@/integrations/supabase/types";
+import { JobCard } from "@/components/JobCard";
 import { SearchBar } from "@/components/SearchBar";
-import { Briefcase, Building2, Users, Sprout } from "lucide-react";
-
-type Job = Database['public']['Tables']['veganjobs']['Row'];
+import { useToast } from "@/components/ui/use-toast";
+import { useState, useMemo } from "react";
 
 const Index = () => {
   const { toast } = useToast();
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   const { data: jobs, isLoading, error } = useQuery({
     queryKey: ['jobs'],
@@ -32,6 +31,25 @@ const Index = () => {
       return data;
     }
   });
+
+  // Extract unique tags from all jobs
+  const allTags = useMemo(() => {
+    const tags = new Set<string>();
+    jobs?.forEach(job => {
+      job.tags?.forEach(tag => tags.add(tag));
+    });
+    return Array.from(tags);
+  }, [jobs]);
+
+  // Filter jobs by selected tag
+  const filteredJobs = useMemo(() => {
+    if (!selectedTag) return jobs;
+    return jobs?.filter(job => job.tags?.includes(selectedTag));
+  }, [jobs, selectedTag]);
+
+  const handleTagSelect = (tag: string) => {
+    setSelectedTag(prevTag => prevTag === tag ? null : tag);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream">
@@ -78,7 +96,11 @@ const Index = () => {
               </p>
             </div>
             
-            <SearchBar />
+            <SearchBar 
+              tags={allTags}
+              onTagSelect={handleTagSelect}
+              selectedTag={selectedTag}
+            />
 
             <div className="grid grid-cols-3 gap-4">
               {[
@@ -103,7 +125,20 @@ const Index = () => {
       <div className="container py-12">
         <div className="flex flex-col md:flex-row gap-8">
           <aside className="md:w-64 shrink-0">
-            <JobFilters />
+            <div className="flex flex-col gap-6 w-full">
+              <div>
+                <h3 className="font-semibold mb-3 text-sage-dark">Active Filters</h3>
+                {selectedTag && (
+                  <Badge 
+                    variant="default" 
+                    className="bg-sage cursor-pointer"
+                    onClick={() => setSelectedTag(null)}
+                  >
+                    {selectedTag} ×
+                  </Badge>
+                )}
+              </div>
+            </div>
           </aside>
           
           <div className="flex-1 space-y-6">
@@ -111,7 +146,7 @@ const Index = () => {
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
                 <span className="text-sage bg-sage/10 px-2 py-1 rounded-full text-sm">
-                  {jobs?.length || 0}
+                  {filteredJobs?.length || 0}
                 </span>
               </div>
               <Button variant="outline" className="border-sage hover:bg-sage/10">
@@ -126,15 +161,15 @@ const Index = () => {
               </div>
             ) : error ? (
               <div className="text-center py-12 text-red-500">Error loading jobs</div>
-            ) : !jobs || jobs.length === 0 ? (
+            ) : !filteredJobs || filteredJobs.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-lg border border-sage/10">
                 <Briefcase className="w-12 h-12 text-sage/50 mx-auto mb-4" />
                 <p className="text-sage-dark font-medium">No jobs found</p>
-                <p className="text-sage text-sm mt-1">Check back later for new opportunities</p>
+                <p className="text-sage text-sm mt-1">Try adjusting your filters</p>
               </div>
             ) : (
               <div className="space-y-4">
-                {jobs.map((job) => (
+                {filteredJobs.map((job) => (
                   <JobCard
                     key={job.id}
                     title={job.page_title || 'Untitled Position'}
