@@ -8,7 +8,7 @@ interface JobCardProps {
   company: string;
   location: string;
   type: string;
-  salary: string;
+  salary: string | null;
   posted: string;
   tags: string[];
   verified?: boolean;
@@ -103,6 +103,8 @@ export const JobCard = ({
     });
   };
 
+  const shouldShowSalary = salary && !['N/A', 'Salary not specified'].includes(salary);
+
   return (
     <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-all border border-sage/10 group">
       <div 
@@ -142,7 +144,7 @@ export const JobCard = ({
                 <MapPin className="w-3 h-3 mr-1" />
                 {location}
               </Badge>
-              {salary && (
+              {shouldShowSalary && (
                 <Badge variant="outline" className="bg-white">
                   {salary}
                 </Badge>
