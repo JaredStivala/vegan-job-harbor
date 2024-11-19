@@ -12,38 +12,61 @@ const Index = () => {
   const { toast } = useToast();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  const { data: jobs, isLoading, error } = useQuery({
+  const { data: jobs = [], isLoading, error } = useQuery({
     queryKey: ['jobs'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: veganJobs, error: veganError } = await supabase
         .from('veganjobs')
         .select('*')
         .order('date_posted', { ascending: false });
       
-      if (error) {
+      if (veganError) {
         toast({
-          title: "Error loading jobs",
-          description: error.message,
+          title: "Error loading vegan jobs",
+          description: veganError.message,
           variant: "destructive",
         });
-        throw error;
+        return [];
       }
-      return data;
-    }
+
+      const { data: advocacyJobs, error: advocacyError } = await supabase
+        .from('animaladvocacy')
+        .select('*')
+        .order('date_posted', { ascending: false });
+      
+      if (advocacyError) {
+        toast({
+          title: "Error loading advocacy jobs",
+          description: advocacyError.message,
+          variant: "destructive",
+        });
+        return veganJobs || [];
+      }
+
+      // Combine and filter out any null entries
+      const allJobs = [...(veganJobs || []), ...(advocacyJobs || [])].filter(job => 
+        job && job.page_title && job.company_name
+      );
+
+      return allJobs;
+    },
+    initialData: []
   });
 
   const allTags = useMemo(() => {
     const tags = new Set<string>();
-    jobs?.forEach(job => {
-      job.tags?.forEach(tag => tags.add(tag));
+    jobs.forEach(job => {
+      if (Array.isArray(job.tags)) {
+        job.tags.forEach(tag => tags.add(tag));
+      }
     });
     return Array.from(tags);
   }, [jobs]);
 
   const filteredJobs = useMemo(() => {
     if (!selectedTags.length) return jobs;
-    return jobs?.filter(job => 
-      selectedTags.every(tag => job.tags?.includes(tag))
+    return jobs.filter(job => 
+      job.tags && selectedTags.every(tag => job.tags.includes(tag))
     );
   }, [jobs, selectedTags]);
 
@@ -141,7 +164,7 @@ const Index = () => {
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
                 <span className="text-sage bg-sage/10 px-2 py-1 rounded-full text-sm">
-                  {filteredJobs?.length || 0}
+                  {filteredJobs.length}
                 </span>
               </div>
               <Button variant="outline" className="border-sage hover:bg-sage/10">
@@ -156,7 +179,7 @@ const Index = () => {
               </div>
             ) : error ? (
               <div className="text-center py-12 text-red-500">Error loading jobs</div>
-            ) : !filteredJobs || filteredJobs.length === 0 ? (
+            ) : filteredJobs.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-lg border border-sage/10">
                 <Briefcase className="w-12 h-12 text-sage/50 mx-auto mb-4" />
                 <p className="text-sage-dark font-medium">No jobs found</p>
@@ -167,13 +190,13 @@ const Index = () => {
                 {filteredJobs.map((job) => (
                   <JobCard
                     key={job.id}
-                    title={job.page_title || 'No Title Available'}
-                    company={job.company_name || 'Company Not Specified'}
+                    title={job.page_title}
+                    company={job.company_name}
                     location={job.location || 'Location not specified'}
-                    type={'Full-time'}
+                    type={job.type || 'Full-time'}
                     salary={job.salary || 'Salary not specified'}
                     posted={job.date_posted ? new Date(job.date_posted).toLocaleDateString() : 'Recently'}
-                    tags={job.tags || ['Vegan']}
+                    tags={Array.isArray(job.tags) ? job.tags : ['Vegan']}
                     url={job.url}
                     description={job.description}
                   />
