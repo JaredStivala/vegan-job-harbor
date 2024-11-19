@@ -142,13 +142,11 @@ export const JobCard = ({
                 <MapPin className="w-3 h-3 mr-1" />
                 {location}
               </Badge>
-              <Badge variant="outline" className="bg-white">
-                <Clock className="w-3 h-3 mr-1" />
-                {type}
-              </Badge>
-              <Badge variant="outline" className="bg-white">
-                {salary}
-              </Badge>
+              {salary && (
+                <Badge variant="outline" className="bg-white">
+                  {salary}
+                </Badge>
+              )}
             </div>
             
             <div className="flex items-center justify-between">
