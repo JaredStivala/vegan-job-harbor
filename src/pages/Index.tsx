@@ -1,12 +1,14 @@
-import { Briefcase, Building2, Users, Sprout } from "lucide-react";
+import { Briefcase, Sprout } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { JobCard } from "@/components/JobCard";
 import { SearchBar } from "@/components/SearchBar";
 import { JobFilters } from "@/components/JobFilters";
 import { useToast } from "@/components/ui/use-toast";
 import { useState, useMemo } from "react";
+import { JobStats } from "@/components/JobStats";
+import { JobsList } from "@/components/JobsList";
+import type { Job } from "@/types/job";
 
 const Index = () => {
   const { toast } = useToast();
@@ -15,6 +17,7 @@ const Index = () => {
   const { data: jobs = [], isLoading, error } = useQuery({
     queryKey: ['jobs'],
     queryFn: async () => {
+      // Fetch vegan jobs
       const { data: veganJobs, error: veganError } = await supabase
         .from('veganjobs')
         .select('*')
@@ -29,6 +32,7 @@ const Index = () => {
         return [];
       }
 
+      // Fetch advocacy jobs
       const { data: advocacyJobs, error: advocacyError } = await supabase
         .from('animaladvocacy')
         .select('*')
@@ -43,10 +47,19 @@ const Index = () => {
         return veganJobs || [];
       }
 
-      // Combine and filter out any null entries
-      const allJobs = [...(veganJobs || []), ...(advocacyJobs || [])].filter(job => 
-        job && job.page_title && job.company_name
-      );
+      // Combine and strictly filter out incomplete entries
+      const allJobs = [...(veganJobs || []), ...(advocacyJobs || [])]
+        .filter((job): job is Job => {
+          return Boolean(
+            job &&
+            typeof job.id === 'string' &&
+            typeof job.page_title === 'string' &&
+            job.page_title.trim() !== '' &&
+            typeof job.company_name === 'string' &&
+            job.company_name.trim() !== '' &&
+            typeof job.url === 'string'
+          );
+        });
 
       return allJobs;
     },
@@ -130,22 +143,7 @@ const Index = () => {
               selectedTags={selectedTags}
             />
 
-            <div className="grid grid-cols-3 gap-4">
-              {[
-                { icon: Building2, label: 'Companies', value: jobs?.length || 0 },
-                { icon: Briefcase, label: 'Active Jobs', value: jobs?.length || 0 },
-                { icon: Users, label: 'Candidates', value: '1000+' }
-              ].map((stat, index) => (
-                <div 
-                  key={index}
-                  className="p-4 rounded-xl bg-white/10 border border-white/20 hover:bg-white/15 transition-colors"
-                >
-                  <stat.icon className="w-6 h-6 text-white mb-2 mx-auto" />
-                  <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
-                  <div className="text-white/80 text-sm">{stat.label}</div>
-                </div>
-              ))}
-            </div>
+            <JobStats jobCount={jobs.length} />
           </div>
         </div>
       </div>
@@ -159,7 +157,7 @@ const Index = () => {
             />
           </aside>
           
-          <div className="flex-1 space-y-6">
+          <div className="flex-1">
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
@@ -172,37 +170,11 @@ const Index = () => {
               </Button>
             </div>
             
-            {isLoading ? (
-              <div className="text-center py-12">
-                <div className="animate-spin w-8 h-8 border-4 border-sage border-t-transparent rounded-full mx-auto mb-4" />
-                <p className="text-sage-dark">Loading jobs...</p>
-              </div>
-            ) : error ? (
-              <div className="text-center py-12 text-red-500">Error loading jobs</div>
-            ) : filteredJobs.length === 0 ? (
-              <div className="text-center py-12 bg-white rounded-lg border border-sage/10">
-                <Briefcase className="w-12 h-12 text-sage/50 mx-auto mb-4" />
-                <p className="text-sage-dark font-medium">No jobs found</p>
-                <p className="text-sage text-sm mt-1">Try adjusting your filters</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {filteredJobs.map((job) => (
-                  <JobCard
-                    key={job.id}
-                    title={job.page_title}
-                    company={job.company_name}
-                    location={job.location || 'Location not specified'}
-                    type={job.type || 'Full-time'}
-                    salary={job.salary || 'Salary not specified'}
-                    posted={job.date_posted ? new Date(job.date_posted).toLocaleDateString() : 'Recently'}
-                    tags={Array.isArray(job.tags) ? job.tags : ['Vegan']}
-                    url={job.url}
-                    description={job.description}
-                  />
-                ))}
-              </div>
-            )}
+            <JobsList 
+              jobs={filteredJobs}
+              isLoading={isLoading}
+              error={error as Error}
+            />
           </div>
         </div>
       </div>
