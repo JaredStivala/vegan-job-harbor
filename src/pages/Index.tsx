@@ -56,13 +56,33 @@ const Index = () => {
     initialData: []
   });
 
+  const { data: vevolutionJobs = [], isLoading: isLoadingVevolution, error: vevolutionError } = useQuery({
+    queryKey: ['vevolution'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('vevolution')
+        .select('*')
+        .order('date_posted', { ascending: false });
+      
+      if (error) {
+        toast({
+          title: "Error loading vevolution jobs",
+          description: error.message,
+          variant: "destructive",
+        });
+        return [];
+      }
+      return data;
+    },
+    initialData: []
+  });
+
   const allJobs = useMemo(() => {
-    const jobs = [...veganJobs, ...advocacyJobs].filter((job): job is Job => {
+    const jobs = [...veganJobs, ...advocacyJobs, ...vevolutionJobs].filter((job): job is Job => {
       return Boolean(
         job &&
         job.id &&
-        job.url &&
-        (job.page_title || job.company_name) // At least one of these should be present
+        job.url
       );
     });
 
@@ -71,7 +91,7 @@ const Index = () => {
     return jobs.filter(job => 
       job.tags?.some(tag => selectedTags.includes(tag))
     );
-  }, [veganJobs, advocacyJobs, selectedTags]);
+  }, [veganJobs, advocacyJobs, vevolutionJobs, selectedTags]);
 
   const handleTagSelect = (tag: string) => {
     setSelectedTags(prev => {
@@ -162,8 +182,8 @@ const Index = () => {
             
             <JobsList 
               jobs={allJobs}
-              isLoading={isLoadingVegan || isLoadingAdvocacy}
-              error={veganError || advocacyError}
+              isLoading={isLoadingVegan || isLoadingAdvocacy || isLoadingVevolution}
+              error={veganError || advocacyError || vevolutionError}
             />
           </div>
         </div>
