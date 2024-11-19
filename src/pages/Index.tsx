@@ -9,6 +9,7 @@ import { useState, useMemo } from "react";
 import { JobStats } from "@/components/JobStats";
 import { JobsList } from "@/components/JobsList";
 import type { Job } from "@/types/job";
+import type { Database } from "@/integrations/supabase/types";
 
 const Index = () => {
   const { toast } = useToast();

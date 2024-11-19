@@ -2,11 +2,13 @@ export interface Job {
   id: string;
   page_title: string;
   company_name: string;
-  location?: string;
+  location?: string | null;
   type?: string;
-  salary?: string;
-  date_posted?: string;
-  tags?: string[];
+  salary?: string | null;
+  date_posted?: string | null;
+  date_closes?: string | null;
+  tags?: string[] | null;
   url: string;
-  description?: string;
+  description?: string | null;
+  updated_at?: string | null;
 }
