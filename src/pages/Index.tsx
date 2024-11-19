@@ -9,80 +9,69 @@ import { useState, useMemo } from "react";
 import { JobStats } from "@/components/JobStats";
 import { JobsList } from "@/components/JobsList";
 import type { Job } from "@/types/job";
-import type { Database } from "@/integrations/supabase/types";
 
 const Index = () => {
   const { toast } = useToast();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  const { data: jobs = [], isLoading, error } = useQuery({
-    queryKey: ['jobs'],
+  const { data: veganJobs = [], isLoading: isLoadingVegan, error: veganError } = useQuery({
+    queryKey: ['veganjobs'],
     queryFn: async () => {
-      // Fetch vegan jobs
-      const { data: veganJobs, error: veganError } = await supabase
+      const { data, error } = await supabase
         .from('veganjobs')
         .select('*')
         .order('date_posted', { ascending: false });
       
-      if (veganError) {
+      if (error) {
         toast({
           title: "Error loading vegan jobs",
-          description: veganError.message,
+          description: error.message,
           variant: "destructive",
         });
         return [];
       }
-
-      // Fetch advocacy jobs
-      const { data: advocacyJobs, error: advocacyError } = await supabase
-        .from('animaladvocacy')
-        .select('*')
-        .order('date_posted', { ascending: false });
-      
-      if (advocacyError) {
-        toast({
-          title: "Error loading advocacy jobs",
-          description: advocacyError.message,
-          variant: "destructive",
-        });
-        return veganJobs || [];
-      }
-
-      // Combine and strictly filter out incomplete entries
-      const allJobs = [...(veganJobs || []), ...(advocacyJobs || [])]
-        .filter((job): job is Job => {
-          return Boolean(
-            job &&
-            typeof job.id === 'string' &&
-            typeof job.page_title === 'string' &&
-            job.page_title.trim() !== '' &&
-            typeof job.company_name === 'string' &&
-            job.company_name.trim() !== '' &&
-            typeof job.url === 'string'
-          );
-        });
-
-      return allJobs;
+      return data;
     },
     initialData: []
   });
 
-  const allTags = useMemo(() => {
-    const tags = new Set<string>();
-    jobs.forEach(job => {
-      if (Array.isArray(job.tags)) {
-        job.tags.forEach(tag => tags.add(tag));
+  const { data: advocacyJobs = [], isLoading: isLoadingAdvocacy, error: advocacyError } = useQuery({
+    queryKey: ['advocacy'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('animaladvocacy')
+        .select('*')
+        .order('date_posted', { ascending: false });
+      
+      if (error) {
+        toast({
+          title: "Error loading advocacy jobs",
+          description: error.message,
+          variant: "destructive",
+        });
+        return [];
       }
-    });
-    return Array.from(tags);
-  }, [jobs]);
+      return data;
+    },
+    initialData: []
+  });
 
-  const filteredJobs = useMemo(() => {
-    if (!selectedTags.length) return jobs;
+  const allJobs = useMemo(() => {
+    const jobs = [...veganJobs, ...advocacyJobs].filter((job): job is Job => {
+      return Boolean(
+        job &&
+        job.id &&
+        job.url &&
+        (job.page_title || job.company_name) // At least one of these should be present
+      );
+    });
+
+    if (selectedTags.length === 0) return jobs;
+    
     return jobs.filter(job => 
-      job.tags && selectedTags.every(tag => job.tags.includes(tag))
+      job.tags?.some(tag => selectedTags.includes(tag))
     );
-  }, [jobs, selectedTags]);
+  }, [veganJobs, advocacyJobs, selectedTags]);
 
   const handleTagSelect = (tag: string) => {
     setSelectedTags(prev => {
@@ -139,12 +128,12 @@ const Index = () => {
             </div>
             
             <SearchBar 
-              tags={allTags}
+              tags={allJobs.flatMap(job => job.tags || [])}
               onTagSelect={handleTagSelect}
               selectedTags={selectedTags}
             />
 
-            <JobStats jobCount={jobs.length} />
+            <JobStats jobCount={allJobs.length} />
           </div>
         </div>
       </div>
@@ -163,7 +152,7 @@ const Index = () => {
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
                 <span className="text-sage bg-sage/10 px-2 py-1 rounded-full text-sm">
-                  {filteredJobs.length}
+                  {allJobs.length}
                 </span>
               </div>
               <Button variant="outline" className="border-sage hover:bg-sage/10">
@@ -172,9 +161,9 @@ const Index = () => {
             </div>
             
             <JobsList 
-              jobs={filteredJobs}
-              isLoading={isLoading}
-              error={error as Error}
+              jobs={allJobs}
+              isLoading={isLoadingVegan || isLoadingAdvocacy}
+              error={veganError || advocacyError}
             />
           </div>
         </div>

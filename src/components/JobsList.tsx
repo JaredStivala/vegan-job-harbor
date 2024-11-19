@@ -1,7 +1,6 @@
 import { Briefcase } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { JobCard } from "@/components/JobCard";
-import { Job } from "@/types/job";
+import type { Job } from "@/types/job";
 
 interface JobsListProps {
   jobs: Job[];
@@ -38,8 +37,8 @@ export const JobsList = ({ jobs, isLoading, error }: JobsListProps) => {
       {jobs.map((job) => (
         <JobCard
           key={job.id}
-          title={job.page_title}
-          company={job.company_name}
+          title={job.page_title || 'Position Available'}
+          company={job.company_name || 'Company Name Not Available'}
           location={job.location || 'Location not specified'}
           type={job.type || 'Full-time'}
           salary={job.salary || 'Salary not specified'}
