@@ -19,7 +19,9 @@ const categories = {
     "Host/Hostess",
     "Restaurant Manager",
     "Kitchen Manager",
-    "Food Service"
+    "Food Service",
+    "Catering",
+    "Hospitality Management"
   ],
   "Food Industry": [
     "Food Production",
@@ -28,7 +30,13 @@ const categories = {
     "Recipe Development",
     "Food Science",
     "Product Development",
-    "Kitchen Operations"
+    "Kitchen Operations",
+    "Food Manufacturing",
+    "Food Technology",
+    "Food Innovation",
+    "Food Distribution",
+    "Supply Chain",
+    "Procurement"
   ],
   "Business & Operations": [
     "Operations Manager",
@@ -37,7 +45,14 @@ const categories = {
     "Marketing Manager",
     "HR Manager",
     "Finance Manager",
-    "Account Manager"
+    "Account Manager",
+    "Operations",
+    "Strategy",
+    "Business Strategy",
+    "Business Operations",
+    "Administration",
+    "Executive",
+    "Consulting"
   ],
   "Technology": [
     "Software Engineer",
@@ -45,7 +60,12 @@ const categories = {
     "UX Designer",
     "Product Manager",
     "Data Analyst",
-    "IT Support"
+    "IT Support",
+    "Software Development",
+    "Engineering",
+    "Technical",
+    "Technology",
+    "Development"
   ],
   "Retail & Service": [
     "Retail Manager",
@@ -53,14 +73,53 @@ const categories = {
     "Store Manager",
     "Cashier",
     "Customer Service",
-    "Visual Merchandiser"
+    "Visual Merchandiser",
+    "Retail",
+    "Sales",
+    "Service"
+  ],
+  "Marketing & Communications": [
+    "Marketing",
+    "Communications",
+    "Social Media",
+    "Digital Marketing",
+    "Content Creation",
+    "Public Relations",
+    "Brand Management",
+    "Community Management",
+    "Advertising"
+  ],
+  "Non-Profit & Advocacy": [
+    "Non-Profit",
+    "Advocacy",
+    "Community Outreach",
+    "Program Management",
+    "Volunteer Management",
+    "Fundraising",
+    "Grant Writing",
+    "Animal Rights",
+    "Animal Welfare",
+    "Vegan Advocacy"
+  ],
+  "Education & Research": [
+    "Education",
+    "Research",
+    "Teaching",
+    "Training",
+    "Curriculum Development",
+    "Program Development",
+    "Academic"
   ],
   "Employment Type": [
     "Full-time",
     "Part-time",
     "Contract",
     "Internship",
-    "Remote"
+    "Remote",
+    "Hybrid",
+    "Temporary",
+    "Freelance",
+    "Volunteer"
   ],
   "Experience Level": [
     "Entry Level",
@@ -69,7 +128,23 @@ const categories = {
     "Lead",
     "Manager",
     "Director",
-    "Executive"
+    "Executive",
+    "Junior",
+    "Associate",
+    "Principal"
+  ],
+  "Other Skills": [
+    "Writing",
+    "Editing",
+    "Analysis",
+    "Leadership",
+    "Project Management",
+    "Event Planning",
+    "Customer Relations",
+    "Coordination",
+    "Design",
+    "Planning",
+    "Management"
   ]
 };
 
