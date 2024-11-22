@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { CategorizedTags } from "./CategorizedTags";
 
 interface JobFiltersProps {
   selectedTags: string[];
@@ -40,20 +40,12 @@ export const JobFilters = ({ selectedTags, onTagSelect }: JobFiltersProps) => {
   return (
     <div className="flex flex-col gap-6 w-full md:w-64">
       <div>
-        <h3 className="font-semibold mb-3 text-sage-dark">Tags</h3>
-        <div className="flex flex-wrap gap-2">
-          {allTags.map((tag) => (
-            <Button
-              key={tag}
-              variant={selectedTags.includes(tag) ? "default" : "outline"}
-              size="sm"
-              className={selectedTags.includes(tag) ? "bg-sage hover:bg-sage-dark" : "bg-white hover:bg-sage/10"}
-              onClick={() => onTagSelect(tag)}
-            >
-              {tag}
-            </Button>
-          ))}
-        </div>
+        <h3 className="font-semibold mb-3 text-sage-dark">Filters</h3>
+        <CategorizedTags
+          tags={allTags}
+          selectedTags={selectedTags}
+          onTagSelect={onTagSelect}
+        />
       </div>
     </div>
   );

@@ -16,7 +16,7 @@ export const JobStats = ({ jobCount }: JobStatsProps) => {
       {stats.map((stat, index) => (
         <div 
           key={index}
-          className="p-4 rounded-xl bg-white/10 border border-white/20 hover:bg-white/15 transition-colors"
+          className="p-4 rounded-xl bg-white/10 border border-white/20"
         >
           <stat.icon className="w-6 h-6 text-white mb-2 mx-auto" />
           <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
