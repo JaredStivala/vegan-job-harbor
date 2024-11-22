@@ -20,7 +20,7 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [animationIndex, setAnimationIndex] = useState(-1);
-  const placeholderText = "Search vegan jobs by tags...";
+  const placeholderText = "Search vegan jobs by tags ...";
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -45,13 +45,13 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
           return;
         }
         setAnimationIndex(currentIndex);
-      }, 50); // Speed of the wave effect
+      }, 70); // Slightly slower speed for more noticeable effect
 
       // Cleanup the inner interval
       setTimeout(() => {
         clearInterval(animationCycle);
         setAnimationIndex(-1);
-      }, placeholderText.length * 50 + 100);
+      }, placeholderText.length * 70 + 100);
     }, 5000); // Run every 5 seconds
 
     return () => clearInterval(interval);
@@ -76,8 +76,10 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
         key={index}
         className={`inline-block transition-all duration-200 ${
           index === animationIndex
-            ? 'transform scale-125 text-sage-dark'
-            : 'scale-100'
+            ? 'transform scale-150 text-sage-dark font-bold'
+            : char === ' ' 
+              ? 'px-1' // Add spacing for spaces
+              : 'scale-100'
         }`}
         style={{ 
           transitionDelay: `${index * 30}ms`,
@@ -95,7 +97,7 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
           onClick={() => setOpen(true)}
           className="w-full px-6 py-4 pl-14 text-lg rounded-full border-2 border-sage hover:border-sage-dark focus:border-sage-dark focus:ring-2 focus:ring-sage/20 outline-none transition-all bg-white/90 backdrop-blur-sm shadow-lg text-left"
         >
-          <div className="text-gray-600 font-medium">
+          <div className="text-gray-600 font-medium tracking-wide">
             {renderPlaceholder()}
           </div>
           <kbd className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
