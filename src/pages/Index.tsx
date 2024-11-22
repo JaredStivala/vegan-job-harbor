@@ -158,23 +158,29 @@ const Index = () => {
           minHeight: '400px'
         }}
       >
+        <div 
+          className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
+          style={{
+            background: 'linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.4))'
+          }}
+        />
         <div className="container relative z-10">
           <div className="max-w-2xl mx-auto space-y-8 text-center">
             <div className="space-y-4">
-              <div className="inline-block p-2 px-4 rounded-full bg-white/20 text-white mb-2">
+              <div className="inline-block p-2 px-4 rounded-full bg-white/20 backdrop-blur-sm text-white mb-2 border border-white/20 shadow-lg">
                 <span className="flex items-center gap-2">
                   <Sprout className="w-4 h-4" />
-                  <span>Join the plant-based revolution</span>
+                  <span className="font-medium tracking-wide">Join the <span className="font-bold">plant-based</span> revolution</span>
                 </span>
               </div>
-              <h2 className="text-5xl font-bold text-white leading-tight">
+              <h2 className="text-5xl font-bold text-white leading-tight tracking-tight drop-shadow-lg">
                 Find Your Next{' '}
-                <span className="text-cream">
+                <span className="text-cream font-extrabold bg-gradient-to-r from-sage to-cream bg-clip-text text-transparent">
                   Vegan Career
                 </span>
               </h2>
-              <p className="text-xl text-white/90">
-                Discover opportunities that align with your values
+              <p className="text-xl text-white/90 font-medium drop-shadow-md tracking-wide">
+                Discover opportunities that <span className="text-cream font-semibold">align with your values</span>
               </p>
             </div>
             
@@ -203,7 +209,7 @@ const Index = () => {
           </svg>
         </div>
       </div>
-      
+
       <div className="container py-8">
         {isMapVisible && (
           <div className="mb-8">
