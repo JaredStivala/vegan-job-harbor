@@ -175,7 +175,7 @@ const Index = () => {
               </div>
               <h2 className="text-5xl font-bold text-white leading-tight tracking-tight drop-shadow-lg">
                 Find Your Next{' '}
-                <span className="text-cream font-extrabold bg-gradient-to-r from-sage to-cream bg-clip-text text-transparent">
+                <span className="text-cream font-extrabold bg-gradient-to-r from-sage to-cream bg-clip-text text-transparent drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)]">
                   Vegan Career
                 </span>
               </h2>
