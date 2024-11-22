@@ -13,9 +13,16 @@ interface JobMapProps {
 export const JobMap = ({ jobs, onJobSelect }: JobMapProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
+  const markersRef = useRef<mapboxgl.Marker[]>([]);
   const [lng] = useState(-40);
   const [lat] = useState(35);
   const [zoom] = useState(1.5);
+
+  // Clean up markers when component unmounts or jobs change
+  const clearMarkers = () => {
+    markersRef.current.forEach(marker => marker.remove());
+    markersRef.current = [];
+  };
 
   useEffect(() => {
     if (!mapContainer.current || map.current) return;
@@ -35,6 +42,7 @@ export const JobMap = ({ jobs, onJobSelect }: JobMapProps) => {
     map.current.addControl(nav, 'top-right');
 
     return () => {
+      clearMarkers();
       map.current?.remove();
     };
   }, [lng, lat, zoom]);
@@ -42,63 +50,75 @@ export const JobMap = ({ jobs, onJobSelect }: JobMapProps) => {
   useEffect(() => {
     if (!map.current) return;
 
-    map.current.on('load', () => {
-      if (!map.current) return;
+    const addMarkers = async () => {
+      clearMarkers();
 
-      jobs.forEach(job => {
-        if (!job.location) return;
+      for (const job of jobs) {
+        if (!job.location) continue;
 
         try {
-          fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(job.location)}.json?access_token=${mapboxgl.accessToken}`)
-            .then(response => response.json())
-            .then(data => {
-              if (data.features && data.features.length > 0) {
-                const [lng, lat] = data.features[0].center;
+          const response = await fetch(
+            `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(job.location)}.json?access_token=${mapboxgl.accessToken}`
+          );
+          const data = await response.json();
 
-                const popup = new mapboxgl.Popup({ 
-                  offset: 25,
-                  closeButton: false,
-                  className: 'custom-popup'
-                })
-                  .setHTML(`
-                    <div class="p-3 min-w-[200px]">
-                      <h3 class="font-bold text-sage-dark mb-1">${job.page_title || 'Untitled Position'}</h3>
-                      <p class="text-sm text-gray-600 mb-1">${job.company_name || 'Company'}</p>
-                      ${job.salary ? `<p class="text-sm text-sage">${job.salary}</p>` : ''}
-                    </div>
-                  `);
+          if (data.features && data.features.length > 0) {
+            const [lng, lat] = data.features[0].center;
 
-                const marker = new mapboxgl.Marker({
-                  color: '#86A789',
-                  scale: 0.8
-                })
-                  .setLngLat([lng, lat])
-                  .setPopup(popup)
-                  .addTo(map.current!);
+            const popup = new mapboxgl.Popup({
+              offset: 25,
+              closeButton: false,
+              closeOnClick: false,
+              className: 'custom-popup'
+            }).setHTML(`
+              <div class="p-3 min-w-[200px] bg-white rounded-lg shadow-lg">
+                <h3 class="font-bold text-sage-dark mb-1">${job.page_title || 'Untitled Position'}</h3>
+                <p class="text-sm text-gray-600 mb-1">${job.company_name || 'Company'}</p>
+                ${job.salary ? `<p class="text-sm text-sage">${job.salary}</p>` : ''}
+                <p class="text-xs text-gray-500 mt-1">${job.location}</p>
+              </div>
+            `);
 
-                marker.getElement().addEventListener('click', () => {
-                  if (onJobSelect) {
-                    onJobSelect(job);
-                    // Find and scroll to the job card
-                    const jobCard = document.getElementById(`job-${job.id}`);
-                    if (jobCard) {
-                      jobCard.scrollIntoView({ 
-                        behavior: 'smooth',
-                        block: 'center'
-                      });
-                    }
-                  }
-                });
-              }
+            const marker = new mapboxgl.Marker({
+              color: '#86A789',
+              scale: 0.8
             })
-            .catch(error => {
-              console.error('Error geocoding location:', error);
+              .setLngLat([lng, lat])
+              .setPopup(popup)
+              .addTo(map.current!);
+
+            marker.getElement().addEventListener('click', () => {
+              if (onJobSelect) {
+                onJobSelect(job);
+                const jobCard = document.getElementById(`job-${job.id}`);
+                if (jobCard) {
+                  jobCard.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                  });
+                }
+              }
             });
+
+            // Store marker reference for cleanup
+            markersRef.current.push(marker);
+          }
         } catch (error) {
           console.error('Error processing job location:', error);
         }
-      });
-    });
+      }
+    };
+
+    // Wait for map to load before adding markers
+    if (map.current.loaded()) {
+      addMarkers();
+    } else {
+      map.current.on('load', addMarkers);
+    }
+
+    return () => {
+      clearMarkers();
+    };
   }, [jobs, onJobSelect]);
 
   return (
