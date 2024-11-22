@@ -200,7 +200,7 @@ const Index = () => {
         </div>
       </div>
 
-      <div className="container py-8">
+      <div className="container py-4">
         {isMapVisible && (
           <div className="mb-8">
             <h2 className="text-2xl font-semibold text-sage-dark mb-4">Job Locations</h2>
@@ -294,3 +294,4 @@ const Index = () => {
 };
 
 export default Index;
+
