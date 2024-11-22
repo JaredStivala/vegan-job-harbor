@@ -4,7 +4,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import type { Job } from '@/types/job';
 
 // Replace with your Mapbox access token
-mapboxgl.accessToken = 'pk.eyJ1IjoiamFyZWRwYWxtZXIiLCJhIjoiY2xzcnhvYzFqMGJ1ZjJqbW84YXB2OGx4ZCJ9.i5zrFJZ1EYQwzKgZVh3rKg';
+mapboxgl.accessToken = 'pk.eyJ1IjoiamFyZWRzZGZmZGEiLCJhIjoiY20zczA0MmsxMDNzMDJqcHB0Y2xrOWw2dCJ9.bq_52A0_h0S9aDBzk1VvVg';
 
 interface JobMapProps {
   jobs: Job[];
