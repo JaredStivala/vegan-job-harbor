@@ -19,7 +19,6 @@ interface SearchBarProps {
 export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -32,16 +31,6 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  // Add animation effect every 5 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsAnimating(true);
-      setTimeout(() => setIsAnimating(false), 1000); // Animation duration
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   const scrollToJobs = () => {
     const jobsSection = document.querySelector('#jobs-section');
     if (jobsSection) {
@@ -52,6 +41,7 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
   const handleTagSelect = (tag: string) => {
     onTagSelect(tag);
     setOpen(false);
+    // Scroll to jobs section after a small delay to ensure the UI has updated
     setTimeout(scrollToJobs, 100);
   };
 
@@ -60,9 +50,7 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
       <div className="relative">
         <button
           onClick={() => setOpen(true)}
-          className={`w-full px-6 py-4 pl-14 text-lg rounded-full border-2 border-sage focus:border-sage focus:ring-2 focus:ring-sage/20 outline-none transition-all bg-white shadow-lg text-left text-muted-foreground ${
-            isAnimating ? 'animate-pulse' : ''
-          }`}
+          className="w-full px-6 py-4 pl-14 text-lg rounded-full border-2 border-sage focus:border-sage focus:ring-2 focus:ring-sage/20 outline-none transition-all bg-white shadow-lg text-left text-muted-foreground"
         >
           Search vegan jobs by tags...
           <kbd className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
