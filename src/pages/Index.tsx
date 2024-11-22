@@ -151,17 +151,17 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream">
       <div 
-        className="relative bg-center bg-cover py-12 flex items-center overflow-hidden" 
+        className="relative bg-center bg-cover py-8 flex items-center overflow-hidden" 
         style={{ 
           backgroundImage: 'url("https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=2400&q=80")',
           backgroundPosition: 'center 40%',
-          minHeight: '400px'
+          minHeight: '350px'
         }}
       >
         <div 
-          className="absolute inset-0 bg-black/30 backdrop-blur-[1px]"
+          className="absolute inset-0 bg-black/20 backdrop-blur-[1px]"
           style={{
-            background: 'linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0.3))'
+            background: 'linear-gradient(to right, rgba(0,0,0,0.3), rgba(0,0,0,0.2))'
           }}
         />
         <div className="container relative z-10">
