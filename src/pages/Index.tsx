@@ -10,6 +10,7 @@ import { JobStats } from "@/components/JobStats";
 import { JobsList } from "@/components/JobsList";
 import { JobMap } from "@/components/JobMap";
 import { MapToggle } from "@/components/MapToggle";
+import { SelectedTags } from "@/components/SelectedTags";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -134,6 +135,10 @@ const Index = () => {
     });
   };
 
+  const handleTagRemove = (tag: string) => {
+    setSelectedTags(prev => prev.filter(t => t !== tag));
+  };
+
   const handleJobSelect = (job: Job) => {
     setSelectedJob(job);
     const element = document.getElementById('jobs-section');
@@ -156,7 +161,7 @@ const Index = () => {
           </div>
         </div>
       </header>
-
+      
       <div 
         className="relative bg-center bg-cover py-12 flex items-center overflow-hidden" 
         style={{ 
@@ -165,8 +170,6 @@ const Index = () => {
           minHeight: '400px'
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-sage-dark/40 to-sage/40" />
-
         <div className="container relative z-10">
           <div className="max-w-2xl mx-auto space-y-8 text-center">
             <div className="space-y-4">
@@ -217,56 +220,63 @@ const Index = () => {
           </aside>
           
           <div className="flex-1">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-              <div className="flex items-center gap-4">
-                <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
-                <span className="text-sage bg-sage/10 px-2 py-1 rounded-full text-sm">
-                  {allJobs.length}
-                </span>
-                <MapToggle isMapVisible={isMapVisible} onToggle={() => setIsMapVisible(!isMapVisible)} />
-              </div>
-              <div className="flex gap-2">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="gap-2">
-                      <Search className="w-4 h-4" />
-                      Search
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setSortBy('latest')}>
-                      Latest
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+            <div className="space-y-4">
+              <SelectedTags 
+                tags={selectedTags} 
+                onRemoveTag={handleTagRemove} 
+              />
+              
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div className="flex items-center gap-4">
+                  <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
+                  <span className="text-sage bg-sage/10 px-2 py-1 rounded-full text-sm">
+                    {allJobs.length}
+                  </span>
+                  <MapToggle isMapVisible={isMapVisible} onToggle={() => setIsMapVisible(!isMapVisible)} />
+                </div>
+                <div className="flex gap-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" className="gap-2">
+                        <Search className="w-4 h-4" />
+                        Search
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => setSortBy('latest')}>
+                        Latest
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
 
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="gap-2">
-                      <MapPin className="w-4 h-4" />
-                      Location
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setSortBy('location')}>
-                      Sort by location
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" className="gap-2">
+                        <MapPin className="w-4 h-4" />
+                        Location
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => setSortBy('location')}>
+                        Sort by location
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
 
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="gap-2">
-                      <DollarSign className="w-4 h-4" />
-                      Salary
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setSortBy('salary')}>
-                      Sort by salary
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" className="gap-2">
+                        <DollarSign className="w-4 h-4" />
+                        Salary
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => setSortBy('salary')}>
+                        Sort by salary
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </div>
             </div>
             
