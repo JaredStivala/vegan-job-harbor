@@ -150,19 +150,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream">
-      <header className="border-b border-sage/10 bg-white/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container flex justify-between items-center py-4">
-          <h1 className="text-2xl font-bold text-sage-dark flex items-center gap-2">
-            <Briefcase className="w-6 h-6" />
-            VeganJobs
-          </h1>
-          <div className="flex gap-4">
-            <Button variant="ghost">Log in</Button>
-            <Button className="bg-sage hover:bg-sage-dark">Post a job</Button>
-          </div>
-        </div>
-      </header>
-      
       <div 
         className="relative bg-center bg-cover py-12 flex items-center overflow-hidden" 
         style={{ 
@@ -199,6 +186,21 @@ const Index = () => {
 
             <JobStats jobCount={allJobs.length} />
           </div>
+        </div>
+        
+        {/* Curved divider */}
+        <div className="absolute bottom-0 left-0 w-full overflow-hidden">
+          <svg 
+            viewBox="0 0 1200 120" 
+            preserveAspectRatio="none" 
+            className="relative block w-full h-[60px]"
+            style={{ transform: 'rotate(180deg)' }}
+          >
+            <path 
+              d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" 
+              className="fill-cream"
+            />
+          </svg>
         </div>
       </div>
       
