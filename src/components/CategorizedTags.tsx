@@ -10,8 +10,62 @@ interface CategorizedTagsProps {
 export const CategorizedTags = ({ tags, selectedTags, onTagSelect }: CategorizedTagsProps) => {
   const categories = {
     "Job Type": ["Full-time", "Part-time", "Contract", "Internship", "Remote"],
-    "Department": ["Engineering", "Marketing", "Sales", "Design", "Product", "Operations"],
-    "Experience": ["Entry Level", "Mid Level", "Senior", "Lead", "Manager"],
+    "Restaurant & Hospitality": [
+      "Chef", 
+      "Sous Chef",
+      "Line Cook",
+      "Pastry Chef",
+      "Server",
+      "Bartender",
+      "Barback",
+      "Host/Hostess",
+      "Restaurant Manager",
+      "Kitchen Manager",
+      "Food Service"
+    ],
+    "Food Industry": [
+      "Food Production",
+      "Food Safety",
+      "Quality Control",
+      "Recipe Development",
+      "Food Science",
+      "Product Development",
+      "Kitchen Operations"
+    ],
+    "Retail & Service": [
+      "Retail Manager",
+      "Sales Associate",
+      "Store Manager",
+      "Cashier",
+      "Customer Service",
+      "Visual Merchandiser"
+    ],
+    "Corporate": [
+      "Operations Manager",
+      "Project Manager",
+      "Business Development",
+      "Marketing Manager",
+      "HR Manager",
+      "Finance Manager",
+      "Account Manager"
+    ],
+    "Technology": [
+      "Software Engineer",
+      "Web Developer",
+      "UX Designer",
+      "Product Manager",
+      "Data Analyst",
+      "IT Support"
+    ],
+    "Experience Level": [
+      "Entry Level",
+      "Mid Level",
+      "Senior",
+      "Lead",
+      "Manager",
+      "Director",
+      "Executive"
+    ],
     "Other": [] as string[]
   };
 
