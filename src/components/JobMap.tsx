@@ -26,9 +26,15 @@ export const JobMap = ({ jobs, onJobSelect }: JobMapProps) => {
       style: 'mapbox://styles/mapbox/light-v11',
       center: [lng, lat],
       zoom: zoom,
+      attributionControl: false, // Hide attribution for cleaner look
     });
 
-    map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+    // Add minimal navigation controls
+    const nav = new mapboxgl.NavigationControl({
+      showCompass: false, // Hide compass for cleaner look
+      visualizePitch: false
+    });
+    map.current.addControl(nav, 'top-right');
 
     return () => {
       map.current?.remove();
@@ -54,19 +60,24 @@ export const JobMap = ({ jobs, onJobSelect }: JobMapProps) => {
               if (data.features && data.features.length > 0) {
                 const [lng, lat] = data.features[0].center;
 
-                // Create a popup
-                const popup = new mapboxgl.Popup({ offset: 25 })
+                // Create a popup with improved styling
+                const popup = new mapboxgl.Popup({ 
+                  offset: 25,
+                  closeButton: false, // Remove close button for cleaner look
+                  className: 'custom-popup' // Add custom class for styling
+                })
                   .setHTML(`
-                    <div class="p-2">
-                      <h3 class="font-bold">${job.page_title || 'Untitled Position'}</h3>
-                      <p class="text-sm text-gray-600">${job.company_name || 'Company'}</p>
-                      ${job.salary ? `<p class="text-sm text-gray-600">${job.salary}</p>` : ''}
+                    <div class="p-3 min-w-[200px]">
+                      <h3 class="font-bold text-sage-dark mb-1">${job.page_title || 'Untitled Position'}</h3>
+                      <p class="text-sm text-gray-600 mb-1">${job.company_name || 'Company'}</p>
+                      ${job.salary ? `<p class="text-sm text-sage">${job.salary}</p>` : ''}
                     </div>
                   `);
 
-                // Create a marker
+                // Create a marker with custom styling
                 const marker = new mapboxgl.Marker({
-                  color: '#86A789'
+                  color: '#86A789',
+                  scale: 0.8 // Slightly smaller markers
                 })
                   .setLngLat([lng, lat])
                   .setPopup(popup)
@@ -89,7 +100,7 @@ export const JobMap = ({ jobs, onJobSelect }: JobMapProps) => {
   }, [jobs, onJobSelect]);
 
   return (
-    <div className="relative w-full h-[500px] rounded-lg overflow-hidden border border-sage/10">
+    <div className="relative w-full h-[400px] rounded-xl overflow-hidden border border-sage/10 shadow-sm">
       <div ref={mapContainer} className="w-full h-full" />
     </div>
   );
