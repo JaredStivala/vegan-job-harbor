@@ -3,7 +3,6 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import type { Job } from '@/types/job';
 
-// Replace with your Mapbox access token
 mapboxgl.accessToken = 'pk.eyJ1IjoiamFyZWRzZGZmZGEiLCJhIjoiY20zczA0MmsxMDNzMDJqcHB0Y2xrOWw2dCJ9.bq_52A0_h0S9aDBzk1VvVg';
 
 interface JobMapProps {
@@ -26,12 +25,11 @@ export const JobMap = ({ jobs, onJobSelect }: JobMapProps) => {
       style: 'mapbox://styles/mapbox/light-v11',
       center: [lng, lat],
       zoom: zoom,
-      attributionControl: false, // Hide attribution for cleaner look
+      attributionControl: false,
     });
 
-    // Add minimal navigation controls
     const nav = new mapboxgl.NavigationControl({
-      showCompass: false, // Hide compass for cleaner look
+      showCompass: false,
       visualizePitch: false
     });
     map.current.addControl(nav, 'top-right');
@@ -44,27 +42,23 @@ export const JobMap = ({ jobs, onJobSelect }: JobMapProps) => {
   useEffect(() => {
     if (!map.current) return;
 
-    // Wait for map to load
     map.current.on('load', () => {
       if (!map.current) return;
 
-      // Add markers for jobs with locations
       jobs.forEach(job => {
         if (!job.location) return;
 
         try {
-          // Use a geocoding service to convert location to coordinates
           fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(job.location)}.json?access_token=${mapboxgl.accessToken}`)
             .then(response => response.json())
             .then(data => {
               if (data.features && data.features.length > 0) {
                 const [lng, lat] = data.features[0].center;
 
-                // Create a popup with improved styling
                 const popup = new mapboxgl.Popup({ 
                   offset: 25,
-                  closeButton: false, // Remove close button for cleaner look
-                  className: 'custom-popup' // Add custom class for styling
+                  closeButton: false,
+                  className: 'custom-popup'
                 })
                   .setHTML(`
                     <div class="p-3 min-w-[200px]">
@@ -74,18 +68,26 @@ export const JobMap = ({ jobs, onJobSelect }: JobMapProps) => {
                     </div>
                   `);
 
-                // Create a marker with custom styling
                 const marker = new mapboxgl.Marker({
                   color: '#86A789',
-                  scale: 0.8 // Slightly smaller markers
+                  scale: 0.8
                 })
                   .setLngLat([lng, lat])
                   .setPopup(popup)
                   .addTo(map.current!);
 
-                // Add click handler
                 marker.getElement().addEventListener('click', () => {
-                  onJobSelect?.(job);
+                  if (onJobSelect) {
+                    onJobSelect(job);
+                    // Find and scroll to the job card
+                    const jobCard = document.getElementById(`job-${job.id}`);
+                    if (jobCard) {
+                      jobCard.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'center'
+                      });
+                    }
+                  }
                 });
               }
             })

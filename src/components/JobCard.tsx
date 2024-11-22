@@ -53,10 +53,13 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
   };
 
   return (
-    <div className={cn(
-      "group transition-all duration-200",
-      isSelected && "scale-[1.02]"
-    )}>
+    <div 
+      id={`job-${job.id}`}
+      className={cn(
+        "group transition-all duration-200",
+        isSelected && "scale-[1.02]"
+      )}
+    >
       <Collapsible
         open={isOpen}
         onOpenChange={setIsOpen}
