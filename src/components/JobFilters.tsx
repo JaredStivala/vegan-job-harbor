@@ -11,25 +11,37 @@ export const JobFilters = ({ selectedTags, onTagSelect }: JobFiltersProps) => {
   const { data: jobs, isLoading } = useQuery({
     queryKey: ['jobs'],
     queryFn: async () => {
-      // Fetch from all job tables
+      // Fetch from all job tables with explicit error handling
       const [veganJobs, advocacyJobs, eaJobs, vevolutionJobs] = await Promise.all([
-        supabase.from('veganjobs').select('tags'),
-        supabase.from('animaladvocacy').select('tags'),
-        supabase.from('ea').select('tags'),
-        supabase.from('vevolution').select('tags')
+        supabase.from('veganjobs').select('tags').not('tags', 'is', null),
+        supabase.from('animaladvocacy').select('tags').not('tags', 'is', null),
+        supabase.from('ea').select('tags').not('tags', 'is', null),
+        supabase.from('vevolution').select('tags').not('tags', 'is', null)
       ]);
       
-      return [
+      // Combine all tags and filter out null/undefined values
+      const allJobsData = [
         ...(veganJobs.data || []),
         ...(advocacyJobs.data || []),
         ...(eaJobs.data || []),
         ...(vevolutionJobs.data || [])
       ];
+
+      // Extract and flatten all tags, ensuring we handle arrays properly
+      const allTags = allJobsData.reduce((acc: string[], job) => {
+        if (Array.isArray(job.tags)) {
+          acc.push(...job.tags);
+        }
+        return acc;
+      }, []);
+
+      // Remove duplicates and filter out empty/null values
+      return Array.from(new Set(allTags)).filter(Boolean);
     }
   });
 
   // Extract unique tags from all jobs
-  const allTags = Array.from(new Set(jobs?.flatMap(job => job.tags || []) || []));
+  const allTags = jobs || [];
 
   if (isLoading) {
     return <div className="animate-pulse space-y-4">
