@@ -1,6 +1,5 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
 
 interface CategorizedTagsProps {
   tags: string[];
@@ -9,7 +8,6 @@ interface CategorizedTagsProps {
 }
 
 const categories = {
-  "Job Type": ["Full-time", "Part-time", "Contract", "Internship", "Remote"],
   "Restaurant & Hospitality": [
     "Chef", 
     "Sous Chef",
@@ -32,15 +30,7 @@ const categories = {
     "Product Development",
     "Kitchen Operations"
   ],
-  "Retail & Service": [
-    "Retail Manager",
-    "Sales Associate",
-    "Store Manager",
-    "Cashier",
-    "Customer Service",
-    "Visual Merchandiser"
-  ],
-  "Corporate": [
+  "Business & Operations": [
     "Operations Manager",
     "Project Manager",
     "Business Development",
@@ -57,6 +47,21 @@ const categories = {
     "Data Analyst",
     "IT Support"
   ],
+  "Retail & Service": [
+    "Retail Manager",
+    "Sales Associate",
+    "Store Manager",
+    "Cashier",
+    "Customer Service",
+    "Visual Merchandiser"
+  ],
+  "Employment Type": [
+    "Full-time",
+    "Part-time",
+    "Contract",
+    "Internship",
+    "Remote"
+  ],
   "Experience Level": [
     "Entry Level",
     "Mid Level",
@@ -65,25 +70,10 @@ const categories = {
     "Manager",
     "Director",
     "Executive"
-  ],
-  "Other": [] as string[]
+  ]
 };
 
 export const CategorizedTags = ({ tags, selectedTags, onTagSelect }: CategorizedTagsProps) => {
-  // Categorize uncategorized tags
-  tags.forEach(tag => {
-    let categorized = false;
-    for (const [category, categoryTags] of Object.entries(categories)) {
-      if (categoryTags.includes(tag)) {
-        categorized = true;
-        break;
-      }
-    }
-    if (!categorized) {
-      categories["Other"].push(tag);
-    }
-  });
-
   return (
     <Accordion type="multiple" className="w-full space-y-2">
       {Object.entries(categories).map(([category, categoryTags]) => {
