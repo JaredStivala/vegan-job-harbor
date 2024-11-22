@@ -44,17 +44,33 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
   const formatDescription = (desc: string) => {
     if (!desc) return '';
     
-    // Enhanced formatting for headers and paragraphs
-    return desc
-      .split(/\n\n|<br\s*\/?>/gi)
-      .filter(p => p.trim().length > 0)
-      .map(p => {
-        // Make headers larger and bolder
-        if (p.trim().startsWith('#')) {
-          return p.replace(/^#+\s*(.*)$/gm, '<h3 class="text-xl font-bold text-sage-dark my-4">$1</h3>');
+    // Split into sections based on potential section headers
+    const sections = desc.split(/(?=Overview|About You|Key Responsibilities|Experience|Qualifications|Requirements|Benefits)/gi);
+    
+    return sections
+      .map(section => {
+        // Extract the header (if any) and content
+        const matches = section.match(/^(Overview|About You|Key Responsibilities|Experience|Qualifications|Requirements|Benefits)?(.*)$/si);
+        const [_, header, content] = matches || [null, '', section];
+        
+        // Format the section
+        const formattedContent = content
+          .split(/\n\n|<br\s*\/?>/gi)
+          .filter(p => p.trim().length > 0)
+          .map(p => `<p class="mb-4 leading-relaxed">${p.trim()}</p>`)
+          .join('\n');
+
+        // If there's a header, wrap the section with header styling
+        if (header) {
+          return `
+            <div class="mb-8">
+              <h2 class="text-2xl font-bold text-sage-dark mb-6">${header.trim()}</h2>
+              ${formattedContent}
+            </div>
+          `;
         }
-        // Add more spacing between paragraphs
-        return `<p class="mb-6">${p.trim()}</p>`;
+        
+        return `<div class="mb-8">${formattedContent}</div>`;
       })
       .join('\n');
   };
@@ -131,7 +147,7 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
           </Card>
         </CollapsibleTrigger>
         
-        <CollapsibleContent className="px-8 py-6 bg-white border-x border-b rounded-b-lg">
+        <CollapsibleContent className="px-8 py-8 bg-white border-x border-b rounded-b-lg">
           <div className="prose prose-lg max-w-none">
             {description ? (
               <div 
