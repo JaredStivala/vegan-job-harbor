@@ -1,6 +1,5 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { ChevronDown } from "lucide-react";
 
 interface CategorizedTagsProps {
   tags: string[];

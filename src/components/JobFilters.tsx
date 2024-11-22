@@ -11,15 +11,20 @@ export const JobFilters = ({ selectedTags, onTagSelect }: JobFiltersProps) => {
   const { data: jobs, isLoading } = useQuery({
     queryKey: ['jobs'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('veganjobs')
-        .select('tags');
+      // Fetch from all job tables
+      const [veganJobs, advocacyJobs, eaJobs, vevolutionJobs] = await Promise.all([
+        supabase.from('veganjobs').select('tags'),
+        supabase.from('animaladvocacy').select('tags'),
+        supabase.from('ea').select('tags'),
+        supabase.from('vevolution').select('tags')
+      ]);
       
-      if (error) {
-        console.error('Error fetching jobs:', error);
-        throw error;
-      }
-      return data;
+      return [
+        ...(veganJobs.data || []),
+        ...(advocacyJobs.data || []),
+        ...(eaJobs.data || []),
+        ...(vevolutionJobs.data || [])
+      ];
     }
   });
 
@@ -39,14 +44,11 @@ export const JobFilters = ({ selectedTags, onTagSelect }: JobFiltersProps) => {
 
   return (
     <div className="flex flex-col gap-6 w-full md:w-64">
-      <div>
-        <h3 className="font-semibold mb-3 text-sage-dark">Categories</h3>
-        <CategorizedTags
-          tags={allTags}
-          selectedTags={selectedTags}
-          onTagSelect={onTagSelect}
-        />
-      </div>
+      <CategorizedTags
+        tags={allTags}
+        selectedTags={selectedTags}
+        onTagSelect={onTagSelect}
+      />
     </div>
   );
 };
