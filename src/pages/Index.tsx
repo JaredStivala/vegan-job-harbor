@@ -158,7 +158,7 @@ const Index = () => {
       </header>
 
       <div 
-        className="relative bg-center bg-cover py-16 flex items-center overflow-hidden" 
+        className="relative bg-center bg-cover py-12 flex items-center overflow-hidden" 
         style={{ 
           backgroundImage: 'url("https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=2400&q=80")',
           backgroundPosition: 'center 40%',
@@ -198,17 +198,17 @@ const Index = () => {
         </div>
       </div>
       
-      <div className="container py-12">
+      <div className="container py-8">
         {isMapVisible && (
-          <div className="mb-12">
-            <h2 className="text-2xl font-semibold text-sage-dark mb-6">Job Locations</h2>
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold text-sage-dark mb-4">Job Locations</h2>
             <JobMap jobs={allJobs} onJobSelect={handleJobSelect} />
           </div>
         )}
       </div>
       
-      <div id="jobs-section" className="container py-12">
-        <div className="flex flex-col md:flex-row gap-8">
+      <div id="jobs-section" className="container py-8">
+        <div className="flex flex-col md:flex-row gap-6">
           <aside className="md:w-64 shrink-0">
             <JobFilters 
               selectedTags={selectedTags}
@@ -217,7 +217,7 @@ const Index = () => {
           </aside>
           
           <div className="flex-1">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
               <div className="flex items-center gap-4">
                 <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
                 <span className="text-sage bg-sage/10 px-2 py-1 rounded-full text-sm">
