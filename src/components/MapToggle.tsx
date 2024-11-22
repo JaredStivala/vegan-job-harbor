@@ -12,10 +12,10 @@ export const MapToggle = ({ isMapVisible, onToggle }: MapToggleProps) => {
       variant="outline"
       size="sm"
       onClick={onToggle}
-      className="mb-6 gap-2 text-sage hover:text-sage-dark"
+      className="gap-2 text-sage hover:text-sage-dark border-sage hover:border-sage-dark hover:bg-sage/5"
     >
       <MapIcon className="w-4 h-4" />
-      {isMapVisible ? "Hide Map" : "Show Map"}
+      Show Interactive Map
     </Button>
   );
 };

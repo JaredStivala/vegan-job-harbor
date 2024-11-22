@@ -199,7 +199,6 @@ const Index = () => {
       </div>
       
       <div className="container py-12">
-        <MapToggle isMapVisible={isMapVisible} onToggle={() => setIsMapVisible(!isMapVisible)} />
         {isMapVisible && (
           <div className="mb-12">
             <h2 className="text-2xl font-semibold text-sage-dark mb-6">Job Locations</h2>
@@ -219,11 +218,12 @@ const Index = () => {
           
           <div className="flex-1">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4">
                 <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
                 <span className="text-sage bg-sage/10 px-2 py-1 rounded-full text-sm">
                   {allJobs.length}
                 </span>
+                <MapToggle isMapVisible={isMapVisible} onToggle={() => setIsMapVisible(!isMapVisible)} />
               </div>
               <div className="flex gap-2">
                 <DropdownMenu>
