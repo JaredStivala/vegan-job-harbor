@@ -153,7 +153,7 @@ const Index = () => {
       <div 
         className="relative bg-center bg-cover py-12 flex items-center overflow-hidden" 
         style={{ 
-          backgroundImage: 'url("https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=2400&q=80")',
+          backgroundImage: 'url("https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=2400&q=80")',
           backgroundPosition: 'center 40%',
           minHeight: '400px'
         }}
