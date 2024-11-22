@@ -1,189 +1,89 @@
-import { Building2, MapPin, Clock, CheckCircle2, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { MapPin, Building2, Calendar } from "lucide-react";
+import type { Job } from "@/types/job";
+import { cn } from "@/lib/utils";
 
 interface JobCardProps {
-  title: string;
-  company: string;
-  location: string;
-  type: string;
-  salary: string | null;
-  posted: string;
-  tags: string[];
-  verified?: boolean;
-  logo?: string;
-  url: string;
-  description?: string;
+  job: Job;
+  isSelected?: boolean;
 }
 
-export const JobCard = ({
-  title,
-  company,
-  location,
-  type,
-  salary,
-  posted,
-  tags,
-  verified = false,
-  logo,
-  url,
-  description,
-}: JobCardProps) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+export const JobCard = ({ job, isSelected }: JobCardProps) => {
+  const {
+    page_title,
+    company_name,
+    location,
+    salary,
+    date_posted,
+    url
+  } = job;
 
-  const formatDescription = (text: string) => {
-    // Extended list of common section headers in job descriptions
-    const sectionPatterns = [
-      'Overview',
-      'About Us',
-      'About the Role',
-      'About the Position',
-      'Job Description',
-      'Responsibilities',
-      'Key Responsibilities',
-      'Requirements',
-      'Required Skills',
-      'Qualifications',
-      'Required Qualifications',
-      'Preferred Qualifications',
-      'Experience',
-      'Required Experience',
-      'Skills',
-      'Key Skills',
-      'Benefits',
-      'What We Offer',
-      'Perks',
-      'Company Benefits',
-      'Location',
-      'Hours',
-      'Working Hours',
-      'Schedule',
-      'Work Schedule',
-      'Holidays',
-      'Salary',
-      'Compensation',
-      'Start Date',
-      'Start date',
-      'Reports to',
-      'Contract type',
-      'Employment Type',
-      'How to Apply',
-      'Application Process',
-      'Next Steps'
-    ].join('|');
+  const formattedDate = date_posted
+    ? new Date(date_posted).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      })
+    : null;
 
-    // Create a regex pattern that matches any of the section headers
-    const regex = new RegExp(`(?=${sectionPatterns})`, 'g');
-    
-    // Split the text into sections based on the patterns
-    const sections = text.split(regex);
-    
-    return sections.map((section, index) => {
-      // Find the title at the start of the section
-      const titleMatch = section.match(new RegExp(`^(${sectionPatterns})`));
-      const title = titleMatch ? titleMatch[0] : '';
-      const content = titleMatch ? section.slice(title.length) : section;
-      
-      // Only render sections that have content
-      if (!content.trim()) return null;
-      
-      return (
-        <div key={index} className="mb-6 last:mb-0">
-          {title && (
-            <h4 className="font-semibold text-sage-dark mb-3 text-lg">
-              {title}
-            </h4>
-          )}
-          <p className="text-gray-600 leading-relaxed whitespace-pre-line">
-            {content.trim()}
-          </p>
-        </div>
-      );
-    });
-  };
-
-  const shouldShowSalary = salary && !['N/A', 'Salary not specified'].includes(salary);
+  const shouldShowSalary = salary && 
+    salary !== "N/A" && 
+    salary !== "Salary not specified";
 
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-all border border-sage/10 group">
-      <div 
-        className="cursor-pointer" 
-        onClick={() => description && setIsExpanded(!isExpanded)}
-      >
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-lg bg-cream flex items-center justify-center">
-            {logo ? (
-              <img src={logo} alt={company} className="w-8 h-8 object-contain" />
-            ) : (
-              <Building2 className="w-6 h-6 text-sage" />
-            )}
-          </div>
-          
-          <div className="flex-1">
-            <div className="flex items-start justify-between mb-2">
-              <div>
-                <h3 className="font-semibold text-lg text-sage-dark group-hover:text-sage transition-colors flex items-center gap-2">
-                  {title}
-                  {verified && (
-                    <CheckCircle2 className="w-4 h-4 text-green-500" />
-                  )}
-                  {description && (
-                    <ChevronDown className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-                  )}
-                </h3>
-                <p className="text-sage">{company}</p>
-              </div>
-              <span className="text-sm text-sage bg-sage/5 px-3 py-1 rounded-full">
-                {posted}
-              </span>
-            </div>
+    <a 
+      href={url} 
+      target="_blank" 
+      rel="noopener noreferrer"
+      className={cn(
+        "block transition-all duration-200",
+        isSelected && "scale-[1.02]"
+      )}
+    >
+      <Card className={cn(
+        "p-6 hover:shadow-md transition-shadow duration-200",
+        isSelected && "ring-2 ring-sage shadow-md"
+      )}>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <h3 className="font-semibold text-lg text-sage-dark">
+              {page_title || "Untitled Position"}
+            </h3>
             
-            <div className="flex flex-wrap gap-2 mb-4">
-              <Badge variant="outline" className="bg-white">
-                <MapPin className="w-3 h-3 mr-1" />
-                {location}
-              </Badge>
-              {shouldShowSalary && (
-                <Badge variant="outline" className="bg-white">
-                  {salary}
-                </Badge>
+            <div className="flex flex-wrap gap-2 items-center text-sm text-gray-600">
+              {company_name && (
+                <div className="flex items-center gap-1">
+                  <Building2 className="w-4 h-4" />
+                  <span>{company_name}</span>
+                </div>
+              )}
+              
+              {location && (
+                <div className="flex items-center gap-1">
+                  <MapPin className="w-4 h-4" />
+                  <span>{location}</span>
+                </div>
+              )}
+              
+              {formattedDate && (
+                <div className="flex items-center gap-1">
+                  <Calendar className="w-4 h-4" />
+                  <span>{formattedDate}</span>
+                </div>
               )}
             </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="flex flex-wrap gap-2">
-                {tags.map((tag) => (
-                  <Badge key={tag} variant="secondary" className="bg-sage/5 hover:bg-sage/10">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-              <Button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  window.open(url, '_blank');
-                }}
-                className="bg-sage hover:bg-sage-dark"
-              >
-                Apply
-              </Button>
-            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {shouldShowSalary && (
+              <Badge variant="outline" className="bg-white">
+                {salary}
+              </Badge>
+            )}
           </div>
         </div>
-
-        {description && (
-          <div
-            className={`overflow-hidden transition-all duration-300 ease-in-out ${
-              isExpanded ? 'max-h-[2000px] mt-6 opacity-100' : 'max-h-0 opacity-0'
-            }`}
-          >
-            <div className="prose prose-sage max-w-none bg-cream/50 p-6 rounded-lg">
-              {formatDescription(description)}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+      </Card>
+    </a>
   );
 };

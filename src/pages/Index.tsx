@@ -8,6 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useState, useMemo } from "react";
 import { JobStats } from "@/components/JobStats";
 import { JobsList } from "@/components/JobsList";
+import { JobMap } from "@/components/JobMap";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +21,7 @@ const Index = () => {
   const { toast } = useToast();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<'latest' | 'salary' | 'location'>('latest');
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
   const { data: veganJobs = [], isLoading: isLoadingVegan, error: veganError } = useQuery({
     queryKey: ['veganjobs'],
@@ -99,7 +101,6 @@ const Index = () => {
       );
     }
 
-    // Sort jobs based on selected criteria
     switch (sortBy) {
       case 'salary':
         return jobs.sort((a, b) => {
@@ -129,6 +130,14 @@ const Index = () => {
       }
       return [...prev, tag];
     });
+  };
+
+  const handleJobSelect = (job: Job) => {
+    setSelectedJob(job);
+    const element = document.getElementById('jobs-section');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -184,6 +193,13 @@ const Index = () => {
 
             <JobStats jobCount={allJobs.length} />
           </div>
+        </div>
+      </div>
+      
+      <div className="container py-12">
+        <div className="mb-12">
+          <h2 className="text-2xl font-semibold text-sage-dark mb-6">Job Locations</h2>
+          <JobMap jobs={allJobs} onJobSelect={handleJobSelect} />
         </div>
       </div>
       
@@ -253,6 +269,7 @@ const Index = () => {
               jobs={allJobs}
               isLoading={isLoadingVegan || isLoadingAdvocacy || isLoadingVevolution}
               error={veganError || advocacyError || vevolutionError}
+              selectedJob={selectedJob}
             />
           </div>
         </div>
