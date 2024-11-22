@@ -173,9 +173,6 @@ const Index = () => {
                   Vegan Career
                 </span>
               </h2>
-              <p className="text-xl text-white font-medium drop-shadow-md tracking-wide">
-                Discover opportunities that <span className="text-cream font-semibold drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)]">align with your values</span>
-              </p>
             </div>
             
             <SearchBar 
