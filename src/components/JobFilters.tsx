@@ -40,7 +40,7 @@ export const JobFilters = ({ selectedTags, onTagSelect }: JobFiltersProps) => {
   return (
     <div className="flex flex-col gap-6 w-full md:w-64">
       <div>
-        <h3 className="font-semibold mb-3 text-sage-dark">Filters</h3>
+        <h3 className="font-semibold mb-3 text-sage-dark">Categories</h3>
         <CategorizedTags
           tags={allTags}
           selectedTags={selectedTags}
