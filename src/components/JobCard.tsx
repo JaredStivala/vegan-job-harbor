@@ -24,7 +24,8 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
     salary,
     date_posted,
     url,
-    description
+    description,
+    tags
   } = job;
 
   const [isOpen, setIsOpen] = useState(false);
@@ -44,16 +45,13 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
   const formatDescription = (desc: string) => {
     if (!desc) return '';
     
-    // Enhanced formatting for headers and paragraphs
     return desc
       .split(/\n\n|<br\s*\/?>/gi)
       .filter(p => p.trim().length > 0)
       .map(p => {
-        // Make headers larger and bolder
         if (p.trim().startsWith('#')) {
           return p.replace(/^#+\s*(.*)$/gm, '<h3 class="text-xl font-bold text-sage-dark my-4">$1</h3>');
         }
-        // Add more spacing between paragraphs
         return `<p class="mb-6">${p.trim()}</p>`;
       })
       .join('\n');
@@ -126,6 +124,15 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
                     {salary}
                   </Badge>
                 )}
+                {tags && tags.length > 0 && tags.map((tag, index) => (
+                  <Badge 
+                    key={index}
+                    variant="secondary" 
+                    className="bg-sage/10 text-sage-dark hover:bg-sage/20 transition-colors"
+                  >
+                    {tag}
+                  </Badge>
+                ))}
               </div>
             </div>
           </Card>
