@@ -159,9 +159,9 @@ const Index = () => {
         }}
       >
         <div 
-          className="absolute inset-0 bg-black/20 backdrop-blur-[1px]"
+          className="absolute inset-0"
           style={{
-            background: 'linear-gradient(to right, rgba(0,0,0,0.3), rgba(0,0,0,0.2))'
+            background: 'linear-gradient(to right, rgba(0,0,0,0.15), rgba(0,0,0,0.1))'
           }}
         />
         <div className="container relative z-10">
@@ -175,12 +175,12 @@ const Index = () => {
               </div>
               <h2 className="text-5xl font-bold text-white leading-tight tracking-tight drop-shadow-lg">
                 Find Your Next{' '}
-                <span className="text-cream font-extrabold bg-gradient-to-r from-sage to-cream bg-clip-text text-transparent drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)]">
+                <span className="text-cream font-extrabold bg-gradient-to-r from-sage to-cream bg-clip-text text-transparent drop-shadow-[0_3px_3px_rgba(0,0,0,0.4)]">
                   Vegan Career
                 </span>
               </h2>
-              <p className="text-xl text-white/90 font-medium drop-shadow-md tracking-wide">
-                Discover opportunities that <span className="text-cream font-semibold">align with your values</span>
+              <p className="text-xl text-white font-medium drop-shadow-md tracking-wide">
+                Discover opportunities that <span className="text-cream font-semibold drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)]">align with your values</span>
               </p>
             </div>
             
@@ -194,7 +194,6 @@ const Index = () => {
           </div>
         </div>
         
-        {/* Curved divider */}
         <div className="absolute bottom-0 left-0 w-full overflow-hidden">
           <svg 
             viewBox="0 0 1200 120" 
