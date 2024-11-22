@@ -159,9 +159,9 @@ const Index = () => {
         }}
       >
         <div 
-          className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
+          className="absolute inset-0 bg-black/30 backdrop-blur-[1px]"
           style={{
-            background: 'linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.4))'
+            background: 'linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0.3))'
           }}
         />
         <div className="container relative z-10">
