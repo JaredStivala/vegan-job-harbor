@@ -1,4 +1,4 @@
-import { Briefcase, Sprout } from "lucide-react";
+import { Briefcase, Sprout, Search, MapPin, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,11 +8,18 @@ import { useToast } from "@/components/ui/use-toast";
 import { useState, useMemo } from "react";
 import { JobStats } from "@/components/JobStats";
 import { JobsList } from "@/components/JobsList";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import type { Job } from "@/types/job";
 
 const Index = () => {
   const { toast } = useToast();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState<'latest' | 'salary' | 'location'>('latest');
 
   const { data: veganJobs = [], isLoading: isLoadingVegan, error: veganError } = useQuery({
     queryKey: ['veganjobs'],
@@ -78,7 +85,7 @@ const Index = () => {
   });
 
   const allJobs = useMemo(() => {
-    const jobs = [...veganJobs, ...advocacyJobs, ...vevolutionJobs].filter((job): job is Job => {
+    let jobs = [...veganJobs, ...advocacyJobs, ...vevolutionJobs].filter((job): job is Job => {
       return Boolean(
         job &&
         job.id &&
@@ -86,12 +93,34 @@ const Index = () => {
       );
     });
 
-    if (selectedTags.length === 0) return jobs;
-    
-    return jobs.filter(job => 
-      job.tags?.some(tag => selectedTags.includes(tag))
-    );
-  }, [veganJobs, advocacyJobs, vevolutionJobs, selectedTags]);
+    if (selectedTags.length > 0) {
+      jobs = jobs.filter(job => 
+        job.tags?.some(tag => selectedTags.includes(tag))
+      );
+    }
+
+    // Sort jobs based on selected criteria
+    switch (sortBy) {
+      case 'salary':
+        return jobs.sort((a, b) => {
+          if (!a.salary) return 1;
+          if (!b.salary) return -1;
+          return b.salary.localeCompare(a.salary);
+        });
+      case 'location':
+        return jobs.sort((a, b) => {
+          if (!a.location) return 1;
+          if (!b.location) return -1;
+          return a.location.localeCompare(b.location);
+        });
+      default:
+        return jobs.sort((a, b) => {
+          const dateA = a.date_posted ? new Date(a.date_posted) : new Date(0);
+          const dateB = b.date_posted ? new Date(b.date_posted) : new Date(0);
+          return dateB.getTime() - dateA.getTime();
+        });
+    }
+  }, [veganJobs, advocacyJobs, vevolutionJobs, selectedTags, sortBy]);
 
   const handleTagSelect = (tag: string) => {
     setSelectedTags(prev => {
@@ -168,16 +197,56 @@ const Index = () => {
           </aside>
           
           <div className="flex-1">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
                 <span className="text-sage bg-sage/10 px-2 py-1 rounded-full text-sm">
                   {allJobs.length}
                 </span>
               </div>
-              <Button variant="outline" className="border-sage hover:bg-sage/10">
-                Sort by: Latest
-              </Button>
+              <div className="flex gap-2">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <Search className="w-4 h-4" />
+                      Search
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => setSortBy('latest')}>
+                      Latest
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <MapPin className="w-4 h-4" />
+                      Location
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => setSortBy('location')}>
+                      Sort by location
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <DollarSign className="w-4 h-4" />
+                      Salary
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => setSortBy('salary')}>
+                      Sort by salary
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
             
             <JobsList 
