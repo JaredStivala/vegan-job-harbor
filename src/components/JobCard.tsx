@@ -66,7 +66,7 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
       >
         <CollapsibleTrigger className="w-full text-left">
           <Card className={cn(
-            "p-6 hover:shadow-md transition-shadow duration-200 relative",
+            "p-6 hover:shadow-md transition-all duration-200 relative hover:scale-[1.01] hover:bg-sage/5",
             isSelected && "ring-2 ring-sage shadow-md"
           )}>
             <div className="space-y-4">
@@ -127,7 +127,7 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
           <div className="prose prose-sm max-w-none">
             {description ? (
               <div 
-                className="whitespace-pre-wrap"
+                className="whitespace-pre-wrap space-y-4 text-gray-700 leading-relaxed"
                 dangerouslySetInnerHTML={{ 
                   __html: formatDescription(description) 
                 }} 
