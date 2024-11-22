@@ -192,7 +192,7 @@ const Index = () => {
           <svg 
             viewBox="0 0 1200 120" 
             preserveAspectRatio="none" 
-            className="relative block w-full h-[60px]"
+            className="relative block w-full h-[40px]"
             style={{ transform: 'rotate(180deg)' }}
           >
             <path 
