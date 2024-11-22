@@ -44,12 +44,19 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
   const formatDescription = (desc: string) => {
     if (!desc) return '';
     
-    const paragraphs = desc.split(/\n\n|<br\s*\/?>/gi);
-    
-    return paragraphs
+    // Enhanced formatting for headers and paragraphs
+    return desc
+      .split(/\n\n|<br\s*\/?>/gi)
       .filter(p => p.trim().length > 0)
-      .map(p => p.trim())
-      .join('\n\n');
+      .map(p => {
+        // Make headers larger and bolder
+        if (p.trim().startsWith('#')) {
+          return p.replace(/^#+\s*(.*)$/gm, '<h3 class="text-xl font-bold text-sage-dark my-4">$1</h3>');
+        }
+        // Add more spacing between paragraphs
+        return `<p class="mb-6">${p.trim()}</p>`;
+      })
+      .join('\n');
   };
 
   return (
@@ -124,11 +131,11 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
           </Card>
         </CollapsibleTrigger>
         
-        <CollapsibleContent className="px-6 py-4 bg-white border-x border-b rounded-b-lg">
-          <div className="prose prose-sm max-w-none">
+        <CollapsibleContent className="px-8 py-6 bg-white border-x border-b rounded-b-lg">
+          <div className="prose prose-lg max-w-none">
             {description ? (
               <div 
-                className="whitespace-pre-wrap space-y-4 text-gray-700 leading-relaxed"
+                className="space-y-6 text-gray-700 leading-relaxed"
                 dangerouslySetInnerHTML={{ 
                   __html: formatDescription(description) 
                 }} 
