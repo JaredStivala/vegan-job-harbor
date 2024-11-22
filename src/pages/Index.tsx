@@ -161,18 +161,12 @@ const Index = () => {
         <div 
           className="absolute inset-0"
           style={{
-            background: 'linear-gradient(to right, rgba(0,0,0,0.15), rgba(0,0,0,0.1))'
+            background: 'linear-gradient(to right, rgba(0,0,0,0.2), rgba(0,0,0,0.2))'
           }}
         />
         <div className="container relative z-10">
           <div className="max-w-2xl mx-auto space-y-8 text-center">
             <div className="space-y-4">
-              <div className="inline-block p-2 px-4 rounded-full bg-white/20 backdrop-blur-sm text-white mb-2 border border-white/20 shadow-lg">
-                <span className="flex items-center gap-2">
-                  <Sprout className="w-4 h-4" />
-                  <span className="font-medium tracking-wide">Join the <span className="font-bold">plant-based</span> revolution</span>
-                </span>
-              </div>
               <h2 className="text-5xl font-bold text-white leading-tight tracking-tight drop-shadow-lg">
                 Find Your Next{' '}
                 <span className="text-cream font-extrabold bg-gradient-to-r from-sage to-cream bg-clip-text text-transparent drop-shadow-[0_3px_3px_rgba(0,0,0,0.4)]">
