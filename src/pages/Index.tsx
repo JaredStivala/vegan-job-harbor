@@ -9,6 +9,7 @@ import { useState, useMemo } from "react";
 import { JobStats } from "@/components/JobStats";
 import { JobsList } from "@/components/JobsList";
 import { JobMap } from "@/components/JobMap";
+import { MapToggle } from "@/components/MapToggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +23,7 @@ const Index = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<'latest' | 'salary' | 'location'>('latest');
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [isMapVisible, setIsMapVisible] = useState(false);
 
   const { data: veganJobs = [], isLoading: isLoadingVegan, error: veganError } = useQuery({
     queryKey: ['veganjobs'],
@@ -197,10 +199,13 @@ const Index = () => {
       </div>
       
       <div className="container py-12">
-        <div className="mb-12">
-          <h2 className="text-2xl font-semibold text-sage-dark mb-6">Job Locations</h2>
-          <JobMap jobs={allJobs} onJobSelect={handleJobSelect} />
-        </div>
+        <MapToggle isMapVisible={isMapVisible} onToggle={() => setIsMapVisible(!isMapVisible)} />
+        {isMapVisible && (
+          <div className="mb-12">
+            <h2 className="text-2xl font-semibold text-sage-dark mb-6">Job Locations</h2>
+            <JobMap jobs={allJobs} onJobSelect={handleJobSelect} />
+          </div>
+        )}
       </div>
       
       <div id="jobs-section" className="container py-12">

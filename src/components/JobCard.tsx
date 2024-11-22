@@ -44,10 +44,8 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
   const formatDescription = (desc: string) => {
     if (!desc) return '';
     
-    // Split by double newlines or <br> tags to preserve intentional breaks
     const paragraphs = desc.split(/\n\n|<br\s*\/?>/gi);
     
-    // Filter out empty paragraphs and trim whitespace
     return paragraphs
       .filter(p => p.trim().length > 0)
       .map(p => p.trim())
@@ -66,7 +64,7 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
       >
         <CollapsibleTrigger className="w-full text-left">
           <Card className={cn(
-            "p-6 hover:shadow-md transition-all duration-200 relative hover:scale-[1.01] hover:bg-sage/5",
+            "p-6 hover:shadow-md transition-all duration-200 relative hover:bg-sage/5",
             isSelected && "ring-2 ring-sage shadow-md"
           )}>
             <div className="space-y-4">
