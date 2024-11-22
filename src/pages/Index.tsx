@@ -11,6 +11,7 @@ import { JobsList } from "@/components/JobsList";
 import { JobMap } from "@/components/JobMap";
 import { MapToggle } from "@/components/MapToggle";
 import { SelectedTags } from "@/components/SelectedTags";
+import { BackToTop } from "@/components/BackToTop";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -289,6 +290,7 @@ const Index = () => {
           </div>
         </div>
       </div>
+      <BackToTop />
     </div>
   );
 };
