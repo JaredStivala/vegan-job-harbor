@@ -19,8 +19,7 @@ interface SearchBarProps {
 export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [animationIndex, setAnimationIndex] = useState(-1);
-  const placeholderText = "Search vegan jobs by tags ...";
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -33,26 +32,12 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  // Animation effect
+  // Add animation effect every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      let currentIndex = -1;
-      const animationCycle = setInterval(() => {
-        currentIndex++;
-        if (currentIndex >= placeholderText.length) {
-          clearInterval(animationCycle);
-          setAnimationIndex(-1);
-          return;
-        }
-        setAnimationIndex(currentIndex);
-      }, 70); // Slightly slower speed for more noticeable effect
-
-      // Cleanup the inner interval
-      setTimeout(() => {
-        clearInterval(animationCycle);
-        setAnimationIndex(-1);
-      }, placeholderText.length * 70 + 100);
-    }, 5000); // Run every 5 seconds
+      setIsAnimating(true);
+      setTimeout(() => setIsAnimating(false), 1000); // Animation duration
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -70,36 +55,16 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
     setTimeout(scrollToJobs, 100);
   };
 
-  const renderPlaceholder = () => {
-    return placeholderText.split('').map((char, index) => (
-      <span
-        key={index}
-        className={`inline-block transition-all duration-200 ${
-          index === animationIndex
-            ? 'transform scale-150 text-sage-dark font-bold'
-            : char === ' ' 
-              ? 'px-1' // Add spacing for spaces
-              : 'scale-100'
-        }`}
-        style={{ 
-          transitionDelay: `${index * 30}ms`,
-        }}
-      >
-        {char}
-      </span>
-    ));
-  };
-
   return (
     <div className="relative w-full max-w-2xl mx-auto">
       <div className="relative">
         <button
           onClick={() => setOpen(true)}
-          className="w-full px-6 py-4 pl-14 text-lg rounded-full border-2 border-sage hover:border-sage-dark focus:border-sage-dark focus:ring-2 focus:ring-sage/20 outline-none transition-all bg-white/90 backdrop-blur-sm shadow-lg text-left"
+          className={`w-full px-6 py-4 pl-14 text-lg rounded-full border-2 border-sage focus:border-sage focus:ring-2 focus:ring-sage/20 outline-none transition-all bg-white shadow-lg text-left text-muted-foreground ${
+            isAnimating ? 'animate-pulse' : ''
+          }`}
         >
-          <div className="text-gray-600 font-medium tracking-wide">
-            {renderPlaceholder()}
-          </div>
+          Search vegan jobs by tags...
           <kbd className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
             <span className="text-xs">⌘</span>K
           </kbd>
