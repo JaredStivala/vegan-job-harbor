@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { MapPin, Building2, Calendar, ExternalLink } from "lucide-react";
+import { MapPin, Building2, Calendar } from "lucide-react";
 import type { Job } from "@/types/job";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -41,6 +41,19 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
     salary !== "N/A" && 
     salary !== "Salary not specified";
 
+  const formatDescription = (desc: string) => {
+    if (!desc) return '';
+    
+    // Split by double newlines or <br> tags to preserve intentional breaks
+    const paragraphs = desc.split(/\n\n|<br\s*\/?>/gi);
+    
+    // Filter out empty paragraphs and trim whitespace
+    return paragraphs
+      .filter(p => p.trim().length > 0)
+      .map(p => p.trim())
+      .join('\n\n');
+  };
+
   return (
     <div className={cn(
       "group transition-all duration-200",
@@ -65,13 +78,12 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="opacity-0 group-hover:opacity-100 transition-opacity bg-sage hover:bg-sage-dark text-white hover:text-white border-none"
                     onClick={(e) => {
                       e.stopPropagation();
                       window.open(url, '_blank', 'noopener,noreferrer');
                     }}
                   >
-                    <ExternalLink className="w-4 h-4 mr-2" />
                     Apply
                   </Button>
                 </div>
@@ -114,7 +126,12 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
         <CollapsibleContent className="px-6 py-4 bg-white border-x border-b rounded-b-lg">
           <div className="prose prose-sm max-w-none">
             {description ? (
-              <div dangerouslySetInnerHTML={{ __html: description }} />
+              <div 
+                className="whitespace-pre-wrap"
+                dangerouslySetInnerHTML={{ 
+                  __html: formatDescription(description) 
+                }} 
+              />
             ) : (
               <p className="text-gray-500 italic">No description available</p>
             )}
