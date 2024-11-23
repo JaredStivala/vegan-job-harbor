@@ -76,7 +76,7 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
         return `
           <section class="mb-8">
             <h3 class="text-xl font-bold text-sage-dark mb-4">${title}</h3>
-            ${trimmedP.startsWith('•') || trimmedP.startsWith('-') 
+            ${content.trim().startsWith('•') || content.trim().startsWith('-') 
               ? `<ul class="list-disc pl-6 space-y-1">${formattedContent}</ul>`
               : formattedContent}
           </section>
