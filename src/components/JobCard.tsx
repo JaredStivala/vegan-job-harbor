@@ -45,23 +45,47 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
   const formatDescription = (desc: string) => {
     if (!desc) return '';
     
-    // Split by double newlines or <br> tags
-    return desc
-      .split(/\n\n|<br\s*\/?>/gi)
-      .filter(p => p.trim().length > 0)
-      .map(p => {
-        // Handle headings (lines starting with #)
-        if (p.trim().startsWith('#')) {
-          return p.replace(/^#+\s*(.*)$/gm, '<h3 class="text-xl font-bold text-sage-dark mt-8 mb-4">$1</h3>');
-        }
-        // Handle bullet points
-        if (p.trim().startsWith('•') || p.trim().startsWith('-')) {
-          return `<ul class="list-disc pl-6 mb-4 space-y-2"><li>${p.trim().substring(1).trim()}</li></ul>`;
-        }
-        // Regular paragraphs
-        return `<p class="mb-4 leading-relaxed">${p.trim()}</p>`;
-      })
-      .join('\n');
+    // First, identify and format the overview section
+    let sections = desc.split(/(?=Overview|About the Role|Requirements|Key Responsibilities|What We Offer|Benefits|About Us)/gi);
+    
+    return sections.map(section => {
+      // Get the section title if it exists
+      const titleMatch = section.match(/^(Overview|About the Role|Requirements|Key Responsibilities|What We Offer|Benefits|About Us)/i);
+      const title = titleMatch ? titleMatch[0] : '';
+      const content = titleMatch ? section.substring(title.length) : section;
+      
+      // Split content into paragraphs and format them
+      const formattedContent = content
+        .split(/\n\n|\n(?=[•-])|<br\s*\/?>/gi)
+        .filter(p => p.trim().length > 0)
+        .map(p => {
+          const trimmedP = p.trim();
+          
+          // Handle bullet points
+          if (trimmedP.startsWith('•') || trimmedP.startsWith('-')) {
+            return `<li class="mb-2">${trimmedP.substring(1).trim()}</li>`;
+          }
+          
+          // Regular paragraphs
+          return `<p class="mb-4 leading-relaxed">${trimmedP}</p>`;
+        })
+        .join('\n');
+
+      // If this is a section with a title, wrap it in a section with heading
+      if (title) {
+        return `
+          <section class="mb-8">
+            <h3 class="text-xl font-bold text-sage-dark mb-4">${title}</h3>
+            ${trimmedP.startsWith('•') || trimmedP.startsWith('-') 
+              ? `<ul class="list-disc pl-6 space-y-1">${formattedContent}</ul>`
+              : formattedContent}
+          </section>
+        `;
+      }
+      
+      // If no title, just return the formatted content
+      return `<div class="mb-6">${formattedContent}</div>`;
+    }).join('\n');
   };
 
   return (
