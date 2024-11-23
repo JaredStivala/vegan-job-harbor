@@ -45,14 +45,21 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
   const formatDescription = (desc: string) => {
     if (!desc) return '';
     
+    // Split by double newlines or <br> tags
     return desc
       .split(/\n\n|<br\s*\/?>/gi)
       .filter(p => p.trim().length > 0)
       .map(p => {
+        // Handle headings (lines starting with #)
         if (p.trim().startsWith('#')) {
-          return p.replace(/^#+\s*(.*)$/gm, '<h3 class="text-xl font-bold text-sage-dark my-4">$1</h3>');
+          return p.replace(/^#+\s*(.*)$/gm, '<h3 class="text-xl font-bold text-sage-dark mt-8 mb-4">$1</h3>');
         }
-        return `<p class="mb-6">${p.trim()}</p>`;
+        // Handle bullet points
+        if (p.trim().startsWith('•') || p.trim().startsWith('-')) {
+          return `<ul class="list-disc pl-6 mb-4 space-y-2"><li>${p.trim().substring(1).trim()}</li></ul>`;
+        }
+        // Regular paragraphs
+        return `<p class="mb-4 leading-relaxed">${p.trim()}</p>`;
       })
       .join('\n');
   };
@@ -142,7 +149,7 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
           <div className="prose prose-lg max-w-none">
             {description ? (
               <div 
-                className="space-y-6 text-gray-700 leading-relaxed"
+                className="text-gray-700"
                 dangerouslySetInnerHTML={{ 
                   __html: formatDescription(description) 
                 }} 
