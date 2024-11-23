@@ -52,16 +52,16 @@ export const JobStats = ({ jobCount }: JobStatsProps) => {
   return (
     <div className="flex gap-8 justify-center items-center text-white">
       <div className="flex items-center gap-2">
-        <Briefcase className="w-4 h-4" />
-        <span className="text-lg font-medium tracking-wide">
-          <span className="font-semibold">{animatedJobCount}</span>{" "}
+        <Briefcase className="w-4 h-4 drop-shadow-sm" />
+        <span className="text-lg font-semibold tracking-wide drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)]">
+          <span className="font-bold">{animatedJobCount}</span>{" "}
           Active Jobs
         </span>
       </div>
       <div className="flex items-center gap-2">
-        <Users className="w-4 h-4" />
-        <span className="text-lg font-medium tracking-wide">
-          <span className="font-semibold">{animatedCandidateCount}+</span>{" "}
+        <Users className="w-4 h-4 drop-shadow-sm" />
+        <span className="text-lg font-semibold tracking-wide drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)]">
+          <span className="font-bold">{animatedCandidateCount}+</span>{" "}
           Candidates
         </span>
       </div>
