@@ -17,20 +17,20 @@ const PostJob = () => {
 
     const formData = new FormData(e.currentTarget);
     const jobData = {
-      page_title: formData.get("title"),
-      company_name: formData.get("company"),
-      location: formData.get("location"),
-      salary: formData.get("salary"),
-      description: formData.get("description"),
-      url: formData.get("url"),
-      tags: formData.get("tags")?.toString().split(",").map(tag => tag.trim()),
+      page_title: String(formData.get("title") || ""),
+      company_name: String(formData.get("company") || ""),
+      location: String(formData.get("location") || ""),
+      salary: String(formData.get("salary") || ""),
+      description: String(formData.get("description") || ""),
+      url: String(formData.get("url") || ""),
+      tags: formData.get("tags")?.toString().split(",").map(tag => tag.trim()) || [],
       date_posted: new Date().toISOString().split("T")[0],
     };
 
     try {
       const { error } = await supabase
         .from("veganjobs")
-        .insert([jobData]);
+        .insert(jobData);
 
       if (error) throw error;
 
