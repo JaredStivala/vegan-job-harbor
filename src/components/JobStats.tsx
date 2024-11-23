@@ -51,17 +51,17 @@ export const JobStats = ({ jobCount }: JobStatsProps) => {
 
   return (
     <div className="flex gap-8 justify-center items-center text-white">
-      <div className="flex items-center gap-2.5">
-        <Briefcase className="w-5 h-5" />
-        <span className="text-xl font-semibold tracking-wide">
-          <span className="font-bold text-2xl">{animatedJobCount}</span>{" "}
+      <div className="flex items-center gap-2">
+        <Briefcase className="w-4 h-4" />
+        <span className="text-lg font-medium tracking-wide">
+          <span className="font-semibold">{animatedJobCount}</span>{" "}
           Active Jobs
         </span>
       </div>
-      <div className="flex items-center gap-2.5">
-        <Users className="w-5 h-5" />
-        <span className="text-xl font-semibold tracking-wide">
-          <span className="font-bold text-2xl">{animatedCandidateCount}+</span>{" "}
+      <div className="flex items-center gap-2">
+        <Users className="w-4 h-4" />
+        <span className="text-lg font-medium tracking-wide">
+          <span className="font-semibold">{animatedCandidateCount}+</span>{" "}
           Candidates
         </span>
       </div>
