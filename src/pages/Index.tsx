@@ -12,6 +12,7 @@ import { JobMap } from "@/components/JobMap";
 import { MapToggle } from "@/components/MapToggle";
 import { SelectedTags } from "@/components/SelectedTags";
 import { BackToTop } from "@/components/BackToTop";
+import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,6 +22,7 @@ import {
 import type { Job } from "@/types/job";
 
 const Index = () => {
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<'latest' | 'salary' | 'location'>('latest');
@@ -150,6 +152,15 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream">
+      <div className="absolute top-4 right-4 z-20">
+        <Button 
+          onClick={() => navigate("/post-job")}
+          className="bg-sage hover:bg-sage-dark text-white"
+        >
+          Post a Job
+        </Button>
+      </div>
+      
       <div 
         className="relative bg-center bg-cover py-8 flex items-center overflow-hidden" 
         style={{ 
@@ -294,4 +305,3 @@ const Index = () => {
 };
 
 export default Index;
-
