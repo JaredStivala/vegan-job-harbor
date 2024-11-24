@@ -1,15 +1,15 @@
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { MapPin, Building2, Calendar, ImageIcon } from "lucide-react";
 import type { Job } from "@/types/job";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { JobHeader } from "./job/JobHeader";
+import { JobMetadata } from "./job/JobMetadata";
 
 interface JobCardProps {
   job: Job;
@@ -109,62 +109,18 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
           )}>
             <div className="space-y-4">
               <div className="space-y-2">
-                <div className="flex justify-between items-start gap-4">
-                  <div className="flex items-start gap-3">
-                    <div className="w-12 h-12 rounded-lg border flex items-center justify-center bg-white shrink-0 overflow-hidden">
-                      {logo ? (
-                        <img 
-                          src={logo} 
-                          alt={`${company_name} logo`}
-                          className="w-full h-full object-contain"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.src = '/placeholder.svg';
-                          }}
-                        />
-                      ) : (
-                        <ImageIcon className="w-6 h-6 text-gray-400" />
-                      )}
-                    </div>
-                    <h3 className="font-semibold text-lg text-sage-dark">
-                      {page_title || "Untitled Position"}
-                    </h3>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="opacity-0 group-hover:opacity-100 transition-opacity bg-sage hover:bg-sage-dark text-white hover:text-white border-none"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      window.open(url, '_blank', 'noopener,noreferrer');
-                    }}
-                  >
-                    Apply
-                  </Button>
-                </div>
+                <JobHeader 
+                  title={page_title}
+                  logo={logo}
+                  companyName={company_name}
+                  url={url}
+                />
                 
-                <div className="flex flex-wrap gap-2 items-center text-sm text-gray-600">
-                  {company_name && (
-                    <div className="flex items-center gap-1">
-                      <Building2 className="w-4 h-4" />
-                      <span>{company_name}</span>
-                    </div>
-                  )}
-                  
-                  {location && (
-                    <div className="flex items-center gap-1">
-                      <MapPin className="w-4 h-4" />
-                      <span>{location}</span>
-                    </div>
-                  )}
-                  
-                  {formattedDate && (
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4" />
-                      <span>{formattedDate}</span>
-                    </div>
-                  )}
-                </div>
+                <JobMetadata 
+                  companyName={company_name}
+                  location={location}
+                  formattedDate={formattedDate}
+                />
               </div>
 
               <div className="flex flex-wrap gap-2">
