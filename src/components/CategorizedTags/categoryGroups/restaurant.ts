@@ -1,0 +1,22 @@
+export const restaurantCategories = [
+  "Chef", 
+  "Sous Chef",
+  "Line Cook",
+  "Pastry Chef",
+  "Server",
+  "Bartender",
+  "Barback",
+  "Host/Hostess",
+  "Restaurant Manager",
+  "Kitchen Manager",
+  "Food Service",
+  "Catering",
+  "Hospitality Management",
+  "Restaurant",
+  "Hospitality",
+  "Food & Beverage",
+  "Culinary",
+  "Kitchen Staff",
+  "Front of House",
+  "Back of House"
+];

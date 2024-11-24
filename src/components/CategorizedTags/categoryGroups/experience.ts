@@ -1,0 +1,22 @@
+export const experienceCategories = [
+  "Entry Level",
+  "Mid Level",
+  "Senior",
+  "Lead",
+  "Manager",
+  "Director",
+  "Executive",
+  "Junior",
+  "Associate",
+  "Principal",
+  "C-Level",
+  "VP",
+  "Head",
+  "Chief",
+  "Specialist",
+  "Expert",
+  "Professional",
+  "Coordinator",
+  "Supervisor",
+  "Administrator"
+];

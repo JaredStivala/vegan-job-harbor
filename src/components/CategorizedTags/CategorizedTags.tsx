@@ -1,6 +1,6 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
+import { Accordion } from "@/components/ui/accordion";
 import { categories } from "./categories";
+import { CategoryItem } from "./CategoryItem";
 
 interface CategorizedTagsProps {
   tags: string[];
@@ -9,52 +9,30 @@ interface CategorizedTagsProps {
 }
 
 export const CategorizedTags = ({ tags, selectedTags, onTagSelect }: CategorizedTagsProps) => {
+  // Convert tags array to lowercase for case-insensitive comparison
+  const normalizedTags = tags.map(tag => tag.toLowerCase());
+
   return (
     <div className="w-full">
       <h3 className="text-lg font-semibold text-sage-dark mb-4">Categories</h3>
       <Accordion type="multiple" className="w-full space-y-2">
         {Object.entries(categories).map(([category, categoryTags]) => {
-          const filteredTags = categoryTags.filter(tag => tags.includes(tag));
+          // Filter tags case-insensitively
+          const filteredTags = categoryTags.filter(tag => 
+            normalizedTags.includes(tag.toLowerCase())
+          );
+          
+          // Don't render empty categories
           if (filteredTags.length === 0) return null;
           
-          const selectedCount = filteredTags.filter(tag => selectedTags.includes(tag)).length;
-          
           return (
-            <AccordionItem 
-              value={category} 
-              key={category} 
-              className="border rounded-lg overflow-hidden bg-white shadow-sm"
-            >
-              <AccordionTrigger className="px-4 py-3 text-sage-dark hover:text-sage hover:no-underline">
-                <div className="flex items-center justify-between w-full">
-                  <span className="font-medium">{category}</span>
-                  {selectedCount > 0 && (
-                    <span className="text-sm bg-sage/10 px-2 py-0.5 rounded-full ml-2">
-                      {selectedCount}
-                    </span>
-                  )}
-                </div>
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="flex flex-col gap-1 p-3">
-                  {filteredTags.map((tag) => (
-                    <Button
-                      key={tag}
-                      variant={selectedTags.includes(tag) ? "default" : "ghost"}
-                      size="sm"
-                      className={`justify-start ${
-                        selectedTags.includes(tag) 
-                          ? "bg-sage hover:bg-sage-dark text-white" 
-                          : "hover:bg-sage/10 text-sage-dark"
-                      }`}
-                      onClick={() => onTagSelect(tag)}
-                    >
-                      {tag}
-                    </Button>
-                  ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
+            <CategoryItem
+              key={category}
+              category={category}
+              tags={filteredTags}
+              selectedTags={selectedTags}
+              onTagSelect={onTagSelect}
+            />
           );
         })}
       </Accordion>

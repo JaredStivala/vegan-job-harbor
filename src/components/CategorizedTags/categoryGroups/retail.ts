@@ -1,0 +1,22 @@
+export const retailCategories = [
+  "Retail Manager",
+  "Sales Associate",
+  "Store Manager",
+  "Cashier",
+  "Customer Service",
+  "Visual Merchandiser",
+  "Retail",
+  "Sales",
+  "Service",
+  "Merchandising",
+  "Inventory Management",
+  "Loss Prevention",
+  "E-commerce",
+  "Online Retail",
+  "Retail Operations",
+  "Customer Experience",
+  "Customer Success",
+  "Account Management",
+  "Client Services",
+  "Business Services"
+];

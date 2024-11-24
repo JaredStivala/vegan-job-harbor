@@ -1,0 +1,23 @@
+export const educationCategories = [
+  "Education",
+  "Research",
+  "Teaching",
+  "Training",
+  "Curriculum Development",
+  "Program Development",
+  "Academic",
+  "Instructional Design",
+  "E-learning",
+  "Educational Technology",
+  "Higher Education",
+  "Adult Education",
+  "Professional Development",
+  "Learning & Development",
+  "Research Analysis",
+  "Research Coordination",
+  "Scientific Research",
+  "Market Research",
+  "Data Analysis",
+  "Policy Research",
+  "Research Management"
+];
