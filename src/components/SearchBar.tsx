@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { Search, Tag } from "lucide-react";
 import { useState, useEffect } from "react";
 import {
   Command,
@@ -84,7 +84,7 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
                     onSelect={() => handleTagSelect(tag)}
                     className="cursor-pointer"
                   >
-                    <span className="mr-2">#</span>
+                    <Tag className="mr-2 h-4 w-4 text-sage" />
                     <span>{tag}</span>
                     {selectedTags.includes(tag) && (
                       <span className="ml-auto text-sage">Selected</span>
