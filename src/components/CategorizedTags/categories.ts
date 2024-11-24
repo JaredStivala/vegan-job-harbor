@@ -9,6 +9,11 @@ import { educationCategories } from './categoryGroups/education';
 import { employmentCategories } from './categoryGroups/employment';
 import { experienceCategories } from './categoryGroups/experience';
 import { skillsCategories } from './categoryGroups/skills';
+import { sustainabilityCategories } from './categoryGroups/sustainability';
+import { healthcareCategories } from './categoryGroups/healthcare';
+import { consultingCategories } from './categoryGroups/consulting';
+import { creativeCategories } from './categoryGroups/creative';
+import { legalCategories } from './categoryGroups/legal';
 
 export const categories = {
   "Restaurant & Hospitality": restaurantCategories,
@@ -21,5 +26,10 @@ export const categories = {
   "Education & Research": educationCategories,
   "Employment Type": employmentCategories,
   "Experience Level": experienceCategories,
-  "Other Skills": skillsCategories
+  "Skills": skillsCategories,
+  "Sustainability & Environment": sustainabilityCategories,
+  "Healthcare & Wellness": healthcareCategories,
+  "Consulting & Advisory": consultingCategories,
+  "Creative & Design": creativeCategories,
+  "Legal & Compliance": legalCategories
 };

@@ -1,0 +1,22 @@
+export const sustainabilityCategories = [
+  "Sustainability",
+  "Environmental",
+  "Climate",
+  "Conservation",
+  "Sustainable Food",
+  "Organic",
+  "Plant-Based",
+  "Green Technology",
+  "Renewable Energy",
+  "Zero Waste",
+  "Circular Economy",
+  "Environmental Impact",
+  "Eco-friendly",
+  "Carbon Footprint",
+  "Sustainable Agriculture",
+  "Clean Energy",
+  "Environmental Policy",
+  "Sustainable Development",
+  "Green Business",
+  "Corporate Sustainability"
+];

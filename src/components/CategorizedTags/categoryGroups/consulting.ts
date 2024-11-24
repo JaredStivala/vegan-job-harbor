@@ -1,0 +1,22 @@
+export const consultingCategories = [
+  "Consulting",
+  "Strategy Consulting",
+  "Management Consulting",
+  "Business Consulting",
+  "Technical Consulting",
+  "Environmental Consulting",
+  "Food Consulting",
+  "Sustainability Consulting",
+  "Policy Consulting",
+  "Impact Consulting",
+  "Innovation Consulting",
+  "Change Management",
+  "Process Improvement",
+  "Organizational Development",
+  "Strategic Planning",
+  "Business Transformation",
+  "Digital Transformation",
+  "Advisory",
+  "Expert",
+  "Professional Services"
+];

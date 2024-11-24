@@ -1,0 +1,22 @@
+export const creativeCategories = [
+  "Creative",
+  "Design",
+  "Art Direction",
+  "Graphic Design",
+  "UI Design",
+  "UX Design",
+  "Product Design",
+  "Visual Design",
+  "Content Creation",
+  "Content Strategy",
+  "Creative Direction",
+  "Brand Design",
+  "Digital Design",
+  "Web Design",
+  "Photography",
+  "Video Production",
+  "Animation",
+  "Illustration",
+  "Creative Strategy",
+  "Creative Services"
+];

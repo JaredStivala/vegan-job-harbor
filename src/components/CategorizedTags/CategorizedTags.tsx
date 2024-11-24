@@ -17,9 +17,12 @@ export const CategorizedTags = ({ tags, selectedTags, onTagSelect }: Categorized
       <h3 className="text-lg font-semibold text-sage-dark mb-4">Categories</h3>
       <Accordion type="multiple" className="w-full space-y-2">
         {Object.entries(categories).map(([category, categoryTags]) => {
-          // Filter tags case-insensitively
+          // Filter tags case-insensitively and match partial matches
           const filteredTags = categoryTags.filter(tag => 
-            normalizedTags.includes(tag.toLowerCase())
+            normalizedTags.some(normalizedTag => 
+              normalizedTag.includes(tag.toLowerCase()) || 
+              tag.toLowerCase().includes(normalizedTag)
+            )
           );
           
           // Don't render empty categories
