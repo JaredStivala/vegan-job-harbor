@@ -28,5 +28,19 @@ export const nonProfitCategories = [
   "Environmental Justice",
   "Climate",
   "Social Services",
-  "Philanthropy"
+  "Philanthropy",
+  "NGO",
+  "Charitable",
+  "Social Work",
+  "Community Development",
+  "Impact Assessment",
+  "Program Coordination",
+  "Outreach",
+  "Education Outreach",
+  "Animal Sanctuary",
+  "Animal Shelter",
+  "Rescue",
+  "Plant-Based Advocacy",
+  "Environmental Education",
+  "Conservation Biology"
 ];

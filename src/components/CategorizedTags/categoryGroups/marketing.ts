@@ -28,5 +28,11 @@ export const marketingCategories = [
   "Event Marketing",
   "Influencer Marketing",
   "Social Media Marketing",
-  "Performance Marketing"
+  "Performance Marketing",
+  "Marketing Communications",
+  "Product Marketing",
+  "Campaign Management",
+  "Market Research",
+  "Marketing Technology",
+  "Marketing Automation"
 ];

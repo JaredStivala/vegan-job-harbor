@@ -1,4 +1,3 @@
-// Split categories into separate files by domain
 import { restaurantCategories } from './categoryGroups/restaurant';
 import { foodIndustryCategories } from './categoryGroups/foodIndustry';
 import { businessCategories } from './categoryGroups/business';

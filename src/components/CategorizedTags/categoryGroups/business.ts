@@ -1,6 +1,6 @@
 export const businessCategories = [
   "Operations Manager",
-  "Project Manager",
+  "Project Manager", 
   "Business Development",
   "Marketing Manager",
   "HR Manager",
@@ -27,5 +27,14 @@ export const businessCategories = [
   "Logistics",
   "Procurement Management",
   "Business Intelligence",
-  "Analytics"
+  "Analytics",
+  "Business Administration",
+  "Strategic Planning",
+  "Change Management",
+  "Process Improvement",
+  "Business Analysis",
+  "Program Management",
+  "Portfolio Management",
+  "Business Transformation",
+  "Organizational Development"
 ];
