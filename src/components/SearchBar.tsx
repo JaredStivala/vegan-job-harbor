@@ -8,9 +8,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@/components/ui/command";
-import { categories } from "./CategorizedTags/categories";
 
 interface SearchBarProps {
   tags: string[];
@@ -46,20 +44,9 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
   const handleTagSelect = (tag: string) => {
     onTagSelect(tag);
     setOpen(false);
+    // Scroll to jobs section after a small delay to ensure the UI has updated
     setTimeout(scrollToJobs, 100);
   };
-
-  // Filter and organize tags by category
-  const categorizedTags = Object.entries(categories).reduce((acc, [category, categoryTags]) => {
-    const filteredTags = categoryTags.filter(tag => 
-      uniqueTags.includes(tag) && 
-      tag.toLowerCase().includes(search.toLowerCase())
-    );
-    if (filteredTags.length > 0) {
-      acc[category] = filteredTags;
-    }
-    return acc;
-  }, {} as Record<string, string[]>);
 
   return (
     <div className="relative w-full max-w-2xl mx-auto">
@@ -85,27 +72,26 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
           />
           <CommandList>
             <CommandEmpty>No tags found.</CommandEmpty>
-            {Object.entries(categorizedTags).map(([category, tags], index) => (
-              <div key={category}>
-                {index > 0 && <CommandSeparator />}
-                <CommandGroup heading={category}>
-                  {tags.map((tag) => (
-                    <CommandItem
-                      key={tag}
-                      value={tag}
-                      onSelect={() => handleTagSelect(tag)}
-                      className="cursor-pointer"
-                    >
-                      <span className="mr-2">#</span>
-                      <span>{tag}</span>
-                      {selectedTags.includes(tag) && (
-                        <span className="ml-auto text-sage">Selected</span>
-                      )}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </div>
-            ))}
+            <CommandGroup heading="Available Tags">
+              {uniqueTags
+                .filter(tag => 
+                  tag.toLowerCase().includes(search.toLowerCase())
+                )
+                .map((tag) => (
+                  <CommandItem
+                    key={tag}
+                    value={tag}
+                    onSelect={() => handleTagSelect(tag)}
+                    className="cursor-pointer"
+                  >
+                    <span className="mr-2">#</span>
+                    <span>{tag}</span>
+                    {selectedTags.includes(tag) && (
+                      <span className="ml-auto text-sage">Selected</span>
+                    )}
+                  </CommandItem>
+                ))}
+            </CommandGroup>
           </CommandList>
         </Command>
       </CommandDialog>
