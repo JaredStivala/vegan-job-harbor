@@ -20,6 +20,9 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
+  // Remove duplicate tags
+  const uniqueTags = Array.from(new Set(tags));
+
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
@@ -70,7 +73,7 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
           <CommandList>
             <CommandEmpty>No tags found.</CommandEmpty>
             <CommandGroup heading="Available Tags">
-              {tags
+              {uniqueTags
                 .filter(tag => 
                   tag.toLowerCase().includes(search.toLowerCase())
                 )
