@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { MapPin, Building2, Calendar } from "lucide-react";
+import { MapPin, Building2, Calendar, ImageIcon } from "lucide-react";
 import type { Job } from "@/types/job";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -25,7 +25,8 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
     date_posted,
     url,
     description,
-    tags
+    tags,
+    logo
   } = job;
 
   const [isOpen, setIsOpen] = useState(false);
@@ -108,10 +109,27 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
           )}>
             <div className="space-y-4">
               <div className="space-y-2">
-                <div className="flex justify-between items-start">
-                  <h3 className="font-semibold text-lg text-sage-dark">
-                    {page_title || "Untitled Position"}
-                  </h3>
+                <div className="flex justify-between items-start gap-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 rounded-lg border flex items-center justify-center bg-white shrink-0 overflow-hidden">
+                      {logo ? (
+                        <img 
+                          src={logo} 
+                          alt={`${company_name} logo`}
+                          className="w-full h-full object-contain"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = '/placeholder.svg';
+                          }}
+                        />
+                      ) : (
+                        <ImageIcon className="w-6 h-6 text-gray-400" />
+                      )}
+                    </div>
+                    <h3 className="font-semibold text-lg text-sage-dark">
+                      {page_title || "Untitled Position"}
+                    </h3>
+                  </div>
                   <Button
                     variant="outline"
                     size="sm"

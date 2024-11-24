@@ -11,4 +11,5 @@ export interface Job {
   url: string;
   description: string | null;
   updated_at: string | null;
+  logo?: string | null;
 }
