@@ -94,11 +94,7 @@ const Index = () => {
 
   const allJobs = useMemo(() => {
     let jobs = [...veganJobs, ...advocacyJobs, ...vevolutionJobs].filter((job): job is Job => {
-      return Boolean(
-        job &&
-        job.id &&
-        job.url
-      );
+      return Boolean(job && job.id && job.url);
     });
 
     if (selectedTags.length > 0) {
