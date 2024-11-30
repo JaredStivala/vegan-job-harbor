@@ -28,13 +28,13 @@ serve(async (req) => {
       )
     }
 
+    console.log('Fetching job from source:', source, 'with ID:', jobId)
+
     // Initialize Supabase client
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
-
-    console.log('Fetching job from source:', source, 'with ID:', jobId)
 
     // Get the job URL from the appropriate table
     const { data: job, error: jobError } = await supabase
@@ -71,16 +71,8 @@ serve(async (req) => {
       console.error('Error logging click:', clickError)
     }
 
-    // Return 302 redirect with all necessary headers
-    return new Response(null, {
-      status: 302,
-      headers: {
-        ...corsHeaders,
-        'Location': job.url,
-        'Cache-Control': 'no-store, no-cache, must-revalidate',
-        'Pragma': 'no-cache'
-      }
-    })
+    // Perform the redirect using Response.redirect()
+    return Response.redirect(job.url, 302)
   } catch (error) {
     console.error('Unexpected error:', error)
     return new Response(

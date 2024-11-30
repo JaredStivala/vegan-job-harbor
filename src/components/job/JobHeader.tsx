@@ -13,7 +13,13 @@ interface JobHeaderProps {
 export const JobHeader = ({ title, logo, companyName, url, jobId, source }: JobHeaderProps) => {
   const handleApply = (e: React.MouseEvent) => {
     e.stopPropagation();
-    window.open(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/redirect?id=${jobId}&source=${source}`, '_blank', 'noopener,noreferrer');
+    // Construct the full URL using import.meta.env.VITE_SUPABASE_URL
+    const redirectUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/redirect`;
+    const params = new URLSearchParams({
+      id: jobId,
+      source: source
+    });
+    window.open(`${redirectUrl}?${params.toString()}`, '_blank', 'noopener,noreferrer');
   };
 
   return (
