@@ -41,14 +41,14 @@ export const JobHeader = ({ title, logo, companyName, url, jobId, source }: JobH
     <div className="flex justify-between items-start gap-4">
       <div className="flex items-start gap-3">
         <JobLogo logo={logo} companyName={companyName} />
-        <h3 className="font-semibold text-lg text-black group-hover:text-sage transition-colors">
+        <h3 className="font-semibold text-lg text-black group-hover:text-sage">
           {title || "Untitled Position"}
         </h3>
       </div>
       <Button
         variant="outline"
         size="sm"
-        className="opacity-0 group-hover:opacity-100 transition-opacity bg-sage hover:bg-sage-dark text-white hover:text-white border-none"
+        className="opacity-0 group-hover:opacity-100 bg-sage hover:bg-sage-dark text-white hover:text-white border-none"
         onClick={handleApply}
       >
         Apply
