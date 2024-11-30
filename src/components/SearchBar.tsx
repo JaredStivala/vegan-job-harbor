@@ -8,13 +8,13 @@ interface SearchBarProps {
   selectedTags: string[];
 }
 
-export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) => {
+export const SearchBar = ({ tags = [], onTagSelect, selectedTags }: SearchBarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // Remove duplicate tags
-  const uniqueTags = Array.from(new Set(tags));
+  // Remove duplicate tags - ensure tags is an array before creating Set
+  const uniqueTags = Array.from(new Set(tags.filter(Boolean)));
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
