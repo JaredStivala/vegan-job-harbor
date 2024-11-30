@@ -46,11 +46,11 @@ export const JobsContent = ({
   const [locationSearch, setLocationSearch] = useState("");
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
 
-  // Get unique locations from jobs
+  // Get unique locations from jobs, ensuring we have a valid array
   const uniqueLocations = Array.from(new Set(
     allJobs
       .map(job => job.location)
-      .filter((location): location is string => !!location)
+      .filter((location): location is string => Boolean(location))
   ));
 
   // Filter jobs based on selected locations
@@ -156,6 +156,7 @@ export const JobsContent = ({
             value={locationSearch}
             onValueChange={setLocationSearch}
           />
+          <CommandEmpty>No locations found.</CommandEmpty>
           <CommandGroup heading="Available Locations">
             {uniqueLocations
               .filter(location => 

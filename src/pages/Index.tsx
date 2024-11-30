@@ -88,17 +88,13 @@ const Index = () => {
         if (!job.tags) return false;
         
         // Handle both array and string tags
-        if (Array.isArray(job.tags)) {
-          return job.tags.some(tag => selectedTags.includes(tag));
-        } 
-        
-        // Handle string tags
-        if (typeof job.tags === 'string') {
-          const tagArray = job.tags.split(',').map(t => t.trim());
-          return tagArray.some(tag => selectedTags.includes(tag));
-        }
-        
-        return false;
+        const jobTags = Array.isArray(job.tags) 
+          ? job.tags 
+          : typeof job.tags === 'string' 
+            ? job.tags.split(',').map(t => t.trim())
+            : [];
+
+        return jobTags.some(tag => selectedTags.includes(tag));
       });
     }
 
