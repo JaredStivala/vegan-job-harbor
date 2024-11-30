@@ -2,14 +2,7 @@ import { Search, MapPin, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { JobsList } from "@/components/JobsList";
 import { SelectedTags } from "@/components/SelectedTags";
-import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
+import { LocationSearchDialog } from "@/components/jobs/LocationSearchDialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -46,7 +39,7 @@ export const JobsContent = ({
   const [locationSearch, setLocationSearch] = useState("");
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
 
-  // Get unique locations from jobs, ensuring we have a valid array
+  // Get unique locations from jobs
   const uniqueLocations = Array.from(new Set(
     allJobs
       .filter((job): job is Job & { location: string } => 
@@ -160,38 +153,15 @@ export const JobsContent = ({
         </div>
       </div>
       
-      <CommandDialog open={locationDialogOpen} onOpenChange={setLocationDialogOpen}>
-        <Command className="rounded-lg border shadow-md">
-          <CommandInput 
-            placeholder="Search locations..." 
-            value={locationSearch}
-            onValueChange={setLocationSearch}
-          />
-          <CommandList>
-            <CommandEmpty>No locations found.</CommandEmpty>
-            <CommandGroup heading="Available Locations">
-              {uniqueLocations
-                .filter(location => 
-                  location.toLowerCase().includes(locationSearch.toLowerCase())
-                )
-                .map((location) => (
-                  <CommandItem
-                    key={location}
-                    value={location}
-                    onSelect={() => handleLocationSelect(location)}
-                    className="cursor-pointer"
-                  >
-                    <MapPin className="mr-2 h-4 w-4 text-sage" />
-                    <span>{location}</span>
-                    {selectedLocations.includes(location) && (
-                      <span className="ml-auto text-sage">Selected</span>
-                    )}
-                  </CommandItem>
-                ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </CommandDialog>
+      <LocationSearchDialog
+        open={locationDialogOpen}
+        onOpenChange={setLocationDialogOpen}
+        locationSearch={locationSearch}
+        setLocationSearch={setLocationSearch}
+        uniqueLocations={uniqueLocations}
+        selectedLocations={selectedLocations}
+        onLocationSelect={handleLocationSelect}
+      />
       
       <JobsList 
         jobs={filteredJobs}
