@@ -8,8 +8,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { useState, useMemo } from "react";
 import { JobStats } from "@/components/JobStats";
 import { JobsList } from "@/components/JobsList";
-import { JobMap } from "@/components/JobMap";
-import { MapToggle } from "@/components/MapToggle";
 import { SelectedTags } from "@/components/SelectedTags";
 import { BackToTop } from "@/components/BackToTop";
 import { useNavigate } from "react-router-dom";
@@ -27,7 +25,6 @@ const Index = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<'latest' | 'salary' | 'location'>('latest');
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-  const [isMapVisible, setIsMapVisible] = useState(false);
 
   const { data: veganJobs = [], isLoading: isLoadingVegan, error: veganError } = useQuery({
     queryKey: ['veganjobs'],
@@ -139,14 +136,6 @@ const Index = () => {
     setSelectedTags(prev => prev.filter(t => t !== tag));
   };
 
-  const handleJobSelect = (job: Job) => {
-    setSelectedJob(job);
-    const element = document.getElementById('jobs-section');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream">
       <div className="absolute top-4 right-4 z-20">
@@ -207,15 +196,6 @@ const Index = () => {
           </svg>
         </div>
       </div>
-
-      <div className="container py-4">
-        {isMapVisible && (
-          <div className="mb-8">
-            <h2 className="text-2xl font-semibold text-sage-dark mb-4">Job Locations</h2>
-            <JobMap jobs={allJobs} onJobSelect={handleJobSelect} />
-          </div>
-        )}
-      </div>
       
       <div id="jobs-section" className="container py-8">
         <div className="flex flex-col md:flex-row gap-6">
@@ -239,7 +219,6 @@ const Index = () => {
                   <span className="text-sage bg-sage/10 px-2 py-1 rounded-full text-sm">
                     {allJobs.length}
                   </span>
-                  <MapToggle isMapVisible={isMapVisible} onToggle={() => setIsMapVisible(!isMapVisible)} />
                 </div>
                 <div className="flex gap-2">
                   <DropdownMenu>
