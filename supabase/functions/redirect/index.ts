@@ -18,9 +18,13 @@ serve(async (req) => {
     const source = url.searchParams.get('source')
 
     if (!jobId || !source) {
+      console.error('Missing required parameters:', { jobId, source })
       return new Response(
         JSON.stringify({ error: 'Missing job ID or source' }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+          status: 400 
+        }
       )
     }
 
@@ -30,6 +34,8 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
+    console.log('Fetching job from source:', source, 'with ID:', jobId)
+
     // Get the job URL from the appropriate table
     const { data: job, error: jobError } = await supabase
       .from(source)
@@ -37,13 +43,18 @@ serve(async (req) => {
       .eq('id', jobId)
       .single()
 
-    if (jobError || !job) {
+    if (jobError || !job?.url) {
       console.error('Error fetching job:', jobError)
       return new Response(
         JSON.stringify({ error: 'Job not found' }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 404 }
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+          status: 404 
+        }
       )
     }
+
+    console.log('Found job URL:', job.url)
 
     // Log the click
     const { error: clickError } = await supabase
@@ -60,19 +71,23 @@ serve(async (req) => {
       console.error('Error logging click:', clickError)
     }
 
-    // Return 302 redirect
+    // Return 302 redirect with all necessary headers
     return new Response(null, {
+      status: 302,
       headers: {
         ...corsHeaders,
         'Location': job.url,
-      },
-      status: 302
+        'Cache-Control': 'no-cache'
+      }
     })
   } catch (error) {
     console.error('Unexpected error:', error)
     return new Response(
       JSON.stringify({ error: 'Internal server error' }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      { 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
+        status: 500 
+      }
     )
   }
 })
