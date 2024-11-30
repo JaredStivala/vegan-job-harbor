@@ -38,6 +38,7 @@ export const JobsContent = ({
   const [showLocationSearch, setShowLocationSearch] = useState(false);
   const [locationSearch, setLocationSearch] = useState("");
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
+  const [isLocationSearchOpen, setIsLocationSearchOpen] = useState(false);
 
   // Get unique locations from jobs
   const uniqueLocations = Array.from(new Set(
@@ -140,6 +141,8 @@ export const JobsContent = ({
                   uniqueLocations={uniqueLocations}
                   selectedLocations={selectedLocations}
                   onLocationSelect={handleLocationSelect}
+                  isOpen={isLocationSearchOpen}
+                  setIsOpen={setIsLocationSearchOpen}
                 />
               )}
             </div>
