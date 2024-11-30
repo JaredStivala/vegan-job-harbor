@@ -1,14 +1,6 @@
 import { Search, Tag } from "lucide-react";
-import { useState, useEffect } from "react";
-import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { useState, useEffect, useRef } from "react";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 
 interface SearchBarProps {
   tags: string[];
@@ -17,17 +9,29 @@ interface SearchBarProps {
 }
 
 export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) => {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   // Remove duplicate tags
   const uniqueTags = Array.from(new Set(tags));
 
   useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        setOpen((open) => !open);
+        setIsOpen(true);
       }
     };
     document.addEventListener("keydown", down);
@@ -43,36 +47,36 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
 
   const handleTagSelect = (tag: string) => {
     onTagSelect(tag);
-    setOpen(false);
-    // Scroll to jobs section after a small delay to ensure the UI has updated
+    setIsOpen(false);
     setTimeout(scrollToJobs, 100);
   };
 
   return (
-    <div className="relative w-full max-w-2xl mx-auto">
+    <div className="relative w-full max-w-2xl mx-auto" ref={wrapperRef}>
       <div className="relative">
-        <button
-          onClick={() => setOpen(true)}
-          className="w-full px-6 py-4 pl-14 text-lg rounded-full border-2 border-sage focus:border-sage focus:ring-2 focus:ring-sage/20 outline-none transition-all bg-white shadow-lg text-left text-muted-foreground"
+        <div
+          onClick={() => setIsOpen(true)}
+          className="w-full px-6 py-4 pl-14 text-lg rounded-full border-2 border-sage focus:border-sage focus:ring-2 focus:ring-sage/20 outline-none transition-all bg-white shadow-lg text-left text-muted-foreground cursor-pointer"
         >
           Search vegan jobs by tags...
           <kbd className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
             <span className="text-xs">⌘</span>K
           </kbd>
-        </button>
+        </div>
         <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-sage w-6 h-6" />
       </div>
 
-      <CommandDialog open={open} onOpenChange={setOpen}>
-        <Command className="rounded-lg border shadow-md">
-          <CommandInput 
-            placeholder="Type to search tags..." 
-            value={search}
-            onValueChange={setSearch}
-          />
-          <CommandList>
+      {isOpen && (
+        <div className="absolute w-full mt-2 rounded-lg border shadow-lg bg-white z-50">
+          <Command className="rounded-lg">
+            <CommandInput 
+              placeholder="Type to search tags..." 
+              value={search}
+              onValueChange={setSearch}
+              className="border-none focus:ring-0"
+            />
             <CommandEmpty>No tags found.</CommandEmpty>
-            <CommandGroup heading="Available Tags">
+            <CommandGroup heading="Available Tags" className="max-h-[300px] overflow-y-auto">
               {uniqueTags
                 .filter(tag => 
                   tag.toLowerCase().includes(search.toLowerCase())
@@ -82,7 +86,7 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
                     key={tag}
                     value={tag}
                     onSelect={() => handleTagSelect(tag)}
-                    className="cursor-pointer"
+                    className="cursor-pointer flex items-center px-4 py-2 hover:bg-sage/10"
                   >
                     <Tag className="mr-2 h-4 w-4 text-sage" />
                     <span>{tag}</span>
@@ -92,9 +96,9 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
                   </CommandItem>
                 ))}
             </CommandGroup>
-          </CommandList>
-        </Command>
-      </CommandDialog>
+          </Command>
+        </div>
+      )}
     </div>
   );
 };
