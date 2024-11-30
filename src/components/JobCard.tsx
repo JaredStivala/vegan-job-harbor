@@ -113,7 +113,7 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
       >
         <CollapsibleTrigger className="w-full text-left">
           <Card className={cn(
-            "p-6 hover:shadow-md transition-all duration-200 relative hover:bg-sage/5",
+            "p-6 transition-all duration-200 relative",
             isSelected && "ring-2 ring-sage shadow-md"
           )}>
             <div className="space-y-4">
@@ -144,7 +144,7 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
                   <Badge 
                     key={index}
                     variant="secondary" 
-                    className="bg-sage/10 text-sage-dark hover:bg-sage/20 transition-colors"
+                    className="bg-sage/10 text-sage-dark"
                   >
                     {tag}
                   </Badge>

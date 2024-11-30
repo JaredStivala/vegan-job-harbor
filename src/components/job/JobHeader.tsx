@@ -41,7 +41,7 @@ export const JobHeader = ({ title, logo, companyName, url, jobId, source }: JobH
     <div className="flex justify-between items-start gap-4">
       <div className="flex items-start gap-3">
         <JobLogo logo={logo} companyName={companyName} />
-        <h3 className="font-semibold text-lg text-black hover:text-sage transition-colors">
+        <h3 className="font-semibold text-lg text-black group-hover:text-sage transition-colors">
           {title || "Untitled Position"}
         </h3>
       </div>
