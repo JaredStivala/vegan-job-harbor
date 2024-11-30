@@ -7,9 +7,10 @@ interface JobsListProps {
   isLoading: boolean;
   error: Error | null;
   selectedJob?: Job | null;
+  source: string;
 }
 
-export const JobsList = ({ jobs = [], isLoading, error, selectedJob }: JobsListProps) => {
+export const JobsList = ({ jobs = [], isLoading, error, selectedJob, source }: JobsListProps) => {
   if (error) {
     return (
       <div className="text-red-500">
@@ -43,6 +44,7 @@ export const JobsList = ({ jobs = [], isLoading, error, selectedJob }: JobsListP
           key={job.id} 
           job={job} 
           isSelected={selectedJob?.id === job.id}
+          source={source}
         />
       ))}
     </div>

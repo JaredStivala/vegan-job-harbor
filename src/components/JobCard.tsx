@@ -14,10 +14,12 @@ import { JobMetadata } from "./job/JobMetadata";
 interface JobCardProps {
   job: Job;
   isSelected?: boolean;
+  source: string;
 }
 
-export const JobCard = ({ job, isSelected }: JobCardProps) => {
+export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
   const {
+    id,
     page_title,
     company_name,
     location,
@@ -121,6 +123,8 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
                   logo={logo}
                   companyName={company_name}
                   url={url}
+                  jobId={id}
+                  source={source}
                 />
                 
                 <JobMetadata 

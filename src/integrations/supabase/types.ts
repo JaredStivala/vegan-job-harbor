@@ -99,6 +99,36 @@ export type Database = {
         }
         Relationships: []
       }
+      job_clicks: {
+        Row: {
+          clicked_at: string | null
+          id: string
+          ip_address: string | null
+          job_id: string
+          job_source: string
+          original_url: string
+          user_agent: string | null
+        }
+        Insert: {
+          clicked_at?: string | null
+          id?: string
+          ip_address?: string | null
+          job_id: string
+          job_source: string
+          original_url: string
+          user_agent?: string | null
+        }
+        Update: {
+          clicked_at?: string | null
+          id?: string
+          ip_address?: string | null
+          job_id?: string
+          job_source?: string
+          original_url?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       veganjobs: {
         Row: {
           company_name: string | null
