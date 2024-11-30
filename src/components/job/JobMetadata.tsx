@@ -19,7 +19,7 @@ export const JobMetadata = ({ companyName, location, formattedDate }: JobMetadat
       {location && (
         <div className="flex items-center gap-1">
           <MapPin className="w-4 h-4" />
-          <span>{location}</span>
+          <span>{location?.replace(/[\[\]"]/g, '').replace(/,\s*/g, ', ')}</span>
         </div>
       )}
       
