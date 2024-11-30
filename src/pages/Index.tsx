@@ -91,7 +91,7 @@ const Index = () => {
         const jobTags = Array.isArray(job.tags) 
           ? job.tags 
           : typeof job.tags === 'string' 
-            ? job.tags.split(',').map(t => t.trim())
+            ? (job.tags as string).split(',').map(t => t.trim())
             : [];
 
         return jobTags.some(tag => selectedTags.includes(tag));
