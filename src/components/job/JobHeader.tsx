@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { JobLogo } from "./JobLogo";
+import { supabase } from "@/integrations/supabase/client";
 
 interface JobHeaderProps {
   title: string;
@@ -18,17 +19,17 @@ export const JobHeader = ({ title, logo, companyName, url, jobId, source }: JobH
     // Log the click in the background without waiting for the response
     const logClick = async () => {
       try {
-        await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/log-click`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
+        const { error } = await supabase.functions.invoke('log-click', {
+          body: {
             jobId,
             source,
             url
-          })
+          }
         });
+        
+        if (error) {
+          console.error('Error logging click:', error);
+        }
       } catch (error) {
         console.error('Error logging click:', error);
       }
