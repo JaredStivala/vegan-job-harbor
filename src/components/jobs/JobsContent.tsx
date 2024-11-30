@@ -49,8 +49,10 @@ export const JobsContent = ({
   // Get unique locations from jobs, ensuring we have a valid array
   const uniqueLocations = Array.from(new Set(
     allJobs
+      .filter((job): job is Job & { location: string } => 
+        Boolean(job && job.location)
+      )
       .map(job => job.location)
-      .filter((location): location is string => Boolean(location))
   ));
 
   // Filter jobs based on selected locations
