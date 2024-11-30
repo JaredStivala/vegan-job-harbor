@@ -71,15 +71,8 @@ serve(async (req) => {
       console.error('Error logging click:', clickError)
     }
 
-    // Return 302 redirect with all necessary headers
-    return new Response(null, {
-      status: 302,
-      headers: {
-        ...corsHeaders,
-        'Location': job.url,
-        'Cache-Control': 'no-cache'
-      }
-    })
+    // Redirect to the job URL
+    return Response.redirect(job.url, 302)
   } catch (error) {
     console.error('Unexpected error:', error)
     return new Response(
