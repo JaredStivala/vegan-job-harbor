@@ -127,11 +127,20 @@ export const JobsContent = ({
             <Button 
               variant="outline" 
               size="sm" 
-              className="gap-2"
+              className="gap-2 relative w-[200px] justify-between"
               onClick={() => setLocationDialogOpen(true)}
             >
-              <MapPin className="w-4 h-4" />
-              Location
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4" />
+                <span className="text-left truncate">
+                  {selectedLocations.length > 0 
+                    ? `${selectedLocations.length} location${selectedLocations.length > 1 ? 's' : ''}`
+                    : 'Search locations...'}
+                </span>
+              </div>
+              <kbd className="pointer-events-none hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
+                <span className="text-xs">⌘</span>L
+              </kbd>
             </Button>
 
             <DropdownMenu>
@@ -158,27 +167,29 @@ export const JobsContent = ({
             value={locationSearch}
             onValueChange={setLocationSearch}
           />
-          <CommandEmpty>No locations found.</CommandEmpty>
-          <CommandGroup heading="Available Locations">
-            {uniqueLocations
-              .filter(location => 
-                location.toLowerCase().includes(locationSearch.toLowerCase())
-              )
-              .map((location) => (
-                <CommandItem
-                  key={location}
-                  value={location}
-                  onSelect={() => handleLocationSelect(location)}
-                  className="cursor-pointer"
-                >
-                  <MapPin className="mr-2 h-4 w-4 text-sage" />
-                  <span>{location}</span>
-                  {selectedLocations.includes(location) && (
-                    <span className="ml-auto text-sage">Selected</span>
-                  )}
-                </CommandItem>
-              ))}
-          </CommandGroup>
+          <CommandList>
+            <CommandEmpty>No locations found.</CommandEmpty>
+            <CommandGroup heading="Available Locations">
+              {uniqueLocations
+                .filter(location => 
+                  location.toLowerCase().includes(locationSearch.toLowerCase())
+                )
+                .map((location) => (
+                  <CommandItem
+                    key={location}
+                    value={location}
+                    onSelect={() => handleLocationSelect(location)}
+                    className="cursor-pointer"
+                  >
+                    <MapPin className="mr-2 h-4 w-4 text-sage" />
+                    <span>{location}</span>
+                    {selectedLocations.includes(location) && (
+                      <span className="ml-auto text-sage">Selected</span>
+                    )}
+                  </CommandItem>
+                ))}
+            </CommandGroup>
+          </CommandList>
         </Command>
       </CommandDialog>
       
