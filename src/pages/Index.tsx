@@ -84,9 +84,17 @@ const Index = () => {
     });
 
     if (selectedTags.length > 0) {
-      jobs = jobs.filter(job => 
-        job.tags?.some(tag => selectedTags.includes(tag))
-      );
+      jobs = jobs.filter(job => {
+        // Handle both array and string tags
+        if (Array.isArray(job.tags)) {
+          return job.tags.some(tag => selectedTags.includes(tag));
+        } else if (typeof job.tags === 'string') {
+          // If tags is a string, split it and check
+          const tagArray = job.tags.split(',').map(t => t.trim());
+          return tagArray.some(tag => selectedTags.includes(tag));
+        }
+        return false;
+      });
     }
 
     switch (sortBy) {
