@@ -109,7 +109,7 @@ export const JobsContent = ({
             isLoading={isLoading}
             error={error}
             selectedJob={selectedJob}
-            source="index"
+            source="jobs-content"
           />
         </div>
       </div>
