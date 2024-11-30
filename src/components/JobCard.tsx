@@ -89,6 +89,9 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
     }).join('\n');
   };
 
+  // Ensure tags is an array before mapping
+  const jobTags = Array.isArray(tags) ? tags : [];
+
   return (
     <div 
       id={`job-${job.id}`}
@@ -129,7 +132,7 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
                     {salary}
                   </Badge>
                 )}
-                {tags && tags.length > 0 && tags.map((tag, index) => (
+                {jobTags.length > 0 && jobTags.map((tag, index) => (
                   <Badge 
                     key={index}
                     variant="secondary" 
