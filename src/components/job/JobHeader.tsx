@@ -13,13 +13,27 @@ interface JobHeaderProps {
 export const JobHeader = ({ title, logo, companyName, url, jobId, source }: JobHeaderProps) => {
   const handleApply = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // Construct the full URL using import.meta.env.VITE_SUPABASE_URL
-    const redirectUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/redirect`;
-    const params = new URLSearchParams({
-      id: jobId,
-      source: source
-    });
-    window.open(`${redirectUrl}?${params.toString()}`, '_blank', 'noopener,noreferrer');
+    window.open(url, '_blank', 'noopener,noreferrer');
+
+    // Log the click in the background without waiting for the response
+    const logClick = async () => {
+      try {
+        await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/log-click`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            jobId,
+            source,
+            url
+          })
+        });
+      } catch (error) {
+        console.error('Error logging click:', error);
+      }
+    };
+    logClick();
   };
 
   return (
