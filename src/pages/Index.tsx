@@ -45,9 +45,8 @@ const Index = () => {
         });
         return [];
       }
-      return data;
-    },
-    initialData: []
+      return data || [];
+    }
   });
 
   const { data: advocacyJobs = [], isLoading: isLoadingAdvocacy, error: advocacyError } = useQuery({
@@ -66,9 +65,8 @@ const Index = () => {
         });
         return [];
       }
-      return data;
-    },
-    initialData: []
+      return data || [];
+    }
   });
 
   const { data: vevolutionJobs = [], isLoading: isLoadingVevolution, error: vevolutionError } = useQuery({
@@ -87,13 +85,16 @@ const Index = () => {
         });
         return [];
       }
-      return data;
-    },
-    initialData: []
+      return data || [];
+    }
   });
 
   const allJobs = useMemo(() => {
-    let jobs = [...veganJobs, ...advocacyJobs, ...vevolutionJobs].filter((job): job is Job => {
+    const combinedJobs = [...(Array.isArray(veganJobs) ? veganJobs : []), 
+                         ...(Array.isArray(advocacyJobs) ? advocacyJobs : []), 
+                         ...(Array.isArray(vevolutionJobs) ? vevolutionJobs : [])];
+    
+    let jobs = combinedJobs.filter((job): job is Job => {
       return Boolean(job && job.id && job.url);
     });
 

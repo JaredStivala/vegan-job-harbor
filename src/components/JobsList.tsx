@@ -9,7 +9,7 @@ interface JobsListProps {
   selectedJob?: Job | null;
 }
 
-export const JobsList = ({ jobs, isLoading, error, selectedJob }: JobsListProps) => {
+export const JobsList = ({ jobs = [], isLoading, error, selectedJob }: JobsListProps) => {
   if (error) {
     return (
       <div className="text-red-500">
@@ -21,14 +21,14 @@ export const JobsList = ({ jobs, isLoading, error, selectedJob }: JobsListProps)
   if (isLoading) {
     return (
       <div className="space-y-4">
-        {[...Array(5)].map((_, i) => (
+        {Array.from({ length: 5 }).map((_, i) => (
           <Skeleton key={i} className="h-32" />
         ))}
       </div>
     );
   }
 
-  if (jobs.length === 0) {
+  if (!Array.isArray(jobs) || jobs.length === 0) {
     return (
       <div className="text-center py-8 text-gray-500">
         No jobs found matching your criteria
