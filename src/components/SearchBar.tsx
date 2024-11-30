@@ -1,6 +1,6 @@
 import { Search, Tag } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 
 interface SearchBarProps {
   tags: string[];
@@ -13,8 +13,8 @@ export const SearchBar = ({ tags = [], onTagSelect, selectedTags }: SearchBarPro
   const [search, setSearch] = useState("");
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // Remove duplicate tags - ensure tags is an array before creating Set
-  const uniqueTags = Array.from(new Set(tags.filter(Boolean)));
+  // Remove duplicate tags and ensure we have an array
+  const uniqueTags = Array.from(new Set(tags.filter(Boolean) || []));
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -75,27 +75,29 @@ export const SearchBar = ({ tags = [], onTagSelect, selectedTags }: SearchBarPro
               onValueChange={setSearch}
               className="border-none focus:ring-0"
             />
-            <CommandEmpty>No tags found.</CommandEmpty>
-            <CommandGroup heading="Available Tags" className="max-h-[300px] overflow-y-auto">
-              {uniqueTags
-                .filter(tag => 
-                  tag.toLowerCase().includes(search.toLowerCase())
-                )
-                .map((tag) => (
-                  <CommandItem
-                    key={tag}
-                    value={tag}
-                    onSelect={() => handleTagSelect(tag)}
-                    className="cursor-pointer flex items-center px-4 py-2 hover:bg-sage/10"
-                  >
-                    <Tag className="mr-2 h-4 w-4 text-sage" />
-                    <span>{tag}</span>
-                    {selectedTags.includes(tag) && (
-                      <span className="ml-auto text-sage">Selected</span>
-                    )}
-                  </CommandItem>
-                ))}
-            </CommandGroup>
+            <CommandList>
+              <CommandEmpty>No tags found.</CommandEmpty>
+              <CommandGroup heading="Available Tags" className="max-h-[300px] overflow-y-auto">
+                {uniqueTags
+                  .filter(tag => 
+                    tag.toLowerCase().includes(search.toLowerCase())
+                  )
+                  .map((tag) => (
+                    <CommandItem
+                      key={tag}
+                      value={tag}
+                      onSelect={() => handleTagSelect(tag)}
+                      className="cursor-pointer flex items-center px-4 py-2 hover:bg-sage/10"
+                    >
+                      <Tag className="mr-2 h-4 w-4 text-sage" />
+                      <span>{tag}</span>
+                      {selectedTags.includes(tag) && (
+                        <span className="ml-auto text-sage">Selected</span>
+                      )}
+                    </CommandItem>
+                  ))}
+              </CommandGroup>
+            </CommandList>
           </Command>
         </div>
       )}
