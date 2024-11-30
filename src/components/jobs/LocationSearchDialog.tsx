@@ -1,7 +1,6 @@
 import { MapPin } from "lucide-react";
 import {
   Command,
-  CommandDialog,
   CommandEmpty,
   CommandGroup,
   CommandInput,
@@ -10,32 +9,34 @@ import {
 } from "@/components/ui/command";
 
 interface LocationSearchDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
   locationSearch: string;
   setLocationSearch: (search: string) => void;
   uniqueLocations: string[];
   selectedLocations: string[];
   onLocationSelect: (location: string) => void;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
 export const LocationSearchDialog = ({
-  open,
-  onOpenChange,
   locationSearch,
   setLocationSearch,
   uniqueLocations,
   selectedLocations,
   onLocationSelect,
+  isOpen,
+  setIsOpen,
 }: LocationSearchDialogProps) => {
   return (
-    <CommandDialog open={open} onOpenChange={onOpenChange}>
-      <Command className="rounded-lg border shadow-md">
-        <CommandInput 
-          placeholder="Search locations..." 
-          value={locationSearch}
-          onValueChange={setLocationSearch}
-        />
+    <Command className="absolute top-full mt-1 w-[200px] rounded-lg border shadow-md bg-white z-50">
+      <CommandInput 
+        placeholder="Search locations..." 
+        value={locationSearch}
+        onValueChange={setLocationSearch}
+        onFocus={() => setIsOpen(true)}
+        onBlur={() => setTimeout(() => setIsOpen(false), 200)}
+      />
+      {isOpen && (
         <CommandList>
           <CommandEmpty>No locations found.</CommandEmpty>
           <CommandGroup heading="Available Locations">
@@ -59,7 +60,7 @@ export const LocationSearchDialog = ({
               ))}
           </CommandGroup>
         </CommandList>
-      </Command>
-    </CommandDialog>
+      )}
+    </Command>
   );
 };

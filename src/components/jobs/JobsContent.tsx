@@ -35,9 +35,10 @@ export const JobsContent = ({
   sortBy,
   setSortBy
 }: JobsContentProps) => {
-  const [locationDialogOpen, setLocationDialogOpen] = useState(false);
+  const [showLocationSearch, setShowLocationSearch] = useState(false);
   const [locationSearch, setLocationSearch] = useState("");
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
+  const [isLocationSearchOpen, setIsLocationSearchOpen] = useState(false);
 
   // Get unique locations from jobs
   const uniqueLocations = Array.from(new Set(
@@ -117,24 +118,34 @@ export const JobsContent = ({
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="gap-2 relative w-[200px] justify-between"
-              onClick={() => setLocationDialogOpen(true)}
-            >
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
-                <span className="text-left truncate">
-                  {selectedLocations.length > 0 
-                    ? `${selectedLocations.length} location${selectedLocations.length > 1 ? 's' : ''}`
-                    : 'Search locations...'}
-                </span>
-              </div>
-              <kbd className="pointer-events-none hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
-                <span className="text-xs">⌘</span>L
-              </kbd>
-            </Button>
+            <div className="relative">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2 relative w-[200px] justify-between"
+                onClick={() => setShowLocationSearch(!showLocationSearch)}
+              >
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4" />
+                  <span className="text-left truncate">
+                    {selectedLocations.length > 0 
+                      ? `${selectedLocations.length} location${selectedLocations.length > 1 ? 's' : ''}`
+                      : 'Search locations...'}
+                  </span>
+                </div>
+              </Button>
+              {showLocationSearch && (
+                <LocationSearchDialog
+                  locationSearch={locationSearch}
+                  setLocationSearch={setLocationSearch}
+                  uniqueLocations={uniqueLocations}
+                  selectedLocations={selectedLocations}
+                  onLocationSelect={handleLocationSelect}
+                  isOpen={isLocationSearchOpen}
+                  setIsOpen={setIsLocationSearchOpen}
+                />
+              )}
+            </div>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -152,16 +163,6 @@ export const JobsContent = ({
           </div>
         </div>
       </div>
-      
-      <LocationSearchDialog
-        open={locationDialogOpen}
-        onOpenChange={setLocationDialogOpen}
-        locationSearch={locationSearch}
-        setLocationSearch={setLocationSearch}
-        uniqueLocations={uniqueLocations}
-        selectedLocations={selectedLocations}
-        onLocationSelect={handleLocationSelect}
-      />
       
       <JobsList 
         jobs={filteredJobs}
