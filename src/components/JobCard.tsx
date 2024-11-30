@@ -41,7 +41,8 @@ export const JobCard = ({ job, isSelected }: JobCardProps) => {
 
   const shouldShowSalary = salary && 
     salary !== "N/A" && 
-    salary !== "Salary not specified";
+    salary !== "Salary not specified" &&
+    salary.toLowerCase() !== "none";
 
   const formatDescription = (desc: string) => {
     if (!desc) return '';
