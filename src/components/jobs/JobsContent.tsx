@@ -39,20 +39,27 @@ export const JobsContent = ({
   const [locationSearch, setLocationSearch] = useState("");
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
 
-  // Get unique locations from jobs
+  const formatLocation = (loc: string | null) => {
+    if (!loc) return '';
+    // Remove brackets, quotes, and clean up any extra whitespace
+    return loc.replace(/[\[\]"]/g, '').trim();
+  };
+
+  // Get unique locations from jobs and format them
   const uniqueLocations = Array.from(new Set(
     allJobs
       .filter((job): job is Job & { location: string } => 
         Boolean(job && job.location)
       )
-      .map(job => job.location)
+      .map(job => formatLocation(job.location))
+      .filter(Boolean)
   ));
 
   // Filter jobs based on selected locations
   const filteredJobs = allJobs.filter(job => {
     if (selectedLocations.length === 0) return true;
     return job.location && selectedLocations.some(loc => 
-      job.location?.toLowerCase().includes(loc.toLowerCase())
+      formatLocation(job.location)?.toLowerCase().includes(loc.toLowerCase())
     );
   });
 
@@ -88,7 +95,7 @@ export const JobsContent = ({
                 className="gap-1"
               >
                 <MapPin className="w-3 h-3" />
-                {location}
+                {formatLocation(location)}
                 <span className="ml-1">×</span>
               </Button>
             ))}
