@@ -19,13 +19,14 @@ export const LocationItem = ({
     <CommandItem
       value={location}
       onSelect={() => onSelect(location)}
-      className={cn("cursor-pointer", className)}
-    >
-      <MapPin className="mr-2 h-4 w-4 text-sage" />
-      <span>{location}</span>
-      {isSelected && (
-        <span className="ml-auto text-sage">Selected</span>
+      className={cn(
+        "cursor-pointer flex items-center gap-2 px-4 py-2",
+        isSelected && "bg-accent/10",
+        className
       )}
+    >
+      <MapPin className="h-4 w-4 text-gray-500 shrink-0" />
+      <span className="flex-1">{location}</span>
     </CommandItem>
   );
 };
