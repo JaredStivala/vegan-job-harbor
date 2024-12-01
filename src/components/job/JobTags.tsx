@@ -25,19 +25,20 @@ export const JobTags = ({ salary, tags, source }: JobTagsProps) => {
         .replace(/[\[\]"{}]/g, '') // Remove brackets, quotes, and curly braces
         .split(',')
         .map(tag => tag.trim())
-        .filter(tag => tag.length > 0);
+        .filter(tag => tag.length > 0 && tag !== 'null');
     }
     
     // For other sources (ea, veganjobs), tags should be an array
     if (Array.isArray(tags)) {
       return tags
+        .filter(tag => tag !== null)
         .map(tag => {
           if (typeof tag === 'string') {
             return tag.replace(/[\[\]"{}]/g, '').trim(); // Clean up any remaining formatting
           }
           return '';
         })
-        .filter(tag => tag.length > 0);
+        .filter(tag => tag.length > 0 && tag !== 'null');
     }
     
     return [];
