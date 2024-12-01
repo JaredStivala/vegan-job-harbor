@@ -35,9 +35,9 @@ export const TagFilter = ({ tags, onTagSelect, selectedTags }: TagFilterProps) =
     <div className="relative flex-1 sm:w-48">
       <button
         onClick={() => setSearchDialogOpen(true)}
-        className="w-full px-4 py-2.5 pl-10 pr-10 text-base rounded-xl border border-sage hover:border-sage-dark focus:border-sage-dark transition-colors bg-background text-gray-600 font-normal text-left"
+        className="w-full px-4 py-2.5 pl-10 pr-10 text-base rounded-full border border-sage/50 hover:border-sage focus:border-sage transition-colors bg-background text-gray-600 font-normal text-left"
       >
-        {selectedTags.length > 0 ? `${selectedTags.length} tags selected` : "Search tags"}
+        {selectedTags.length > 0 ? `${selectedTags.length} selected` : "Search tags"}
       </button>
       <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-sage" />
       <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-sage" />
