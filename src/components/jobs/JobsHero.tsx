@@ -1,5 +1,4 @@
 import { SearchBar } from "@/components/SearchBar";
-import { JobStats } from "@/components/JobStats";
 import type { Job } from "@/types/job";
 
 interface JobsHeroProps {
@@ -40,8 +39,6 @@ export const JobsHero = ({ allJobs, selectedTags, onTagSelect }: JobsHeroProps) 
             onTagSelect={onTagSelect}
             selectedTags={selectedTags}
           />
-
-          <JobStats jobCount={allJobs.length} />
         </div>
       </div>
       
