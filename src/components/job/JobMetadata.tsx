@@ -7,6 +7,12 @@ interface JobMetadataProps {
 }
 
 export const JobMetadata = ({ companyName, location, formattedDate }: JobMetadataProps) => {
+  const formatLocation = (loc: string | null) => {
+    if (!loc) return null;
+    // Remove brackets, quotes, and clean up any extra whitespace
+    return loc.replace(/[\[\]"]/g, '').trim();
+  };
+
   return (
     <div className="flex flex-wrap gap-2 items-center text-sm text-gray-600">
       {companyName && (
@@ -19,7 +25,7 @@ export const JobMetadata = ({ companyName, location, formattedDate }: JobMetadat
       {location && (
         <div className="flex items-center gap-1">
           <MapPin className="w-4 h-4" />
-          <span>{location?.replace(/[\[\]"]/g, '').replace(/,\s*/g, ', ')}</span>
+          <span>{formatLocation(location)}</span>
         </div>
       )}
       
