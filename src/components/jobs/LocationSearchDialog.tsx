@@ -28,7 +28,8 @@ export const LocationSearchDialog = ({
   selectedLocations,
   onLocationSelect,
 }: LocationSearchDialogProps) => {
-  const formatLocation = (loc: string) => {
+  const formatLocation = (loc: string | null) => {
+    if (!loc) return '';
     // Remove brackets, quotes, and clean up any extra whitespace
     return loc.replace(/[\[\]"]/g, '').trim();
   };
