@@ -26,6 +26,7 @@ export const JobsContent = ({
   allTags
 }: JobsContentProps) => {
   const [filterSelectedTags, setFilterSelectedTags] = useState<string[]>([]);
+  const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
 
   const {
     locationDialogOpen,
@@ -48,18 +49,51 @@ export const JobsContent = ({
     });
   };
 
+  const handleCompanySelect = (company: string) => {
+    setSelectedCompany(company);
+  };
+
+  const handleCompanyRemove = () => {
+    setSelectedCompany(null);
+  };
+
   // Combine tags from both hero and filter sections for job filtering
   const allSelectedTags = [...new Set([...heroSelectedTags, ...filterSelectedTags])];
 
   return (
     <div id="jobs-section" className="container max-w-none py-8 px-4 md:px-8">
       <div className="space-y-4">
-        <JobsHeader 
-          selectedTags={heroSelectedTags}
-          onTagRemove={heroTagRemove}
-          selectedLocations={selectedLocations}
-          onLocationRemove={handleLocationRemove}
-        />
+        <div className="flex flex-wrap gap-2">
+          {filterSelectedTags.map((tag) => (
+            <button
+              key={tag}
+              onClick={() => handleFilterTagSelect(tag)}
+              className="inline-flex items-center px-3 py-1 rounded-full bg-sage/10 text-sage-dark hover:bg-sage/20 transition-colors"
+            >
+              {tag}
+              <span className="ml-2">×</span>
+            </button>
+          ))}
+          {selectedLocations.map((location) => (
+            <button
+              key={location}
+              onClick={() => handleLocationRemove(location)}
+              className="inline-flex items-center px-3 py-1 rounded-full bg-sage/10 text-sage-dark hover:bg-sage/20 transition-colors"
+            >
+              {location}
+              <span className="ml-2">×</span>
+            </button>
+          ))}
+          {selectedCompany && (
+            <button
+              onClick={handleCompanyRemove}
+              className="inline-flex items-center px-3 py-1 rounded-full bg-sage/10 text-sage-dark hover:bg-sage/20 transition-colors"
+            >
+              {selectedCompany}
+              <span className="ml-2">×</span>
+            </button>
+          )}
+        </div>
         
         <JobsFiltersSection 
           onLocationDialogOpen={() => setLocationDialogOpen(true)}
@@ -67,6 +101,8 @@ export const JobsContent = ({
           setSortBy={setSortBy}
           selectedTags={filterSelectedTags}
           onTagSelect={handleFilterTagSelect}
+          selectedCompany={selectedCompany}
+          onCompanySelect={handleCompanySelect}
         />
       </div>
       
@@ -87,6 +123,7 @@ export const JobsContent = ({
           selectedTags={allSelectedTags}
           selectedJob={selectedJob}
           onLocationsUpdate={setUniqueLocations}
+          selectedCompany={selectedCompany}
         />
         <InfiniteJobsList
           source="ea"
@@ -94,6 +131,7 @@ export const JobsContent = ({
           selectedTags={allSelectedTags}
           selectedJob={selectedJob}
           onLocationsUpdate={setUniqueLocations}
+          selectedCompany={selectedCompany}
         />
         <InfiniteJobsList
           source="animaladvocacy"
@@ -101,6 +139,7 @@ export const JobsContent = ({
           selectedTags={allSelectedTags}
           selectedJob={selectedJob}
           onLocationsUpdate={setUniqueLocations}
+          selectedCompany={selectedCompany}
         />
         <InfiniteJobsList
           source="vevolution"
@@ -108,6 +147,7 @@ export const JobsContent = ({
           selectedTags={allSelectedTags}
           selectedJob={selectedJob}
           onLocationsUpdate={setUniqueLocations}
+          selectedCompany={selectedCompany}
         />
       </div>
     </div>

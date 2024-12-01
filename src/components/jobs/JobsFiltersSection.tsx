@@ -21,13 +21,17 @@ interface JobsFiltersSectionProps {
   setSortBy: (sort: 'latest' | 'salary' | 'location') => void;
   selectedTags: string[];
   onTagSelect: (tag: string) => void;
+  selectedCompany: string | null;
+  onCompanySelect: (company: string) => void;
 }
 
 export const JobsFiltersSection = ({
   selectedLocations,
   setSortBy,
   selectedTags,
-  onTagSelect
+  onTagSelect,
+  selectedCompany,
+  onCompanySelect
 }: JobsFiltersSectionProps) => {
   const [companyDialogOpen, setCompanyDialogOpen] = useState(false);
   const [companySearch, setCompanySearch] = useState("");
@@ -98,6 +102,7 @@ export const JobsFiltersSection = ({
             placeholder="Company name..." 
             className="pl-10 pr-10"
             onClick={() => setCompanyDialogOpen(true)}
+            value={selectedCompany || ''}
             readOnly
           />
           <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
@@ -121,12 +126,16 @@ export const JobsFiltersSection = ({
                         key={company}
                         value={company}
                         onSelect={() => {
+                          onCompanySelect(company);
                           setCompanyDialogOpen(false);
                         }}
                         className="cursor-pointer"
                       >
                         <Building2 className="mr-2 h-4 w-4 text-sage" />
                         <span>{company}</span>
+                        {selectedCompany === company && (
+                          <span className="ml-auto text-sage">Selected</span>
+                        )}
                       </CommandItem>
                     ))}
                 </CommandGroup>
