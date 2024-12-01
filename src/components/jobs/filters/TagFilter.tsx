@@ -16,6 +16,12 @@ interface TagFilterProps {
   selectedTags: string[];
 }
 
+const processTag = (tag: string): string => {
+  return tag
+    .replace(/[\[\]"{}]/g, '') // Remove brackets, quotes, and curly braces
+    .trim();
+};
+
 export const TagFilter = ({ tags, onTagSelect, selectedTags }: TagFilterProps) => {
   const [searchDialogOpen, setSearchDialogOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -47,7 +53,7 @@ export const TagFilter = ({ tags, onTagSelect, selectedTags }: TagFilterProps) =
             <CommandGroup heading="Available Tags">
               {tags
                 .filter(tag => 
-                  tag.toLowerCase().includes(searchValue.toLowerCase())
+                  processTag(tag).toLowerCase().includes(searchValue.toLowerCase())
                 )
                 .map((tag) => (
                   <CommandItem
@@ -57,7 +63,7 @@ export const TagFilter = ({ tags, onTagSelect, selectedTags }: TagFilterProps) =
                     className="cursor-pointer"
                   >
                     <Tag className="mr-2 h-4 w-4 text-sage" />
-                    <span>{tag}</span>
+                    <span>{processTag(tag)}</span>
                     {selectedTags.includes(tag) && (
                       <span className="ml-auto text-sage">Selected</span>
                     )}
