@@ -27,18 +27,14 @@ export const useInfiniteJobs = ({ source, selectedLocations, selectedTags, selec
 
         // Handle location filtering with improved logic
         if (selectedLocations?.length) {
-          const locationFilters = selectedLocations.map(location => {
-            // Handle special characters and formatting
-            const sanitizedLocation = location
-              .replace(/[[\]"]/g, '') // Remove brackets and quotes
-              .trim();
-            
-            // Create a more flexible location match
-            return `location.ilike.%${sanitizedLocation}%`;
+          // Create a filter for each location
+          selectedLocations.forEach(location => {
+            // Use textSearch instead of ilike for better handling of special characters
+            query = query.textSearch('location', location, {
+              type: 'plain',
+              config: 'english'
+            });
           });
-
-          // Combine all location filters with OR
-          query = query.or(locationFilters.join(','));
         }
 
         // Handle company filtering
