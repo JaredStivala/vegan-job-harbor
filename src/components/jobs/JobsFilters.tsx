@@ -43,9 +43,6 @@ export const JobsFilters = ({
               : 'Search locations...'}
           </span>
         </div>
-        <kbd className="pointer-events-none hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
-          <span className="text-xs">⌘</span>L
-        </kbd>
       </Button>
 
       <DropdownMenu>

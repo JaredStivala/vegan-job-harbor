@@ -1,5 +1,5 @@
 import { Search, Tag } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Command,
   CommandDialog,
@@ -23,17 +23,6 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
   // Remove duplicate tags
   const uniqueTags = Array.from(new Set(tags));
 
-  useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setOpen((open) => !open);
-      }
-    };
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
-  }, []);
-
   const scrollToJobs = () => {
     const jobsSection = document.querySelector('#jobs-section');
     if (jobsSection) {
@@ -56,9 +45,6 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
           className="w-full px-6 py-4 pl-14 text-lg rounded-full border-2 border-sage focus:border-sage focus:ring-2 focus:ring-sage/20 outline-none transition-all bg-white shadow-lg text-left text-muted-foreground"
         >
           Search vegan jobs by tags...
-          <kbd className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
-            <span className="text-xs">⌘</span>K
-          </kbd>
         </button>
         <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-sage w-6 h-6" />
       </div>
