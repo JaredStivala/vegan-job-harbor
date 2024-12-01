@@ -4,6 +4,8 @@ import { JobsFiltersSection } from "./JobsFiltersSection";
 import { InfiniteJobsList } from "./InfiniteJobsList";
 import { JobsHeader } from "./JobsHeader";
 import { useLocations } from "@/hooks/useLocations";
+import { Badge } from "@/components/ui/badge";
+import { X } from "lucide-react";
 import type { Job } from "@/types/job";
 
 interface JobsContentProps {
@@ -50,7 +52,7 @@ export const JobsContent = ({
   };
 
   const handleCompanySelect = (company: string) => {
-    setSelectedCompany(company);
+    setSelectedCompany(prev => prev === company ? null : company);
   };
 
   const handleCompanyRemove = () => {
@@ -60,39 +62,37 @@ export const JobsContent = ({
   // Combine tags from both hero and filter sections for job filtering
   const allSelectedTags = [...new Set([...heroSelectedTags, ...filterSelectedTags])];
 
+  const renderFilterBadge = (text: string, onRemove: () => void) => (
+    <Badge
+      key={text}
+      variant="secondary"
+      className="pl-3 pr-2 py-1.5 bg-sage/10 text-sage-dark hover:bg-sage/20 transition-colors group flex items-center gap-1"
+    >
+      {text}
+      <button
+        onClick={onRemove}
+        className="ml-1 p-0.5 rounded-full hover:bg-sage/20 transition-colors"
+      >
+        <X className="w-3 h-3" />
+        <span className="sr-only">Remove {text}</span>
+      </button>
+    </Badge>
+  );
+
   return (
     <div id="jobs-section" className="container max-w-none py-8 px-4 md:px-8">
       <div className="space-y-4">
+        {/* Active Filters Display */}
         <div className="flex flex-wrap gap-2">
-          {filterSelectedTags.map((tag) => (
-            <button
-              key={tag}
-              onClick={() => handleFilterTagSelect(tag)}
-              className="inline-flex items-center px-3 py-1 rounded-full bg-sage/10 text-sage-dark hover:bg-sage/20 transition-colors"
-            >
-              {tag}
-              <span className="ml-2">×</span>
-            </button>
-          ))}
-          {selectedLocations.map((location) => (
-            <button
-              key={location}
-              onClick={() => handleLocationRemove(location)}
-              className="inline-flex items-center px-3 py-1 rounded-full bg-sage/10 text-sage-dark hover:bg-sage/20 transition-colors"
-            >
-              {location}
-              <span className="ml-2">×</span>
-            </button>
-          ))}
-          {selectedCompany && (
-            <button
-              onClick={handleCompanyRemove}
-              className="inline-flex items-center px-3 py-1 rounded-full bg-sage/10 text-sage-dark hover:bg-sage/20 transition-colors"
-            >
-              {selectedCompany}
-              <span className="ml-2">×</span>
-            </button>
+          {filterSelectedTags.map((tag) => 
+            renderFilterBadge(tag, () => handleFilterTagSelect(tag))
           )}
+          {selectedLocations.map((location) => 
+            renderFilterBadge(location, () => handleLocationRemove(location))
+          )}
+          {selectedCompany && 
+            renderFilterBadge(selectedCompany, handleCompanyRemove)
+          }
         </div>
         
         <JobsFiltersSection 
