@@ -11,6 +11,7 @@ interface InfiniteJobsListProps {
   selectedTags: string[];
   selectedJob: Job | null;
   onLocationsUpdate: (locations: string[]) => void;
+  selectedCompany: string | null;
 }
 
 export const InfiniteJobsList = ({ 
@@ -18,7 +19,8 @@ export const InfiniteJobsList = ({
   selectedLocations,
   selectedTags,
   selectedJob,
-  onLocationsUpdate 
+  onLocationsUpdate,
+  selectedCompany
 }: InfiniteJobsListProps) => {
   const { ref, inView } = useInView();
 
@@ -32,7 +34,8 @@ export const InfiniteJobsList = ({
   } = useInfiniteJobs({
     source,
     selectedLocations,
-    selectedTags
+    selectedTags,
+    selectedCompany
   });
 
   useEffect(() => {

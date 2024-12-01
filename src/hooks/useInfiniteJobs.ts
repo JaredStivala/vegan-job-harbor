@@ -8,11 +8,12 @@ interface FetchJobsOptions {
   source: 'veganjobs' | 'ea' | 'animaladvocacy' | 'vevolution';
   selectedLocations?: string[];
   selectedTags?: string[];
+  selectedCompany?: string | null;
 }
 
-export const useInfiniteJobs = ({ source, selectedLocations, selectedTags }: FetchJobsOptions) => {
+export const useInfiniteJobs = ({ source, selectedLocations, selectedTags, selectedCompany }: FetchJobsOptions) => {
   return useInfiniteQuery({
-    queryKey: ['jobs', source, selectedLocations, selectedTags],
+    queryKey: ['jobs', source, selectedLocations, selectedTags, selectedCompany],
     queryFn: async ({ pageParam = 0 }) => {
       const start = pageParam * JOBS_PER_PAGE;
       const end = start + JOBS_PER_PAGE - 1;
@@ -27,6 +28,10 @@ export const useInfiniteJobs = ({ source, selectedLocations, selectedTags }: Fet
         query = query.or(
           selectedLocations.map(loc => `location.ilike.%${loc}%`).join(',')
         );
+      }
+
+      if (selectedCompany) {
+        query = query.ilike('company_name', `%${selectedCompany}%`);
       }
 
       // Handle tags differently for vevolution table since it uses text type
