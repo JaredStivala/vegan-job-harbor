@@ -28,6 +28,11 @@ export const LocationSearchDialog = ({
   selectedLocations,
   onLocationSelect,
 }: LocationSearchDialogProps) => {
+  const formatLocation = (loc: string) => {
+    // Remove brackets, quotes, and clean up any extra whitespace
+    return loc.replace(/[\[\]"]/g, '').trim();
+  };
+
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
       <Command className="rounded-lg border shadow-md">
@@ -41,22 +46,25 @@ export const LocationSearchDialog = ({
           <CommandGroup heading="Available Locations">
             {uniqueLocations
               .filter(location => 
-                location.toLowerCase().includes(locationSearch.toLowerCase())
+                formatLocation(location).toLowerCase().includes(locationSearch.toLowerCase())
               )
-              .map((location) => (
-                <CommandItem
-                  key={location}
-                  value={location}
-                  onSelect={() => onLocationSelect(location)}
-                  className="cursor-pointer"
-                >
-                  <MapPin className="mr-2 h-4 w-4 text-sage" />
-                  <span>{location}</span>
-                  {selectedLocations.includes(location) && (
-                    <span className="ml-auto text-sage">Selected</span>
-                  )}
-                </CommandItem>
-              ))}
+              .map((location) => {
+                const formattedLocation = formatLocation(location);
+                return (
+                  <CommandItem
+                    key={location}
+                    value={formattedLocation}
+                    onSelect={() => onLocationSelect(location)}
+                    className="cursor-pointer"
+                  >
+                    <MapPin className="mr-2 h-4 w-4 text-sage" />
+                    <span>{formattedLocation}</span>
+                    {selectedLocations.includes(location) && (
+                      <span className="ml-auto text-sage">Selected</span>
+                    )}
+                  </CommandItem>
+                );
+              })}
           </CommandGroup>
         </CommandList>
       </Command>
