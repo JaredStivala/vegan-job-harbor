@@ -98,6 +98,7 @@ export const JobsContent = ({
         <JobsFiltersSection 
           onLocationDialogOpen={() => setLocationDialogOpen(true)}
           selectedLocations={selectedLocations}
+          onLocationSelect={handleLocationSelect}
           setSortBy={setSortBy}
           selectedTags={filterSelectedTags}
           onTagSelect={handleFilterTagSelect}

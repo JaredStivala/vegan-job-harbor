@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 interface JobsFiltersSectionProps {
   onLocationDialogOpen: () => void;
   selectedLocations: string[];
+  onLocationSelect: (location: string) => void;
   setSortBy: (sort: 'latest' | 'salary' | 'location') => void;
   selectedTags: string[];
   onTagSelect: (tag: string) => void;
@@ -27,6 +28,7 @@ interface JobsFiltersSectionProps {
 
 export const JobsFiltersSection = ({
   selectedLocations,
+  onLocationSelect,
   setSortBy,
   selectedTags,
   onTagSelect,
@@ -76,10 +78,6 @@ export const JobsFiltersSection = ({
       .map(name => name.trim())
   )).sort();
 
-  const handleLocationSelect = (location: string) => {
-    setSortBy('location');
-  };
-
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
       <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
@@ -93,7 +91,7 @@ export const JobsFiltersSection = ({
 
         <LocationFilter 
           selectedLocations={selectedLocations}
-          onLocationSelect={handleLocationSelect}
+          onLocationSelect={onLocationSelect}
         />
 
         <div className="relative flex-1 sm:w-48">

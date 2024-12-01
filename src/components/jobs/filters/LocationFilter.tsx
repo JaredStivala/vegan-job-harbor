@@ -64,6 +64,7 @@ export const LocationFilter = ({ selectedLocations, onLocationSelect }: Location
   const handleLocationSelection = (location: string) => {
     onLocationSelect(location);
     setLocationDialogOpen(false);
+    setIsDropdownOpen(false);
   };
 
   return (
