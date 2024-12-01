@@ -34,35 +34,23 @@ export const JobsFiltersSection = ({
   const [searchDialogOpen, setSearchDialogOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
-  // Fetch all tags from all job tables
-  const { data: allTags } = useQuery({
-    queryKey: ['all-tags'],
+  // Fetch all jobs to get their tags
+  const { data: allJobs = [] } = useQuery({
+    queryKey: ['all-jobs'],
     queryFn: async () => {
       const [veganJobs, advocacyJobs, eaJobs, vevolutionJobs] = await Promise.all([
-        supabase.from('veganjobs').select('tags').not('tags', 'is', null),
-        supabase.from('animaladvocacy').select('tags').not('tags', 'is', null),
-        supabase.from('ea').select('tags').not('tags', 'is', null),
-        supabase.from('vevolution').select('tags').not('tags', 'is', null)
+        supabase.from('veganjobs').select('*'),
+        supabase.from('animaladvocacy').select('*'),
+        supabase.from('ea').select('*'),
+        supabase.from('vevolution').select('*')
       ]);
-
-      // Combine all tags and filter out null/undefined values
-      const allJobsData = [
+      
+      return [
         ...(veganJobs.data || []),
         ...(advocacyJobs.data || []),
         ...(eaJobs.data || []),
         ...(vevolutionJobs.data || [])
       ];
-
-      // Extract and flatten all tags
-      const tags = allJobsData.reduce((acc: string[], job) => {
-        if (Array.isArray(job.tags)) {
-          acc.push(...job.tags);
-        }
-        return acc;
-      }, []);
-
-      // Remove duplicates and filter out empty/null values
-      return Array.from(new Set(tags)).filter(Boolean);
     }
   });
 
@@ -75,8 +63,10 @@ export const JobsFiltersSection = ({
     setSearchDialogOpen(false);
   };
 
-  // Use the fetched tags, falling back to props if not yet loaded
-  const availableTags = allTags || propTags;
+  // Extract all unique tags from jobs
+  const availableTags = Array.from(new Set(
+    allJobs.flatMap(job => Array.isArray(job.tags) ? job.tags : [])
+  ));
 
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
