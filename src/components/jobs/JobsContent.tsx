@@ -112,7 +112,6 @@ export const JobsContent = ({
         onOpenChange={setLocationDialogOpen}
         locationSearch={locationSearch}
         setLocationSearch={setLocationSearch}
-        uniqueLocations={uniqueLocations}
         selectedLocations={selectedLocations}
         onLocationSelect={handleLocationSelect}
       />
