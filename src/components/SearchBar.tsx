@@ -20,8 +20,20 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
-  // Remove duplicate tags
-  const uniqueTags = Array.from(new Set(tags));
+  // Clean and process tags
+  const processTag = (tag: string) => {
+    return tag
+      .replace(/[\[\]"{}]/g, '') // Remove brackets, quotes, and curly braces
+      .trim();
+  };
+
+  // Remove duplicate tags and clean them
+  const uniqueTags = Array.from(new Set(
+    tags
+      .filter(tag => tag && tag !== 'null')
+      .map(processTag)
+      .filter(tag => tag.length > 0)
+  ));
 
   const scrollToJobs = () => {
     const jobsSection = document.querySelector('#jobs-section');

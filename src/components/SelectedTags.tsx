@@ -9,6 +9,12 @@ interface SelectedTagsProps {
 export const SelectedTags = ({ tags, onRemoveTag }: SelectedTagsProps) => {
   if (tags.length === 0) return null;
 
+  const processTag = (tag: string) => {
+    return tag
+      .replace(/[\[\]"{}]/g, '') // Remove brackets, quotes, and curly braces
+      .trim();
+  };
+
   return (
     <div className="flex flex-wrap gap-2 mb-4">
       {tags.map((tag) => (
@@ -17,13 +23,13 @@ export const SelectedTags = ({ tags, onRemoveTag }: SelectedTagsProps) => {
           variant="secondary"
           className="pl-3 pr-2 py-1.5 bg-sage/10 text-sage-dark hover:bg-sage/20 transition-colors group flex items-center gap-1"
         >
-          {tag}
+          {processTag(tag)}
           <button
             onClick={() => onRemoveTag(tag)}
             className="ml-1 p-0.5 rounded-full hover:bg-sage/20 transition-colors"
           >
             <X className="w-3 h-3" />
-            <span className="sr-only">Remove {tag} tag</span>
+            <span className="sr-only">Remove {processTag(tag)} tag</span>
           </button>
         </Badge>
       ))}
