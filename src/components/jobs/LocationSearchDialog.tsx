@@ -30,17 +30,48 @@ export const LocationSearchDialog = ({
 }: LocationSearchDialogProps) => {
   const formatLocation = (loc: string | null) => {
     if (!loc) return '';
+    
     try {
-      // Check if it's a JSON string and parse it
+      // Handle JSON array strings
       if (loc.startsWith('[') && loc.endsWith(']')) {
         const parsed = JSON.parse(loc);
-        return Array.isArray(parsed) ? parsed[0] : parsed;
+        const location = Array.isArray(parsed) ? parsed[0] : parsed;
+        return standardizeLocation(location);
       }
-      return loc.replace(/[\[\]"{}']/g, '').trim();
+      return standardizeLocation(loc.replace(/[\[\]"{}']/g, '').trim());
     } catch {
-      return loc.replace(/[\[\]"{}']/g, '').trim();
+      return standardizeLocation(loc.replace(/[\[\]"{}']/g, '').trim());
     }
   };
+
+  const standardizeLocation = (location: string) => {
+    // Standardize Remote locations
+    if (location.toLowerCase().includes('remote')) {
+      if (location.toLowerCase().includes('usa') || location.toLowerCase().includes('united states')) {
+        return 'Remote (USA)';
+      }
+      if (location.toLowerCase().includes('uk') || location.toLowerCase().includes('united kingdom')) {
+        return 'Remote (UK)';
+      }
+      if (location.toLowerCase().includes('global')) {
+        return 'Remote (Global)';
+      }
+      return 'Remote';
+    }
+    return location;
+  };
+
+  // Remove duplicates and sort locations
+  const processedLocations = Array.from(new Set(
+    uniqueLocations
+      .map(loc => formatLocation(loc))
+      .filter(Boolean)
+  )).sort((a, b) => {
+    // Sort Remote locations first
+    if (a.startsWith('Remote') && !b.startsWith('Remote')) return -1;
+    if (!a.startsWith('Remote') && b.startsWith('Remote')) return 1;
+    return a.localeCompare(b);
+  });
 
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
@@ -53,27 +84,24 @@ export const LocationSearchDialog = ({
         <CommandList>
           <CommandEmpty>No locations found.</CommandEmpty>
           <CommandGroup heading="Available Locations">
-            {uniqueLocations
+            {processedLocations
               .filter(location => 
-                formatLocation(location).toLowerCase().includes(locationSearch.toLowerCase())
+                location.toLowerCase().includes(locationSearch.toLowerCase())
               )
-              .map((location) => {
-                const formattedLocation = formatLocation(location);
-                return (
-                  <CommandItem
-                    key={location}
-                    value={formattedLocation}
-                    onSelect={() => onLocationSelect(location)}
-                    className="cursor-pointer"
-                  >
-                    <MapPin className="mr-2 h-4 w-4 text-sage" />
-                    <span>{formattedLocation}</span>
-                    {selectedLocations.includes(location) && (
-                      <span className="ml-auto text-sage">Selected</span>
-                    )}
-                  </CommandItem>
-                );
-              })}
+              .map((location) => (
+                <CommandItem
+                  key={location}
+                  value={location}
+                  onSelect={() => onLocationSelect(location)}
+                  className="cursor-pointer"
+                >
+                  <MapPin className="mr-2 h-4 w-4 text-sage" />
+                  <span>{location}</span>
+                  {selectedLocations.includes(location) && (
+                    <span className="ml-auto text-sage">Selected</span>
+                  )}
+                </CommandItem>
+              ))}
           </CommandGroup>
         </CommandList>
       </Command>
