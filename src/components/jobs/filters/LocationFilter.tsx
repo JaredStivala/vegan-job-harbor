@@ -70,7 +70,7 @@ export const LocationFilter = ({ selectedLocations, onLocationSelect }: Location
       <Input 
         type="text" 
         placeholder="Location" 
-        className="pl-10 pr-10 rounded-xl border-sage hover:border-sage-dark focus:border-sage-dark transition-colors"
+        className="pl-10 pr-10 rounded-xl border-sage hover:border-sage-dark focus:border-sage-dark transition-colors font-normal text-gray-600"
         onClick={() => setLocationDialogOpen(true)}
         value={selectedLocations.length > 0 ? `${selectedLocations.length} selected` : ''}
         readOnly

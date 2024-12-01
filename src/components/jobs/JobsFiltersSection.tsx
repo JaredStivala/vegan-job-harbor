@@ -57,7 +57,6 @@ export const JobsFiltersSection = ({
     }
   });
 
-  // Extract all unique tags from jobs, handling both array and string formats
   const availableTags = Array.from(new Set(
     allJobs.flatMap(job => {
       if (Array.isArray(job.tags)) {
@@ -69,7 +68,6 @@ export const JobsFiltersSection = ({
     }).filter(Boolean)
   ));
 
-  // Extract all unique company names
   const companyNames = Array.from(new Set(
     allJobs
       .map(job => job.company_name)
@@ -97,7 +95,7 @@ export const JobsFiltersSection = ({
           <Input 
             type="text" 
             placeholder="Company name" 
-            className="pl-10 pr-10 rounded-xl border-sage hover:border-sage-dark focus:border-sage-dark transition-colors"
+            className="pl-10 pr-10 rounded-xl border-sage hover:border-sage-dark focus:border-sage-dark transition-colors font-normal text-gray-600"
             onClick={() => setCompanyDialogOpen(true)}
             value={selectedCompany || ''}
             readOnly
