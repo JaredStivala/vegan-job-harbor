@@ -25,13 +25,12 @@ export const useInfiniteJobs = ({ source, selectedLocations, selectedTags, selec
         .order('date_posted', { ascending: false, nullsFirst: false });
 
       if (selectedLocations?.length) {
-        // Handle each location as a separate ilike filter
-        const filters = selectedLocations.map(location => {
-          return `location.ilike.%${location.replace(/%/g, '')}%`;
-        });
-        
-        // Combine filters with or
-        query = query.or(filters.join(','));
+        // Use Supabase's filter builder for each location
+        query = query.or(
+          selectedLocations.map(location => 
+            `location.ilike.%${location.replace(/[%']/g, '')}%`
+          ).join(',')
+        );
       }
 
       if (selectedCompany) {
