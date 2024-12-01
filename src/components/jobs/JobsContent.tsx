@@ -60,7 +60,7 @@ export const JobsContent = ({
         onLocationSelect={handleLocationSelect}
       />
       
-      <div className="grid gap-8 mt-8">
+      <div className="space-y-8 mt-8">
         <InfiniteJobsList
           source="veganjobs"
           selectedLocations={selectedLocations}

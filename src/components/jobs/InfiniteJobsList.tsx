@@ -36,6 +36,12 @@ export const InfiniteJobsList = ({
   });
 
   useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  useEffect(() => {
     if (data?.pages) {
       const allJobs = data.pages.flat();
       const uniqueLocations = [...new Set(allJobs
@@ -58,11 +64,7 @@ export const InfiniteJobsList = ({
   const jobs = data?.pages.flat() || [];
 
   if (!isLoading && jobs.length === 0) {
-    return (
-      <div className="text-center py-8 text-gray-500">
-        No jobs found matching your criteria
-      </div>
-    );
+    return null;
   }
 
   return (
