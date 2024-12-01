@@ -24,32 +24,29 @@ export const useInfiniteJobs = ({ source, selectedLocations, selectedTags, selec
         .range(start, end)
         .order('date_posted', { ascending: false, nullsFirst: false });
 
+      // Handle location filtering
       if (selectedLocations?.length) {
-        const filters = selectedLocations.map(location => {
-          const cleanLocation = location.replace(/[^a-zA-Z0-9\s]/g, ' ').trim();
-          return `location.ilike.%${cleanLocation}%`;
+        const locationFilters = selectedLocations.map(location => {
+          return `location.ilike.%${location}%`;
         });
-        
-        // Apply each location filter individually
-        filters.forEach(filter => {
-          query = query.or(filter);
-        });
+        query = query.or(locationFilters.join(','));
       }
 
+      // Handle company filtering
       if (selectedCompany) {
         query = query.ilike('company_name', `%${selectedCompany}%`);
       }
 
-      // Handle tags differently based on the source table
+      // Handle tags filtering based on the source table structure
       if (selectedTags?.length) {
         if (source === 'veganjobs' || source === 'ea') {
-          // For array type columns, we need to check if the array contains ANY of the selected tags
-          const tagConditions = selectedTags.map(tag => `tags.cs.{${tag}}`);
-          query = query.or(tagConditions.join(','));
+          // For array type tags columns
+          const tagFilters = selectedTags.map(tag => `tags.cs.{${tag}}`);
+          query = query.or(tagFilters.join(','));
         } else {
-          // For text type columns (animaladvocacy and vevolution)
-          const tagConditions = selectedTags.map(tag => `tags.ilike.%${tag}%`);
-          query = query.or(tagConditions.join(','));
+          // For text type tags columns (animaladvocacy and vevolution)
+          const tagFilters = selectedTags.map(tag => `tags.ilike.%${tag}%`);
+          query = query.or(tagFilters.join(','));
         }
       }
 
