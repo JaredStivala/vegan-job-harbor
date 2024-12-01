@@ -26,7 +26,6 @@ export const LocationFilter = ({ selectedLocations, onLocationSelect }: Location
   const { data: locations = [] } = useQuery({
     queryKey: ['all-locations'],
     queryFn: async () => {
-      // Fetch locations from all tables
       const [veganJobs, advocacyJobs, eaJobs, vevolutionJobs] = await Promise.all([
         supabase.from('veganjobs').select('location'),
         supabase.from('animaladvocacy').select('location'),
@@ -34,7 +33,6 @@ export const LocationFilter = ({ selectedLocations, onLocationSelect }: Location
         supabase.from('vevolution').select('location')
       ]);
 
-      // Combine all locations and handle different formats
       const allLocations = [
         ...(veganJobs.data || []),
         ...(advocacyJobs.data || []),
@@ -42,12 +40,10 @@ export const LocationFilter = ({ selectedLocations, onLocationSelect }: Location
         ...(vevolutionJobs.data || [])
       ];
 
-      // Process locations to handle different formats and clean the data
       const processedLocations = allLocations
         .map(item => {
           if (!item.location) return null;
           
-          // Handle array-like strings
           if (item.location.startsWith('[') && item.location.endsWith(']')) {
             try {
               return JSON.parse(item.location);
@@ -57,14 +53,18 @@ export const LocationFilter = ({ selectedLocations, onLocationSelect }: Location
           }
           return item.location.trim();
         })
-        .flat() // Flatten arrays if any locations were parsed as arrays
-        .filter(Boolean) // Remove null/undefined/empty values
-        .map(loc => loc.trim()); // Trim all locations
+        .flat()
+        .filter(Boolean)
+        .map(loc => loc.trim());
 
-      // Remove duplicates and sort
       return Array.from(new Set(processedLocations)).sort();
     }
   });
+
+  const handleLocationSelection = (location: string) => {
+    onLocationSelect(location);
+    setLocationDialogOpen(false);
+  };
 
   return (
     <div className="relative flex-1 sm:w-48">
@@ -104,10 +104,7 @@ export const LocationFilter = ({ selectedLocations, onLocationSelect }: Location
                   <CommandItem
                     key={location}
                     value={location}
-                    onSelect={() => {
-                      onLocationSelect(location);
-                      setLocationDialogOpen(false);
-                    }}
+                    onSelect={() => handleLocationSelection(location)}
                     className="cursor-pointer"
                   >
                     <MapPin className="mr-2 h-4 w-4 text-sage" />
