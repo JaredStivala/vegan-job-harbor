@@ -68,17 +68,8 @@ export const LocationSearchDialog = ({
 
   const standardizeLocation = (location: string) => {
     const lowercaseLocation = location.toLowerCase();
-    // Standardize Remote locations
+    // Only keep simple "Remote" and convert all remote variations to it
     if (lowercaseLocation.includes('remote')) {
-      if (lowercaseLocation.includes('usa') || lowercaseLocation.includes('united states')) {
-        return 'Remote (USA)';
-      }
-      if (lowercaseLocation.includes('uk') || lowercaseLocation.includes('united kingdom')) {
-        return 'Remote (UK)';
-      }
-      if (lowercaseLocation.includes('global')) {
-        return 'Remote (Global)';
-      }
       return 'Remote';
     }
     return location;
@@ -100,9 +91,9 @@ export const LocationSearchDialog = ({
       .filter(loc => loc && locationJobCounts[loc] > 0) // Only include locations with jobs
       .filter(Boolean)
   )).sort((a, b) => {
-    // Sort Remote locations first
-    if (a.startsWith('Remote') && !b.startsWith('Remote')) return -1;
-    if (!a.startsWith('Remote') && b.startsWith('Remote')) return 1;
+    // Always put Remote first
+    if (a === 'Remote') return -1;
+    if (b === 'Remote') return 1;
     return a.localeCompare(b);
   });
 
