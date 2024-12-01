@@ -16,9 +16,12 @@ export const formatLocation = (loc: string | null) => {
 
 export const standardizeLocation = (location: string) => {
   const lowercaseLocation = location.toLowerCase();
-  // Only keep simple "Remote" and convert all remote variations to it
+  
+  // Consolidate all remote variations into a single "Remote" option
   if (lowercaseLocation.includes('remote')) {
     return 'Remote';
   }
-  return location;
+  
+  // For non-remote locations, return the original formatted location
+  return location.trim();
 };
