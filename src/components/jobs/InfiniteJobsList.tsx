@@ -3,7 +3,7 @@ import { JobCard } from "../JobCard";
 import type { Job } from "@/types/job";
 
 interface InfiniteJobsListProps {
-  source: string;
+  source: "veganjobs" | "ea" | "animaladvocacy" | "vevolution";
   selectedLocations: string[];
   selectedTags: string[];
   selectedJob: Job | null;
@@ -26,13 +26,13 @@ export const InfiniteJobsList = ({
     onSuccess: (data) => {
       // Extract unique locations from the jobs
       const locations = data.pages.flatMap(page => 
-        page.jobs.map(job => job.location)
+        page.map(job => job.location)
       ).filter((location): location is string => !!location);
       onLocationsUpdate([...new Set(locations)]);
 
       // Extract unique tags from the jobs
       const tags = data.pages.flatMap(page => 
-        page.jobs.flatMap(job => job.tags || [])
+        page.flatMap(job => job.tags || [])
       ).filter((tag): tag is string => !!tag);
       onTagsUpdate([...new Set(tags)]);
     }
@@ -40,13 +40,13 @@ export const InfiniteJobsList = ({
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading jobs</div>;
-  if (!data) return null;
+  if (!data?.pages) return null;
 
   return (
     <div className="space-y-4">
       {data.pages.map((page, i) => (
         <div key={i} className="space-y-4">
-          {page.jobs.map((job) => (
+          {page.map((job) => (
             <JobCard 
               key={job.id} 
               job={job}
