@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import type { Job } from "@/types/job";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -57,7 +58,7 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
       >
         <CollapsibleTrigger className="w-full text-left">
           <Card className={cn(
-            "p-6 transition-all duration-200 relative",
+            "p-6 transition-all duration-200 relative cursor-pointer hover:bg-gray-50/50",
             isSelected && "ring-2 ring-sage shadow-md"
           )}>
             <div className="space-y-4">
@@ -83,6 +84,15 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
                 tags={tags}
                 source={source}
               />
+
+              <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                <ChevronDown 
+                  className={cn(
+                    "h-5 w-5 text-gray-400 transition-transform duration-200",
+                    isOpen && "rotate-180"
+                  )} 
+                />
+              </div>
             </div>
           </Card>
         </CollapsibleTrigger>
