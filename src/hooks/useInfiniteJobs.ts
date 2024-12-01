@@ -29,8 +29,16 @@ export const useInfiniteJobs = ({ source, selectedLocations, selectedTags }: Fet
         );
       }
 
+      // Handle tags differently for vevolution table since it uses text type
       if (selectedTags?.length) {
-        query = query.contains('tags', selectedTags);
+        if (source === 'vevolution') {
+          // For text type, use LIKE for each tag
+          const tagConditions = selectedTags.map(tag => `tags.ilike.%${tag}%`);
+          query = query.or(tagConditions.join(','));
+        } else {
+          // For array type, use contains operator
+          query = query.contains('tags', selectedTags);
+        }
       }
 
       const { data, error } = await query;
