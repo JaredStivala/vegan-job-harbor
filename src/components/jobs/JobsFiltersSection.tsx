@@ -95,7 +95,7 @@ export const JobsFiltersSection = ({
           <Input 
             type="text" 
             placeholder="Company name" 
-            className="pl-10 pr-10 rounded-xl border-sage hover:border-sage-dark focus:border-sage-dark transition-colors font-normal text-gray-600"
+            className="pl-10 pr-10 py-2.5 text-base rounded-xl border-sage hover:border-sage-dark focus:border-sage-dark transition-colors font-normal text-gray-600"
             onClick={() => setCompanyDialogOpen(true)}
             value={selectedCompany || ''}
             readOnly
