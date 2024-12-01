@@ -4,11 +4,11 @@ import {
   CommandEmpty,
   CommandGroup,
   CommandInput,
+  CommandItem,
   CommandList,
+  CommandSeparator,
 } from "@/components/ui/command";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { formatLocation } from "@/utils/locationFormatting";
+import { locationData } from "./locations/locationData";
 import { LocationItem } from "./LocationItem";
 
 interface LocationSearchDialogProps {
@@ -16,7 +16,6 @@ interface LocationSearchDialogProps {
   onOpenChange: (open: boolean) => void;
   locationSearch: string;
   setLocationSearch: (search: string) => void;
-  uniqueLocations: string[];
   selectedLocations: string[];
   onLocationSelect: (location: string) => void;
 }
@@ -26,77 +25,20 @@ export const LocationSearchDialog = ({
   onOpenChange,
   locationSearch,
   setLocationSearch,
-  uniqueLocations = [],
   selectedLocations,
   onLocationSelect,
 }: LocationSearchDialogProps) => {
-  // Fetch all jobs to check which locations have matching jobs
-  const { data: allJobs = [] } = useQuery({
-    queryKey: ['all-jobs'],
-    queryFn: async () => {
-      try {
-        const [veganJobs, advocacyJobs, eaJobs, vevolutionJobs] = await Promise.all([
-          supabase.from('veganjobs').select('location'),
-          supabase.from('animaladvocacy').select('location'),
-          supabase.from('ea').select('location'),
-          supabase.from('vevolution').select('location')
-        ]);
-        
-        return [
-          ...(veganJobs.data || []),
-          ...(advocacyJobs.data || []),
-          ...(eaJobs.data || []),
-          ...(vevolutionJobs.data || [])
-        ];
-      } catch (error) {
-        console.error('Error fetching jobs:', error);
-        return [];
-      }
-    }
-  });
+  const filterLocations = (locations: string[]) => {
+    return locations.filter(location =>
+      location.toLowerCase().includes(locationSearch.toLowerCase())
+    );
+  };
 
-  // Get all valid locations from jobs and count jobs per location
-  const locationJobCounts = allJobs.reduce((acc, job) => {
-    if (!job.location) return acc;
-    
-    // Handle different location formats
-    let locations: string[] = [];
-    try {
-      if (typeof job.location === 'string') {
-        if (job.location.startsWith('[')) {
-          locations = JSON.parse(job.location);
-        } else {
-          locations = [job.location];
-        }
-      } else if (Array.isArray(job.location)) {
-        locations = job.location;
-      }
-    } catch (e) {
-      console.error('Error parsing location:', e);
-      locations = [String(job.location)];
-    }
-
-    locations.forEach(loc => {
-      const formattedLocation = formatLocation(loc);
-      if (formattedLocation) {
-        acc[formattedLocation] = (acc[formattedLocation] || 0) + 1;
-      }
-    });
-    
-    return acc;
-  }, {} as Record<string, number>);
-
-  // Filter and process locations that exist in jobs
-  const processedLocations = Array.from(new Set(
-    uniqueLocations
-      .map(loc => formatLocation(loc))
-      .filter(Boolean)
-  )).sort((a, b) => {
-    // Always put Remote first
-    if (a === 'Remote') return -1;
-    if (b === 'Remote') return 1;
-    return a.localeCompare(b);
-  });
+  const hasMatchInGroup = (locations: string[]) => {
+    return locations.some(location =>
+      location.toLowerCase().includes(locationSearch.toLowerCase())
+    );
+  };
 
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
@@ -108,22 +50,88 @@ export const LocationSearchDialog = ({
         />
         <CommandList>
           <CommandEmpty>No locations found.</CommandEmpty>
-          <CommandGroup heading="Available Locations">
-            {processedLocations
-              .filter(location => 
-                location.toLowerCase().includes(locationSearch.toLowerCase()) &&
-                locationJobCounts[location] > 0 // Only show locations with jobs
-              )
-              .map((location) => (
-                <LocationItem
-                  key={location}
-                  location={location}
-                  jobCount={locationJobCounts[location] || 0}
-                  isSelected={selectedLocations.includes(location)}
-                  onSelect={onLocationSelect}
-                />
-              ))}
-          </CommandGroup>
+          
+          {/* Regions */}
+          {(!locationSearch || Object.entries(locationData.regions).some(
+            ([_, data]) => hasMatchInGroup(data.locations)
+          )) && (
+            <CommandGroup heading="Regions">
+              {Object.entries(locationData.regions).map(([region, data]) => {
+                const filteredLocations = filterLocations(data.locations);
+                if (locationSearch && filteredLocations.length === 0) return null;
+                
+                return (
+                  <div key={region}>
+                    <CommandItem
+                      className="cursor-pointer font-medium"
+                      onSelect={() => {
+                        // When selecting a region, add all its locations
+                        data.locations.forEach(loc => {
+                          if (!selectedLocations.includes(loc)) {
+                            onLocationSelect(loc);
+                          }
+                        });
+                      }}
+                    >
+                      <span className="mr-2">{data.icon}</span>
+                      {region}
+                    </CommandItem>
+                    {filteredLocations.map((location) => (
+                      <LocationItem
+                        key={location}
+                        location={location}
+                        isSelected={selectedLocations.includes(location)}
+                        onSelect={onLocationSelect}
+                        className="pl-8"
+                      />
+                    ))}
+                  </div>
+                );
+              })}
+            </CommandGroup>
+          )}
+
+          <CommandSeparator />
+
+          {/* Countries */}
+          {(!locationSearch || Object.entries(locationData.countries).some(
+            ([_, data]) => hasMatchInGroup(data.locations)
+          )) && (
+            <CommandGroup heading="Countries">
+              {Object.entries(locationData.countries).map(([country, data]) => {
+                const filteredLocations = filterLocations(data.locations);
+                if (locationSearch && filteredLocations.length === 0) return null;
+
+                return (
+                  <div key={country}>
+                    <CommandItem
+                      className="cursor-pointer font-medium"
+                      onSelect={() => {
+                        // When selecting a country, add all its locations
+                        data.locations.forEach(loc => {
+                          if (!selectedLocations.includes(loc)) {
+                            onLocationSelect(loc);
+                          }
+                        });
+                      }}
+                    >
+                      <span className="mr-2">{data.code}</span>
+                      {country}
+                    </CommandItem>
+                    {filteredLocations.map((location) => (
+                      <LocationItem
+                        key={location}
+                        location={location}
+                        isSelected={selectedLocations.includes(location)}
+                        onSelect={onLocationSelect}
+                        className="pl-8"
+                      />
+                    ))}
+                  </div>
+                );
+              })}
+            </CommandGroup>
+          )}
         </CommandList>
       </Command>
     </CommandDialog>
