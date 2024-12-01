@@ -23,6 +23,7 @@ export const JobsContent = ({
   const [locationDialogOpen, setLocationDialogOpen] = useState(false);
   const [locationSearch, setLocationSearch] = useState("");
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
+  const [uniqueLocations, setUniqueLocations] = useState<string[]>([]);
 
   const handleLocationSelect = (location: string) => {
     setSelectedLocations(prev => {
@@ -78,6 +79,7 @@ export const JobsContent = ({
         onOpenChange={setLocationDialogOpen}
         locationSearch={locationSearch}
         setLocationSearch={setLocationSearch}
+        uniqueLocations={uniqueLocations}
         selectedLocations={selectedLocations}
         onLocationSelect={handleLocationSelect}
       />
@@ -88,24 +90,28 @@ export const JobsContent = ({
           selectedLocations={selectedLocations}
           selectedTags={selectedTags}
           selectedJob={selectedJob}
+          onLocationsUpdate={setUniqueLocations}
         />
         <InfiniteJobsList
           source="ea"
           selectedLocations={selectedLocations}
           selectedTags={selectedTags}
           selectedJob={selectedJob}
+          onLocationsUpdate={setUniqueLocations}
         />
         <InfiniteJobsList
           source="animaladvocacy"
           selectedLocations={selectedLocations}
           selectedTags={selectedTags}
           selectedJob={selectedJob}
+          onLocationsUpdate={setUniqueLocations}
         />
         <InfiniteJobsList
           source="vevolution"
           selectedLocations={selectedLocations}
           selectedTags={selectedTags}
           selectedJob={selectedJob}
+          onLocationsUpdate={setUniqueLocations}
         />
       </div>
     </div>
