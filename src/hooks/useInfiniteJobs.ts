@@ -37,8 +37,9 @@ export const useInfiniteJobs = ({ source, selectedLocations, selectedTags, selec
       // Handle tags differently based on the source table
       if (selectedTags?.length) {
         if (source === 'veganjobs' || source === 'ea') {
-          // For array type columns
-          query = query.contains('tags', selectedTags);
+          // For array type columns, we need to check if the array contains ANY of the selected tags
+          const tagConditions = selectedTags.map(tag => `tags.cs.{${tag}}`);
+          query = query.or(tagConditions.join(','));
         } else {
           // For text type columns (animaladvocacy and vevolution)
           const tagConditions = selectedTags.map(tag => `tags.ilike.%${tag}%`);
