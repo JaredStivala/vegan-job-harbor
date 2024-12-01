@@ -6,24 +6,10 @@ import {
   CommandInput,
   CommandList,
 } from "@/components/ui/command";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { formatLocation } from "@/utils/locationFormatting";
 import { LocationItem } from "./LocationItem";
-
-// Predefined list of locations
-const AVAILABLE_LOCATIONS = [
-  'Remote',
-  'New York, USA',
-  'San Francisco, USA',
-  'Los Angeles, USA',
-  'London, UK',
-  'Berlin, Germany',
-  'Toronto, Canada',
-  'Sydney, Australia',
-  'Amsterdam, Netherlands',
-  'Paris, France',
-  'Singapore',
-  'Hong Kong',
-  'Tokyo, Japan'
-];
 
 interface LocationSearchDialogProps {
   open: boolean;
@@ -40,13 +26,77 @@ export const LocationSearchDialog = ({
   onOpenChange,
   locationSearch,
   setLocationSearch,
+  uniqueLocations = [],
   selectedLocations,
   onLocationSelect,
 }: LocationSearchDialogProps) => {
-  // Filter locations based on search input
-  const filteredLocations = AVAILABLE_LOCATIONS.filter(location =>
-    location.toLowerCase().includes(locationSearch.toLowerCase())
-  );
+  // Fetch all jobs to check which locations have matching jobs
+  const { data: allJobs = [] } = useQuery({
+    queryKey: ['all-jobs'],
+    queryFn: async () => {
+      try {
+        const [veganJobs, advocacyJobs, eaJobs, vevolutionJobs] = await Promise.all([
+          supabase.from('veganjobs').select('location'),
+          supabase.from('animaladvocacy').select('location'),
+          supabase.from('ea').select('location'),
+          supabase.from('vevolution').select('location')
+        ]);
+        
+        return [
+          ...(veganJobs.data || []),
+          ...(advocacyJobs.data || []),
+          ...(eaJobs.data || []),
+          ...(vevolutionJobs.data || [])
+        ];
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
+        return [];
+      }
+    }
+  });
+
+  // Get all valid locations from jobs and count jobs per location
+  const locationJobCounts = allJobs.reduce((acc, job) => {
+    if (!job.location) return acc;
+    
+    // Handle different location formats
+    let locations: string[] = [];
+    try {
+      if (typeof job.location === 'string') {
+        if (job.location.startsWith('[')) {
+          locations = JSON.parse(job.location);
+        } else {
+          locations = [job.location];
+        }
+      } else if (Array.isArray(job.location)) {
+        locations = job.location;
+      }
+    } catch (e) {
+      console.error('Error parsing location:', e);
+      locations = [String(job.location)];
+    }
+
+    locations.forEach(loc => {
+      const formattedLocation = formatLocation(loc);
+      if (formattedLocation) {
+        acc[formattedLocation] = (acc[formattedLocation] || 0) + 1;
+      }
+    });
+    
+    return acc;
+  }, {} as Record<string, number>);
+
+  // Filter and process locations that exist in jobs
+  const processedLocations = Array.from(new Set(
+    uniqueLocations
+      .map(loc => formatLocation(loc))
+      .filter(Boolean)
+  )).sort((a, b) => {
+    // Always put Remote first
+    if (a === 'Remote') return -1;
+    if (b === 'Remote') return 1;
+    return a.localeCompare(b);
+  });
 
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
@@ -59,15 +109,20 @@ export const LocationSearchDialog = ({
         <CommandList>
           <CommandEmpty>No locations found.</CommandEmpty>
           <CommandGroup heading="Available Locations">
-            {filteredLocations.map((location) => (
-              <LocationItem
-                key={location}
-                location={location}
-                jobCount={0} // We're not tracking job counts with predefined locations
-                isSelected={selectedLocations.includes(location)}
-                onSelect={onLocationSelect}
-              />
-            ))}
+            {processedLocations
+              .filter(location => 
+                location.toLowerCase().includes(locationSearch.toLowerCase()) &&
+                locationJobCounts[location] > 0 // Only show locations with jobs
+              )
+              .map((location) => (
+                <LocationItem
+                  key={location}
+                  location={location}
+                  jobCount={locationJobCounts[location] || 0}
+                  isSelected={selectedLocations.includes(location)}
+                  onSelect={onLocationSelect}
+                />
+              ))}
           </CommandGroup>
         </CommandList>
       </Command>
