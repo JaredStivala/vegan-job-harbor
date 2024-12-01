@@ -19,18 +19,25 @@ export const JobTags = ({ salary, tags, source }: JobTagsProps) => {
   const processedTags = (() => {
     if (!tags) return [];
     
-    // For vevolution, tags are stored as a string
-    if (source === 'vevolution' && typeof tags === 'string') {
+    // For vevolution and animaladvocacy, tags are stored as a string
+    if ((source === 'vevolution' || source === 'animaladvocacy') && typeof tags === 'string') {
       return tags
-        .replace(/[\[\]"]/g, '') // Remove brackets and quotes
+        .replace(/[\[\]"{}]/g, '') // Remove brackets, quotes, and curly braces
         .split(',')
         .map(tag => tag.trim())
         .filter(tag => tag.length > 0);
     }
     
-    // For other sources, tags should be an array
+    // For other sources (ea, veganjobs), tags should be an array
     if (Array.isArray(tags)) {
-      return tags.filter(tag => tag && typeof tag === 'string');
+      return tags
+        .map(tag => {
+          if (typeof tag === 'string') {
+            return tag.replace(/[\[\]"{}]/g, '').trim(); // Clean up any remaining formatting
+          }
+          return '';
+        })
+        .filter(tag => tag.length > 0);
     }
     
     return [];
