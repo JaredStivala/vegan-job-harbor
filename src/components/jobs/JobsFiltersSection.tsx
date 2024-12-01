@@ -94,7 +94,7 @@ export const JobsFiltersSection = ({
         <div className="relative flex-1 sm:w-48">
           <button
             onClick={() => setCompanyDialogOpen(true)}
-            className="w-full h-[42px] px-4 py-2.5 pl-10 pr-10 text-sm rounded-xl border border-sage hover:border-sage-dark focus:border-sage-dark transition-colors bg-background text-gray-600 font-normal text-left"
+            className="w-full h-10 px-4 py-2 pl-10 pr-10 text-sm rounded-full border border-sage hover:border-sage-dark focus:border-sage-dark transition-colors bg-background text-gray-600 font-normal text-left"
           >
             {selectedCompany || "Company name"}
           </button>
