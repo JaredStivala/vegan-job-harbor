@@ -33,6 +33,9 @@ export const JobsContent = ({
     handleLocationRemove
   } = useLocations();
 
+  // Get all unique tags from all job sources
+  const [allTags, setAllTags] = useState<string[]>([]);
+
   return (
     <div id="jobs-section" className="container max-w-none py-8 px-4 md:px-8">
       <div className="space-y-4">
@@ -47,6 +50,9 @@ export const JobsContent = ({
           onLocationDialogOpen={() => setLocationDialogOpen(true)}
           selectedLocations={selectedLocations}
           setSortBy={setSortBy}
+          tags={allTags}
+          selectedTags={selectedTags}
+          onTagSelect={(tag: string) => !selectedTags.includes(tag) && onTagRemove(tag)}
         />
       </div>
       
@@ -67,6 +73,7 @@ export const JobsContent = ({
           selectedTags={selectedTags}
           selectedJob={selectedJob}
           onLocationsUpdate={setUniqueLocations}
+          onTagsUpdate={(tags) => setAllTags(prev => [...new Set([...prev, ...tags])])}
         />
         <InfiniteJobsList
           source="ea"
@@ -74,6 +81,7 @@ export const JobsContent = ({
           selectedTags={selectedTags}
           selectedJob={selectedJob}
           onLocationsUpdate={setUniqueLocations}
+          onTagsUpdate={(tags) => setAllTags(prev => [...new Set([...prev, ...tags])])}
         />
         <InfiniteJobsList
           source="animaladvocacy"
@@ -81,6 +89,7 @@ export const JobsContent = ({
           selectedTags={selectedTags}
           selectedJob={selectedJob}
           onLocationsUpdate={setUniqueLocations}
+          onTagsUpdate={(tags) => setAllTags(prev => [...new Set([...prev, ...tags])])}
         />
         <InfiniteJobsList
           source="vevolution"
@@ -88,6 +97,7 @@ export const JobsContent = ({
           selectedTags={selectedTags}
           selectedJob={selectedJob}
           onLocationsUpdate={setUniqueLocations}
+          onTagsUpdate={(tags) => setAllTags(prev => [...new Set([...prev, ...tags])])}
         />
       </div>
     </div>

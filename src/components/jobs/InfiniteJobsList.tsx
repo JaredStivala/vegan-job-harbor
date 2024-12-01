@@ -1,16 +1,14 @@
-import { useEffect } from "react";
-import { JobCard } from "@/components/JobCard";
-import { Skeleton } from "@/components/ui/skeleton";
-import type { Job } from "@/types/job";
 import { useInfiniteJobs } from "@/hooks/useInfiniteJobs";
-import { useInView } from "react-intersection-observer";
+import { JobCard } from "../JobCard";
+import type { Job } from "@/types/job";
 
 interface InfiniteJobsListProps {
-  source: 'veganjobs' | 'ea' | 'animaladvocacy' | 'vevolution';
+  source: string;
   selectedLocations: string[];
   selectedTags: string[];
   selectedJob: Job | null;
   onLocationsUpdate: (locations: string[]) => void;
+  onTagsUpdate: (tags: string[]) => void;
 }
 
 export const InfiniteJobsList = ({ 
@@ -18,75 +16,46 @@ export const InfiniteJobsList = ({
   selectedLocations,
   selectedTags,
   selectedJob,
-  onLocationsUpdate 
+  onLocationsUpdate,
+  onTagsUpdate
 }: InfiniteJobsListProps) => {
-  const { ref, inView } = useInView();
-
-  const {
-    data,
-    isLoading,
-    isFetchingNextPage,
-    hasNextPage,
-    fetchNextPage,
-    error
-  } = useInfiniteJobs({
+  const { data, isLoading, error } = useInfiniteJobs({
     source,
     selectedLocations,
-    selectedTags
+    selectedTags,
+    onSuccess: (data) => {
+      // Extract unique locations from the jobs
+      const locations = data.pages.flatMap(page => 
+        page.jobs.map(job => job.location)
+      ).filter((location): location is string => !!location);
+      onLocationsUpdate([...new Set(locations)]);
+
+      // Extract unique tags from the jobs
+      const tags = data.pages.flatMap(page => 
+        page.jobs.flatMap(job => job.tags || [])
+      ).filter((tag): tag is string => !!tag);
+      onTagsUpdate([...new Set(tags)]);
+    }
   });
 
-  useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  useEffect(() => {
-    if (data?.pages) {
-      const allJobs = data.pages.flat();
-      const uniqueLocations = [...new Set(allJobs
-        .map(job => job.location)
-        .filter(Boolean)
-        .map(loc => loc?.replace(/[\[\]"]/g, '').trim())
-      )];
-      onLocationsUpdate(uniqueLocations);
-    }
-  }, [data?.pages, onLocationsUpdate]);
-
-  if (error) {
-    return (
-      <div className="text-red-500">
-        Error loading jobs: {error.message}
-      </div>
-    );
-  }
-
-  const jobs = data?.pages.flat() || [];
-
-  if (!isLoading && jobs.length === 0) {
-    return null;
-  }
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading jobs</div>;
+  if (!data) return null;
 
   return (
     <div className="space-y-4">
-      {jobs.map((job) => (
-        <JobCard 
-          key={job.id} 
-          job={job} 
-          isSelected={selectedJob?.id === job.id}
-          source={source}
-        />
-      ))}
-      
-      {(isLoading || isFetchingNextPage) && (
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-32" />
+      {data.pages.map((page, i) => (
+        <div key={i} className="space-y-4">
+          {page.jobs.map((job) => (
+            <JobCard 
+              key={job.id} 
+              job={job}
+              source={source}
+              isSelected={selectedJob?.id === job.id}
+            />
           ))}
         </div>
-      )}
-      
-      <div ref={ref} className="h-10" />
+      ))}
     </div>
   );
 };
