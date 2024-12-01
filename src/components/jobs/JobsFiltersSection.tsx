@@ -63,9 +63,17 @@ export const JobsFiltersSection = ({
     setSearchDialogOpen(false);
   };
 
-  // Extract all unique tags from jobs
+  // Extract all unique tags from jobs, handling both array and string formats
   const availableTags = Array.from(new Set(
-    allJobs.flatMap(job => Array.isArray(job.tags) ? job.tags : [])
+    allJobs.flatMap(job => {
+      if (Array.isArray(job.tags)) {
+        return job.tags;
+      } else if (typeof job.tags === 'string') {
+        // Split string tags by comma and trim whitespace
+        return job.tags.split(',').map(tag => tag.trim());
+      }
+      return [];
+    }).filter(Boolean) // Remove empty/null values
   ));
 
   return (
