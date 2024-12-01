@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { JobCard } from "@/components/JobCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Job } from "@/types/job";
@@ -10,13 +10,15 @@ interface InfiniteJobsListProps {
   selectedLocations: string[];
   selectedTags: string[];
   selectedJob: Job | null;
+  onLocationsUpdate: (locations: string[]) => void;
 }
 
 export const InfiniteJobsList = ({ 
   source,
   selectedLocations,
   selectedTags,
-  selectedJob 
+  selectedJob,
+  onLocationsUpdate 
 }: InfiniteJobsListProps) => {
   const { ref, inView } = useInView();
 
@@ -34,10 +36,16 @@ export const InfiniteJobsList = ({
   });
 
   useEffect(() => {
-    if (inView && hasNextPage) {
-      fetchNextPage();
+    if (data?.pages) {
+      const allJobs = data.pages.flat();
+      const uniqueLocations = [...new Set(allJobs
+        .map(job => job.location)
+        .filter(Boolean)
+        .map(loc => loc?.replace(/[\[\]"]/g, '').trim())
+      )];
+      onLocationsUpdate(uniqueLocations);
     }
-  }, [inView, fetchNextPage, hasNextPage]);
+  }, [data?.pages, onLocationsUpdate]);
 
   if (error) {
     return (
