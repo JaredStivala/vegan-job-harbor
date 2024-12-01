@@ -1,15 +1,15 @@
-import { MapPin } from "lucide-react";
 import {
   Command,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
   CommandInput,
-  CommandItem,
   CommandList,
 } from "@/components/ui/command";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { formatLocation } from "@/utils/locationFormatting";
+import { LocationItem } from "./LocationItem";
 
 interface LocationSearchDialogProps {
   open: boolean;
@@ -50,31 +50,6 @@ export const LocationSearchDialog = ({
     }
   });
 
-  const formatLocation = (loc: string | null) => {
-    if (!loc) return '';
-    
-    try {
-      // Handle JSON array strings
-      if (loc.startsWith('[') && loc.endsWith(']')) {
-        const parsed = JSON.parse(loc);
-        const location = Array.isArray(parsed) ? parsed[0] : parsed;
-        return standardizeLocation(location);
-      }
-      return standardizeLocation(loc.replace(/[\[\]"{}']/g, '').trim());
-    } catch {
-      return standardizeLocation(loc.replace(/[\[\]"{}']/g, '').trim());
-    }
-  };
-
-  const standardizeLocation = (location: string) => {
-    const lowercaseLocation = location.toLowerCase();
-    // Only keep simple "Remote" and convert all remote variations to it
-    if (lowercaseLocation.includes('remote')) {
-      return 'Remote';
-    }
-    return location;
-  };
-
   // Get all valid locations from jobs and count jobs per location
   const locationJobCounts = allJobs.reduce((acc, job) => {
     const formattedLocation = formatLocation(job.location);
@@ -113,21 +88,13 @@ export const LocationSearchDialog = ({
                 location.toLowerCase().includes(locationSearch.toLowerCase())
               )
               .map((location) => (
-                <CommandItem
+                <LocationItem
                   key={location}
-                  value={location}
-                  onSelect={() => onLocationSelect(location)}
-                  className="cursor-pointer"
-                >
-                  <MapPin className="mr-2 h-4 w-4 text-sage" />
-                  <span>{location}</span>
-                  <span className="ml-2 text-sm text-gray-500">
-                    ({locationJobCounts[location]} jobs)
-                  </span>
-                  {selectedLocations.includes(location) && (
-                    <span className="ml-auto text-sage">Selected</span>
-                  )}
-                </CommandItem>
+                  location={location}
+                  jobCount={locationJobCounts[location]}
+                  isSelected={selectedLocations.includes(location)}
+                  onSelect={onLocationSelect}
+                />
               ))}
           </CommandGroup>
         </CommandList>
