@@ -30,7 +30,7 @@ export const EmailCaptureBanner = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="relative bg-sage text-white py-3 px-4">
+    <div className="fixed top-0 left-0 right-0 z-50 bg-sage text-white py-3 px-4">
       <div className="container mx-auto max-w-6xl">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
           <div className="flex-1 min-w-0">
@@ -38,7 +38,7 @@ export const EmailCaptureBanner = () => {
               🌟 Get Exclusive Vegan Job Alerts!
             </h3>
             <p className="text-cream/90 text-sm mt-1">
-              Be the first to know about new opportunities in the vegan industry
+              Get updates about new opportunities in the vegan industry
             </p>
           </div>
           <form onSubmit={handleSubmit} className="flex gap-2 w-full sm:w-auto">
@@ -54,7 +54,7 @@ export const EmailCaptureBanner = () => {
               type="submit"
               className="bg-cream hover:bg-cream/90 text-sage-dark whitespace-nowrap"
             >
-              Get Alerts
+              Submit
             </Button>
           </form>
           <button
