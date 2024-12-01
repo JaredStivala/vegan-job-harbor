@@ -1,17 +1,32 @@
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { SelectedTags } from "@/components/SelectedTags";
+import { SelectedLocations } from "./SelectedLocations";
 
-export const JobsHeader = () => {
-  const navigate = useNavigate();
-  
+interface JobsHeaderProps {
+  selectedTags: string[];
+  onTagRemove: (tag: string) => void;
+  selectedLocations: string[];
+  onLocationRemove: (location: string) => void;
+}
+
+export const JobsHeader = ({
+  selectedTags,
+  onTagRemove,
+  selectedLocations,
+  onLocationRemove
+}: JobsHeaderProps) => {
   return (
-    <div className="absolute top-4 right-4 z-20">
-      <Button 
-        onClick={() => navigate("/post-job")}
-        className="bg-sage hover:bg-sage-dark text-white"
-      >
-        Post a Job
-      </Button>
+    <div className="space-y-4">
+      <SelectedTags 
+        tags={selectedTags} 
+        onRemoveTag={onTagRemove} 
+      />
+      
+      {selectedLocations.length > 0 && (
+        <SelectedLocations
+          locations={selectedLocations}
+          onLocationRemove={onLocationRemove}
+        />
+      )}
     </div>
   );
 };

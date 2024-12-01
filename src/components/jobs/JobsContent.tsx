@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { SelectedTags } from "@/components/SelectedTags";
-import { LocationSearchDialog } from "@/components/jobs/LocationSearchDialog";
-import { JobsFilters } from "@/components/jobs/JobsFilters";
-import { InfiniteJobsList } from "@/components/jobs/InfiniteJobsList";
+import { LocationSearchDialog } from "./LocationSearchDialog";
+import { JobsFiltersSection } from "./JobsFiltersSection";
+import { InfiniteJobsList } from "./InfiniteJobsList";
+import { JobsHeader } from "./JobsHeader";
+import { useLocations } from "@/hooks/useLocations";
 import type { Job } from "@/types/job";
 
 interface JobsContentProps {
@@ -20,58 +21,33 @@ export const JobsContent = ({
   sortBy,
   setSortBy
 }: JobsContentProps) => {
-  const [locationDialogOpen, setLocationDialogOpen] = useState(false);
-  const [locationSearch, setLocationSearch] = useState("");
-  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
-  const [uniqueLocations, setUniqueLocations] = useState<string[]>([]);
-
-  const handleLocationSelect = (location: string) => {
-    setSelectedLocations(prev => {
-      if (prev.includes(location)) {
-        return prev.filter(l => l !== location);
-      }
-      return [...prev, location];
-    });
-  };
-
-  const handleLocationRemove = (location: string) => {
-    setSelectedLocations(prev => prev.filter(l => l !== location));
-  };
+  const {
+    locationDialogOpen,
+    setLocationDialogOpen,
+    locationSearch,
+    setLocationSearch,
+    selectedLocations,
+    uniqueLocations,
+    setUniqueLocations,
+    handleLocationSelect,
+    handleLocationRemove
+  } = useLocations();
 
   return (
     <div id="jobs-section" className="container max-w-none py-8 px-4 md:px-8">
       <div className="space-y-4">
-        <SelectedTags 
-          tags={selectedTags} 
-          onRemoveTag={onTagRemove} 
+        <JobsHeader 
+          selectedTags={selectedTags}
+          onTagRemove={onTagRemove}
+          selectedLocations={selectedLocations}
+          onLocationRemove={handleLocationRemove}
         />
         
-        {selectedLocations.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {selectedLocations.map(location => (
-              <button
-                key={location}
-                onClick={() => handleLocationRemove(location)}
-                className="inline-flex items-center gap-1 px-2 py-1 bg-sage/10 text-sage-dark rounded-full text-sm hover:bg-sage/20"
-              >
-                {location}
-                <span>×</span>
-              </button>
-            ))}
-          </div>
-        )}
-        
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="flex items-center gap-4">
-            <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
-          </div>
-          
-          <JobsFilters 
-            onLocationDialogOpen={() => setLocationDialogOpen(true)}
-            selectedLocations={selectedLocations}
-            setSortBy={setSortBy}
-          />
-        </div>
+        <JobsFiltersSection 
+          onLocationDialogOpen={() => setLocationDialogOpen(true)}
+          selectedLocations={selectedLocations}
+          setSortBy={setSortBy}
+        />
       </div>
       
       <LocationSearchDialog
