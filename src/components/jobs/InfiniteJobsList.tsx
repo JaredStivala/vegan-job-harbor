@@ -23,20 +23,22 @@ export const InfiniteJobsList = ({
     source,
     selectedLocations,
     selectedTags,
-    onSuccess: (data) => {
-      // Extract unique locations from the jobs
-      const locations = data.pages.flatMap(page => 
-        page.map(job => job.location)
-      ).filter((location): location is string => typeof location === 'string' && location !== null);
-      onLocationsUpdate([...new Set(locations)]);
-
-      // Extract unique tags from the jobs
-      const tags = data.pages.flatMap(page => 
-        page.flatMap(job => job.tags || [])
-      ).filter((tag): tag is string => typeof tag === 'string' && tag !== null);
-      onTagsUpdate([...new Set(tags)]);
-    }
   });
+
+  // Process locations and tags after data is loaded
+  if (data?.pages) {
+    // Extract unique locations from the jobs
+    const locations = data.pages.flatMap(page => 
+      page.map(job => job.location)
+    ).filter((location): location is string => typeof location === 'string' && location !== null);
+    onLocationsUpdate([...new Set(locations)]);
+
+    // Extract unique tags from the jobs
+    const tags = data.pages.flatMap(page => 
+      page.flatMap(job => job.tags || [])
+    ).filter((tag): tag is string => typeof tag === 'string' && tag !== null);
+    onTagsUpdate([...new Set(tags)]);
+  }
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading jobs</div>;

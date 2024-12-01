@@ -8,10 +8,9 @@ interface FetchJobsOptions {
   source: 'veganjobs' | 'ea' | 'animaladvocacy' | 'vevolution';
   selectedLocations?: string[];
   selectedTags?: string[];
-  onSuccess?: (data: { pages: Job[][] }) => void;
 }
 
-export const useInfiniteJobs = ({ source, selectedLocations, selectedTags, onSuccess }: FetchJobsOptions) => {
+export const useInfiniteJobs = ({ source, selectedLocations, selectedTags }: FetchJobsOptions) => {
   return useInfiniteQuery({
     queryKey: ['jobs', source, selectedLocations, selectedTags],
     queryFn: async ({ pageParam = 0 }) => {
@@ -50,7 +49,6 @@ export const useInfiniteJobs = ({ source, selectedLocations, selectedTags, onSuc
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.length === JOBS_PER_PAGE ? allPages.length : undefined;
     },
-    initialPageParam: 0,
-    onSuccess
+    initialPageParam: 0
   });
 };
