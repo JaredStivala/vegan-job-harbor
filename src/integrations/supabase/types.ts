@@ -20,7 +20,7 @@ export type Database = {
           logo: string | null
           page_title: string | null
           salary: string | null
-          tags: string[] | null
+          tags: string | null
           updated_at: string | null
           url: string | null
         }
@@ -34,7 +34,7 @@ export type Database = {
           logo?: string | null
           page_title?: string | null
           salary?: string | null
-          tags?: string[] | null
+          tags?: string | null
           updated_at?: string | null
           url?: string | null
         }
@@ -48,7 +48,7 @@ export type Database = {
           logo?: string | null
           page_title?: string | null
           salary?: string | null
-          tags?: string[] | null
+          tags?: string | null
           updated_at?: string | null
           url?: string | null
         }
