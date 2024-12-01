@@ -8,7 +8,6 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import { Globe, Mountain, User, Building, Lion, Mosque, PalmTree, Water } from "lucide-react";
 import { locationData } from "./locations/locationData";
 import { LocationItem } from "./LocationItem";
 
@@ -39,29 +38,6 @@ export const LocationSearchDialog = ({
     return locations.some(location =>
       location.toLowerCase().includes(locationSearch.toLowerCase())
     );
-  };
-
-  const getRegionIcon = (region: string) => {
-    switch (region) {
-      case "Worldwide":
-        return <Globe className="h-4 w-4 mr-2" />;
-      case "North America":
-        return <Mountain className="h-4 w-4 mr-2" />;
-      case "Latin America":
-        return <User className="h-4 w-4 mr-2" />;
-      case "Europe":
-        return <Building className="h-4 w-4 mr-2" />;
-      case "Africa":
-        return <Lion className="h-4 w-4 mr-2" />;
-      case "Middle East":
-        return <Mosque className="h-4 w-4 mr-2" />;
-      case "Asia":
-        return <PalmTree className="h-4 w-4 mr-2" />;
-      case "Oceania":
-        return <Water className="h-4 w-4 mr-2" />;
-      default:
-        return <Globe className="h-4 w-4 mr-2" />;
-    }
   };
 
   return (
@@ -97,7 +73,7 @@ export const LocationSearchDialog = ({
                         });
                       }}
                     >
-                      {getRegionIcon(region)}
+                      <span className="mr-2">{data.icon}</span>
                       {region}
                     </CommandItem>
                     {filteredLocations.map((location) => (
