@@ -1,4 +1,4 @@
-import { Tag } from "lucide-react";
+import { Tag, ChevronDown } from "lucide-react";
 import {
   Command,
   CommandDialog,
@@ -18,7 +18,7 @@ interface TagFilterProps {
 
 const processTag = (tag: string): string => {
   return tag
-    .replace(/[\[\]"{}]/g, '') // Remove brackets, quotes, and curly braces
+    .replace(/[\[\]"{}]/g, '')
     .trim();
 };
 
@@ -35,16 +35,17 @@ export const TagFilter = ({ tags, onTagSelect, selectedTags }: TagFilterProps) =
     <div className="relative flex-1 sm:w-48">
       <button
         onClick={() => setSearchDialogOpen(true)}
-        className="w-full px-4 py-2 pl-10 pr-10 text-sm rounded-md border border-input bg-background text-left"
+        className="w-full px-4 py-2 pl-10 pr-10 text-sm rounded-xl border border-sage hover:border-sage-dark focus:border-sage-dark transition-colors bg-background text-left"
       >
-        {selectedTags.length > 0 ? `${selectedTags.length} tags selected` : "Search tags..."}
+        {selectedTags.length > 0 ? `${selectedTags.length} tags selected` : "Search tags"}
       </button>
-      <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+      <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-sage" />
+      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-sage" />
 
       <CommandDialog open={searchDialogOpen} onOpenChange={setSearchDialogOpen}>
         <Command className="rounded-lg border shadow-md">
           <CommandInput 
-            placeholder="Type to search tags..." 
+            placeholder="Type to search tags" 
             value={searchValue}
             onValueChange={setSearchValue}
           />

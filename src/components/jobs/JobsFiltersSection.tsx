@@ -1,4 +1,4 @@
-import { Building2 } from "lucide-react";
+import { Building2, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import {
   Command,
@@ -38,7 +38,6 @@ export const JobsFiltersSection = ({
   const [companyDialogOpen, setCompanyDialogOpen] = useState(false);
   const [companySearch, setCompanySearch] = useState("");
 
-  // Fetch all jobs to get their tags, locations, and company names
   const { data: allJobs = [] } = useQuery({
     queryKey: ['all-jobs'],
     queryFn: async () => {
@@ -97,18 +96,19 @@ export const JobsFiltersSection = ({
         <div className="relative flex-1 sm:w-48">
           <Input 
             type="text" 
-            placeholder="Company name..." 
-            className="pl-10 pr-10"
+            placeholder="Company name" 
+            className="pl-10 pr-10 rounded-xl border-sage hover:border-sage-dark focus:border-sage-dark transition-colors"
             onClick={() => setCompanyDialogOpen(true)}
             value={selectedCompany || ''}
             readOnly
           />
-          <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+          <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-sage" />
+          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-sage" />
 
           <CommandDialog open={companyDialogOpen} onOpenChange={setCompanyDialogOpen}>
             <Command className="rounded-lg border shadow-md">
               <CommandInput 
-                placeholder="Search companies..." 
+                placeholder="Search companies" 
                 value={companySearch}
                 onValueChange={setCompanySearch}
               />

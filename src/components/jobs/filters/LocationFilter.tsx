@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import { MapPin, ChevronDown, ChevronUp } from "lucide-react";
+import { MapPin, ChevronDown } from "lucide-react";
 import {
   Command,
   CommandDialog,
@@ -21,7 +21,6 @@ interface LocationFilterProps {
 export const LocationFilter = ({ selectedLocations, onLocationSelect }: LocationFilterProps) => {
   const [locationDialogOpen, setLocationDialogOpen] = useState(false);
   const [locationSearch, setLocationSearch] = useState("");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const { data: locations = [] } = useQuery({
     queryKey: ['all-locations'],
@@ -64,33 +63,25 @@ export const LocationFilter = ({ selectedLocations, onLocationSelect }: Location
   const handleLocationSelection = (location: string) => {
     onLocationSelect(location);
     setLocationDialogOpen(false);
-    setIsDropdownOpen(false);
   };
 
   return (
     <div className="relative flex-1 sm:w-48">
       <Input 
         type="text" 
-        placeholder="Location..." 
-        className="pl-10 pr-10"
-        onClick={() => {
-          setIsDropdownOpen(!isDropdownOpen);
-          setLocationDialogOpen(true);
-        }}
+        placeholder="Location" 
+        className="pl-10 pr-10 rounded-xl border-sage hover:border-sage-dark focus:border-sage-dark transition-colors"
+        onClick={() => setLocationDialogOpen(true)}
         value={selectedLocations.length > 0 ? `${selectedLocations.length} selected` : ''}
         readOnly
       />
-      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-      {isDropdownOpen ? (
-        <ChevronUp className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-      ) : (
-        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-      )}
+      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-sage" />
+      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-sage" />
 
       <CommandDialog open={locationDialogOpen} onOpenChange={setLocationDialogOpen}>
         <Command className="rounded-lg border shadow-md">
           <CommandInput 
-            placeholder="Search locations..." 
+            placeholder="Search locations" 
             value={locationSearch}
             onValueChange={setLocationSearch}
           />
