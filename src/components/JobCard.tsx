@@ -95,8 +95,26 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
     }).join('\n');
   };
 
-  // Ensure tags is an array before mapping
-  const jobTags = Array.isArray(tags) ? tags : [];
+  // Process tags based on source and type
+  const processedTags = (() => {
+    if (!tags) return [];
+    
+    // For vevolution, tags are stored as a string
+    if (source === 'vevolution' && typeof tags === 'string') {
+      return tags
+        .replace(/[\[\]"]/g, '') // Remove brackets and quotes
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(tag => tag.length > 0);
+    }
+    
+    // For other sources, tags should be an array
+    if (Array.isArray(tags)) {
+      return tags.filter(tag => tag && typeof tag === 'string');
+    }
+    
+    return [];
+  })();
 
   return (
     <div 
@@ -140,7 +158,7 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
                     {salary}
                   </Badge>
                 )}
-                {jobTags.length > 0 && jobTags.map((tag, index) => (
+                {processedTags.length > 0 && processedTags.map((tag, index) => (
                   <Badge 
                     key={index}
                     variant="secondary" 
