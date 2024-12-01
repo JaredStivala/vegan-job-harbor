@@ -35,10 +35,10 @@ export const LocationSearchDialog = ({
     queryKey: ['all-jobs'],
     queryFn: async () => {
       const [veganJobs, advocacyJobs, eaJobs, vevolutionJobs] = await Promise.all([
-        supabase.from('veganjobs').select('location'),
-        supabase.from('animaladvocacy').select('location'),
-        supabase.from('ea').select('location'),
-        supabase.from('vevolution').select('location')
+        supabase.from('veganjobs').select('*'),
+        supabase.from('animaladvocacy').select('*'),
+        supabase.from('ea').select('*'),
+        supabase.from('vevolution').select('*')
       ]);
       
       return [
@@ -67,15 +67,16 @@ export const LocationSearchDialog = ({
   };
 
   const standardizeLocation = (location: string) => {
+    const lowercaseLocation = location.toLowerCase();
     // Standardize Remote locations
-    if (location.toLowerCase().includes('remote')) {
-      if (location.toLowerCase().includes('usa') || location.toLowerCase().includes('united states')) {
+    if (lowercaseLocation.includes('remote')) {
+      if (lowercaseLocation.includes('usa') || lowercaseLocation.includes('united states')) {
         return 'Remote (USA)';
       }
-      if (location.toLowerCase().includes('uk') || location.toLowerCase().includes('united kingdom')) {
+      if (lowercaseLocation.includes('uk') || lowercaseLocation.includes('united kingdom')) {
         return 'Remote (UK)';
       }
-      if (location.toLowerCase().includes('global')) {
+      if (lowercaseLocation.includes('global')) {
         return 'Remote (Global)';
       }
       return 'Remote';
@@ -83,18 +84,20 @@ export const LocationSearchDialog = ({
     return location;
   };
 
-  // Get all valid locations from jobs
-  const jobLocations = new Set(
-    allJobs
-      .map(job => formatLocation(job.location))
-      .filter(Boolean)
-  );
+  // Get all valid locations from jobs and count jobs per location
+  const locationJobCounts = allJobs.reduce((acc, job) => {
+    const formattedLocation = formatLocation(job.location);
+    if (formattedLocation) {
+      acc[formattedLocation] = (acc[formattedLocation] || 0) + 1;
+    }
+    return acc;
+  }, {} as Record<string, number>);
 
   // Filter and process locations that exist in jobs
   const processedLocations = Array.from(new Set(
     uniqueLocations
       .map(loc => formatLocation(loc))
-      .filter(loc => jobLocations.has(loc)) // Only include locations that exist in jobs
+      .filter(loc => loc && locationJobCounts[loc] > 0) // Only include locations with jobs
       .filter(Boolean)
   )).sort((a, b) => {
     // Sort Remote locations first
@@ -127,6 +130,9 @@ export const LocationSearchDialog = ({
                 >
                   <MapPin className="mr-2 h-4 w-4 text-sage" />
                   <span>{location}</span>
+                  <span className="ml-2 text-sm text-gray-500">
+                    ({locationJobCounts[location]} jobs)
+                  </span>
                   {selectedLocations.includes(location) && (
                     <span className="ml-auto text-sage">Selected</span>
                   )}
