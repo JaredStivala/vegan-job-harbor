@@ -16,11 +16,25 @@ const Index = () => {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
   const { data: allJobs = [], isLoading, error } = useQuery({
-    queryKey: ['jobs'],
+    queryKey: ['all-jobs'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('veganjobs').select('*');
-      if (error) throw error;
-      return data as Job[];
+      // Fetch from all job tables with explicit error handling
+      const [veganJobs, advocacyJobs, eaJobs, vevolutionJobs] = await Promise.all([
+        supabase.from('veganjobs').select('*'),
+        supabase.from('animaladvocacy').select('*'),
+        supabase.from('ea').select('*'),
+        supabase.from('vevolution').select('*')
+      ]);
+      
+      // Combine all jobs and filter out any null results
+      const allJobsData = [
+        ...(veganJobs.data || []),
+        ...(advocacyJobs.data || []),
+        ...(eaJobs.data || []),
+        ...(vevolutionJobs.data || [])
+      ];
+
+      return allJobsData as Job[];
     }
   });
 
