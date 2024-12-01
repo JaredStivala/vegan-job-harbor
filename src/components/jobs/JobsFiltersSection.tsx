@@ -33,8 +33,10 @@ export const JobsFiltersSection = ({
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [searchDialogOpen, setSearchDialogOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [companyDialogOpen, setCompanyDialogOpen] = useState(false);
+  const [companySearch, setCompanySearch] = useState("");
 
-  // Fetch all jobs to get their tags
+  // Fetch all jobs to get their tags, locations, and company names
   const { data: allJobs = [] } = useQuery({
     queryKey: ['all-jobs'],
     queryFn: async () => {
@@ -75,6 +77,14 @@ export const JobsFiltersSection = ({
       return [];
     }).filter(Boolean) // Remove empty/null values
   ));
+
+  // Extract all unique company names
+  const companyNames = Array.from(new Set(
+    allJobs
+      .map(job => job.company_name)
+      .filter(Boolean) // Remove null/undefined values
+      .map(name => name.trim()) // Trim whitespace
+  )).sort();
 
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -154,7 +164,11 @@ export const JobsFiltersSection = ({
             type="text" 
             placeholder="Company name..." 
             className="pl-10 pr-10"
-            onClick={() => toggleDropdown('company')}
+            onClick={() => {
+              toggleDropdown('company');
+              setCompanyDialogOpen(true);
+            }}
+            readOnly
           />
           <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
           {activeDropdown === 'company' ? (
@@ -162,6 +176,39 @@ export const JobsFiltersSection = ({
           ) : (
             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
           )}
+
+          <CommandDialog open={companyDialogOpen} onOpenChange={setCompanyDialogOpen}>
+            <Command className="rounded-lg border shadow-md">
+              <CommandInput 
+                placeholder="Search companies..." 
+                value={companySearch}
+                onValueChange={setCompanySearch}
+              />
+              <CommandList>
+                <CommandEmpty>No companies found.</CommandEmpty>
+                <CommandGroup heading="Companies">
+                  {companyNames
+                    .filter(company => 
+                      company.toLowerCase().includes(companySearch.toLowerCase())
+                    )
+                    .map((company) => (
+                      <CommandItem
+                        key={company}
+                        value={company}
+                        onSelect={() => {
+                          // Handle company selection here
+                          setCompanyDialogOpen(false);
+                        }}
+                        className="cursor-pointer"
+                      >
+                        <Building2 className="mr-2 h-4 w-4 text-sage" />
+                        <span>{company}</span>
+                      </CommandItem>
+                    ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </CommandDialog>
         </div>
       </div>
     </div>
