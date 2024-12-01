@@ -12,13 +12,14 @@ export const EmailCaptureBanner = () => {
     e.preventDefault();
     if (!email) return;
 
-    // Open Mailchimp subscription URL in a new tab
-    window.open(
-      `https://babson.us8.list-manage.com/subscribe/post?u=bc5177e4337c59d1b3ada8ee8&id=21571d3969&f_id=00da4ee3f0&EMAIL=${encodeURIComponent(
-        email
-      )}`,
-      "_blank"
-    );
+    // Encode the email for the URL
+    const encodedEmail = encodeURIComponent(email);
+    
+    // Make a request to Mailchimp in the background
+    fetch(`https://babson.us8.list-manage.com/subscribe/post?u=bc5177e4337c59d1b3ada8ee8&id=21571d3969&f_id=00da4ee3f0&EMAIL=${encodedEmail}`, {
+      mode: 'no-cors', // Since Mailchimp doesn't support CORS
+      method: 'POST'
+    });
 
     toast({
       title: "Thanks for subscribing! 🌱",
