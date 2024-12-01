@@ -8,6 +8,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
+import { Globe, Mountain, User, Building, Lion, Mosque, PalmTree, Water } from "lucide-react";
 import { locationData } from "./locations/locationData";
 import { LocationItem } from "./LocationItem";
 
@@ -40,6 +41,29 @@ export const LocationSearchDialog = ({
     );
   };
 
+  const getRegionIcon = (region: string) => {
+    switch (region) {
+      case "Worldwide":
+        return <Globe className="h-4 w-4 mr-2" />;
+      case "North America":
+        return <Mountain className="h-4 w-4 mr-2" />;
+      case "Latin America":
+        return <User className="h-4 w-4 mr-2" />;
+      case "Europe":
+        return <Building className="h-4 w-4 mr-2" />;
+      case "Africa":
+        return <Lion className="h-4 w-4 mr-2" />;
+      case "Middle East":
+        return <Mosque className="h-4 w-4 mr-2" />;
+      case "Asia":
+        return <PalmTree className="h-4 w-4 mr-2" />;
+      case "Oceania":
+        return <Water className="h-4 w-4 mr-2" />;
+      default:
+        return <Globe className="h-4 w-4 mr-2" />;
+    }
+  };
+
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
       <Command className="rounded-lg border shadow-md">
@@ -55,7 +79,7 @@ export const LocationSearchDialog = ({
           {(!locationSearch || Object.entries(locationData.regions).some(
             ([_, data]) => hasMatchInGroup(data.locations)
           )) && (
-            <CommandGroup heading="Regions">
+            <CommandGroup heading="REGIONS" className="font-bold text-xs uppercase text-gray-500">
               {Object.entries(locationData.regions).map(([region, data]) => {
                 const filteredLocations = filterLocations(data.locations);
                 if (locationSearch && filteredLocations.length === 0) return null;
@@ -73,7 +97,7 @@ export const LocationSearchDialog = ({
                         });
                       }}
                     >
-                      <span className="mr-2">{data.icon}</span>
+                      {getRegionIcon(region)}
                       {region}
                     </CommandItem>
                     {filteredLocations.map((location) => (
@@ -91,13 +115,13 @@ export const LocationSearchDialog = ({
             </CommandGroup>
           )}
 
-          <CommandSeparator />
+          <CommandSeparator className="my-2" />
 
           {/* Countries */}
           {(!locationSearch || Object.entries(locationData.countries).some(
             ([_, data]) => hasMatchInGroup(data.locations)
           )) && (
-            <CommandGroup heading="Countries">
+            <CommandGroup heading="COUNTRIES" className="font-bold text-xs uppercase text-gray-500">
               {Object.entries(locationData.countries).map(([country, data]) => {
                 const filteredLocations = filterLocations(data.locations);
                 if (locationSearch && filteredLocations.length === 0) return null;
@@ -115,7 +139,7 @@ export const LocationSearchDialog = ({
                         });
                       }}
                     >
-                      <span className="mr-2">{data.code}</span>
+                      <span className="mr-2 text-sm">{data.code}</span>
                       {country}
                     </CommandItem>
                     {filteredLocations.map((location) => (

@@ -1,6 +1,6 @@
 export const locationData = {
   regions: {
-    Worldwide: {
+    "Worldwide": {
       icon: "🌍",
       locations: ["Remote", "Global", "Worldwide"]
     },
@@ -24,7 +24,7 @@ export const locationData = {
         "Buenos Aires, Argentina"
       ]
     },
-    Europe: {
+    "Europe": {
       icon: "🇪🇺",
       locations: [
         "London, United Kingdom",
@@ -34,7 +34,7 @@ export const locationData = {
         "Dublin, Ireland"
       ]
     },
-    Africa: {
+    "Africa": {
       icon: "🦁",
       locations: [
         "Cape Town, South Africa",
@@ -49,7 +49,7 @@ export const locationData = {
         "Tel Aviv, Israel"
       ]
     },
-    Asia: {
+    "Asia": {
       icon: "🗼",
       locations: [
         "Singapore",
@@ -59,7 +59,7 @@ export const locationData = {
         "Bangalore, India"
       ]
     },
-    Oceania: {
+    "Oceania": {
       icon: "🦘",
       locations: [
         "Sydney, Australia",
@@ -80,7 +80,7 @@ export const locationData = {
         "Seattle, United States"
       ]
     },
-    Canada: {
+    "Canada": {
       code: "CA",
       locations: [
         "Toronto, Canada",
@@ -96,7 +96,7 @@ export const locationData = {
         "Edinburgh, United Kingdom"
       ]
     },
-    Australia: {
+    "Australia": {
       code: "AU",
       locations: [
         "Sydney, Australia",
