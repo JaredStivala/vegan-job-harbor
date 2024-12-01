@@ -65,7 +65,6 @@ export const LocationSearchDialog = ({
                     <CommandItem
                       className="cursor-pointer font-medium"
                       onSelect={() => {
-                        // When selecting a region, add all its locations
                         data.locations.forEach(loc => {
                           if (!selectedLocations.includes(loc)) {
                             onLocationSelect(loc);
@@ -73,7 +72,6 @@ export const LocationSearchDialog = ({
                         });
                       }}
                     >
-                      <span className="mr-2">{data.icon}</span>
                       {region}
                     </CommandItem>
                     {filteredLocations.map((location) => (
@@ -107,7 +105,6 @@ export const LocationSearchDialog = ({
                     <CommandItem
                       className="cursor-pointer font-medium"
                       onSelect={() => {
-                        // When selecting a country, add all its locations
                         data.locations.forEach(loc => {
                           if (!selectedLocations.includes(loc)) {
                             onLocationSelect(loc);
@@ -115,7 +112,6 @@ export const LocationSearchDialog = ({
                         });
                       }}
                     >
-                      <span className="mr-2 text-sm">{data.code}</span>
                       {country}
                     </CommandItem>
                     {filteredLocations.map((location) => (
