@@ -56,6 +56,11 @@ const Index = () => {
     setSelectedTags(prev => prev.filter(t => t !== tag));
   };
 
+  // Extract all unique tags from jobs
+  const allTags = Array.from(new Set(
+    allJobs.flatMap(job => Array.isArray(job.tags) ? job.tags : [])
+  ));
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream">
       <JobsHeader 
@@ -73,8 +78,10 @@ const Index = () => {
         selectedJob={selectedJob}
         selectedTags={selectedTags}
         onTagRemove={handleTagRemove}
+        onTagSelect={handleTagSelect}
         sortBy={sortBy}
         setSortBy={setSortBy}
+        allTags={allTags}
       />
       <BackToTop />
     </div>
