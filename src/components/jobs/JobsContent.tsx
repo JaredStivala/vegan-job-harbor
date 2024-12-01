@@ -10,16 +10,20 @@ interface JobsContentProps {
   selectedJob: Job | null;
   selectedTags: string[];
   onTagRemove: (tag: string) => void;
+  onTagSelect: (tag: string) => void;
   sortBy: 'latest' | 'salary' | 'location';
   setSortBy: (sort: 'latest' | 'salary' | 'location') => void;
+  allTags: string[];
 }
 
 export const JobsContent = ({ 
   selectedJob,
   selectedTags,
   onTagRemove,
+  onTagSelect,
   sortBy,
-  setSortBy
+  setSortBy,
+  allTags
 }: JobsContentProps) => {
   const {
     locationDialogOpen,
@@ -47,6 +51,9 @@ export const JobsContent = ({
           onLocationDialogOpen={() => setLocationDialogOpen(true)}
           selectedLocations={selectedLocations}
           setSortBy={setSortBy}
+          tags={allTags}
+          onTagSelect={onTagSelect}
+          selectedTags={selectedTags}
         />
       </div>
       
