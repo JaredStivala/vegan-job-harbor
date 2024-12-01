@@ -34,15 +34,15 @@ export const useInfiniteJobs = ({ source, selectedLocations, selectedTags, selec
         query = query.ilike('company_name', `%${selectedCompany}%`);
       }
 
-      // Handle tags differently for vevolution table since it uses text type
+      // Handle tags differently based on the source table
       if (selectedTags?.length) {
-        if (source === 'vevolution') {
-          // For text type, use LIKE for each tag
+        if (source === 'veganjobs' || source === 'ea') {
+          // For array type columns
+          query = query.contains('tags', selectedTags);
+        } else {
+          // For text type columns (animaladvocacy and vevolution)
           const tagConditions = selectedTags.map(tag => `tags.ilike.%${tag}%`);
           query = query.or(tagConditions.join(','));
-        } else {
-          // For array type, use contains operator
-          query = query.contains('tags', selectedTags);
         }
       }
 
