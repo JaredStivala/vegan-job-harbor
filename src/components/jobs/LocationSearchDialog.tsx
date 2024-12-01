@@ -8,6 +8,8 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 interface LocationSearchDialogProps {
   open: boolean;
@@ -28,6 +30,26 @@ export const LocationSearchDialog = ({
   selectedLocations,
   onLocationSelect,
 }: LocationSearchDialogProps) => {
+  // Fetch all jobs to check which locations have matching jobs
+  const { data: allJobs = [] } = useQuery({
+    queryKey: ['all-jobs'],
+    queryFn: async () => {
+      const [veganJobs, advocacyJobs, eaJobs, vevolutionJobs] = await Promise.all([
+        supabase.from('veganjobs').select('location'),
+        supabase.from('animaladvocacy').select('location'),
+        supabase.from('ea').select('location'),
+        supabase.from('vevolution').select('location')
+      ]);
+      
+      return [
+        ...(veganJobs.data || []),
+        ...(advocacyJobs.data || []),
+        ...(eaJobs.data || []),
+        ...(vevolutionJobs.data || [])
+      ];
+    }
+  });
+
   const formatLocation = (loc: string | null) => {
     if (!loc) return '';
     
@@ -61,10 +83,18 @@ export const LocationSearchDialog = ({
     return location;
   };
 
-  // Remove duplicates and sort locations
+  // Get all valid locations from jobs
+  const jobLocations = new Set(
+    allJobs
+      .map(job => formatLocation(job.location))
+      .filter(Boolean)
+  );
+
+  // Filter and process locations that exist in jobs
   const processedLocations = Array.from(new Set(
     uniqueLocations
       .map(loc => formatLocation(loc))
+      .filter(loc => jobLocations.has(loc)) // Only include locations that exist in jobs
       .filter(Boolean)
   )).sort((a, b) => {
     // Sort Remote locations first
