@@ -83,7 +83,7 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
                     className="cursor-pointer"
                   >
                     <Tag className="mr-2 h-4 w-4 text-sage" />
-                    <span>{tag}</span>
+                    <span>{processTag(tag)}</span>
                     {selectedTags.includes(tag) && (
                       <span className="ml-auto text-sage">Selected</span>
                     )}
