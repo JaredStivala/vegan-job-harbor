@@ -25,10 +25,15 @@ export const useInfiniteJobs = ({ source, selectedLocations, selectedTags, selec
         .order('date_posted', { ascending: false, nullsFirst: false });
 
       if (selectedLocations?.length) {
-        const locationFilters = selectedLocations.map(location => 
-          `location.ilike.%${location.replace(/[^a-zA-Z0-9\s]/g, '')}%`
-        );
-        query = query.or(locationFilters.join(','));
+        const filters = selectedLocations.map(location => {
+          const cleanLocation = location.replace(/[^a-zA-Z0-9\s]/g, ' ').trim();
+          return `location.ilike.%${cleanLocation}%`;
+        });
+        
+        // Apply each location filter individually
+        filters.forEach(filter => {
+          query = query.or(filter);
+        });
       }
 
       if (selectedCompany) {
