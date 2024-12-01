@@ -12,20 +12,19 @@ export const EmailCaptureBanner = () => {
     e.preventDefault();
     if (!email) return;
 
-    try {
-      // Store email in Supabase or send to your email service
-      toast({
-        title: "Thanks for subscribing! 🌱",
-        description: "We'll keep you updated with the latest vegan job opportunities.",
-      });
-      setIsVisible(false);
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Something went wrong",
-        description: "Please try again later.",
-      });
-    }
+    // Open Mailchimp subscription URL in a new tab
+    window.open(
+      `https://babson.us8.list-manage.com/subscribe/post?u=bc5177e4337c59d1b3ada8ee8&id=21571d3969&f_id=00da4ee3f0&EMAIL=${encodeURIComponent(
+        email
+      )}`,
+      "_blank"
+    );
+
+    toast({
+      title: "Thanks for subscribing! 🌱",
+      description: "Please check your email to confirm your subscription.",
+    });
+    setIsVisible(false);
   };
 
   if (!isVisible) return null;
