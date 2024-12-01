@@ -25,10 +25,10 @@ export const useInfiniteJobs = ({ source, selectedLocations, selectedTags, selec
         .order('date_posted', { ascending: false, nullsFirst: false });
 
       if (selectedLocations?.length) {
-        // Create a filter for each location using textSearch
-        selectedLocations.forEach(location => {
-          query = query.or(`location.ilike.${location}`);
-        });
+        const locationFilters = selectedLocations.map(location => 
+          `location.ilike.%${location.replace(/[^a-zA-Z0-9\s]/g, '')}%`
+        );
+        query = query.or(locationFilters.join(','));
       }
 
       if (selectedCompany) {
