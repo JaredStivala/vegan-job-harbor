@@ -49,6 +49,6 @@ export const useInfiniteJobs = ({ source, selectedLocations, selectedTags }: Fet
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.length === JOBS_PER_PAGE ? allPages.length : undefined;
     },
-    initialPageParam: 0
+    initialPageParam: 0,
   });
 };
