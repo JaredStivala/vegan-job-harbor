@@ -10,8 +10,19 @@ export const JobMetadata = ({ companyName, location, formattedDate }: JobMetadat
   const formatLocation = (loc: string | null) => {
     if (!loc) return null;
     // Remove brackets, quotes, and clean up any extra whitespace
-    return loc.replace(/[\[\]"]/g, '').trim();
+    try {
+      // Check if it's a JSON string and parse it
+      if (loc.startsWith('[') && loc.endsWith(']')) {
+        const parsed = JSON.parse(loc);
+        return Array.isArray(parsed) ? parsed[0] : parsed;
+      }
+      return loc.replace(/[\[\]"{}']/g, '').trim();
+    } catch {
+      return loc.replace(/[\[\]"{}']/g, '').trim();
+    }
   };
+
+  const formattedLocation = formatLocation(location);
 
   return (
     <div className="flex flex-wrap gap-2 items-center text-sm text-gray-600">
@@ -22,10 +33,10 @@ export const JobMetadata = ({ companyName, location, formattedDate }: JobMetadat
         </div>
       )}
       
-      {location && (
+      {formattedLocation && (
         <div className="flex items-center gap-1">
           <MapPin className="w-4 h-4" />
-          <span>{formatLocation(location)}</span>
+          <span>{formattedLocation}</span>
         </div>
       )}
       

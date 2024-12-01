@@ -24,13 +24,22 @@ export const LocationSearchDialog = ({
   onOpenChange,
   locationSearch,
   setLocationSearch,
-  uniqueLocations = [], // Provide default empty array
+  uniqueLocations = [],
   selectedLocations,
   onLocationSelect,
 }: LocationSearchDialogProps) => {
   const formatLocation = (loc: string | null) => {
     if (!loc) return '';
-    return loc.replace(/[\[\]"]/g, '').trim();
+    try {
+      // Check if it's a JSON string and parse it
+      if (loc.startsWith('[') && loc.endsWith(']')) {
+        const parsed = JSON.parse(loc);
+        return Array.isArray(parsed) ? parsed[0] : parsed;
+      }
+      return loc.replace(/[\[\]"{}']/g, '').trim();
+    } catch {
+      return loc.replace(/[\[\]"{}']/g, '').trim();
+    }
   };
 
   return (
