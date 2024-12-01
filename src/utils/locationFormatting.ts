@@ -17,8 +17,17 @@ export const formatLocation = (loc: string | null) => {
 export const standardizeLocation = (location: string) => {
   const lowercaseLocation = location.toLowerCase();
   
-  // Consolidate all remote variations into a single "Remote" option
-  if (lowercaseLocation.includes('remote')) {
+  // Consolidate ALL remote variations into a single "Remote" option
+  if (lowercaseLocation.includes('remote') || 
+      lowercaseLocation.includes('global') || 
+      lowercaseLocation.includes('worldwide')) {
+    return 'Remote';
+  }
+  
+  // Remove any country/region specifications from remote locations
+  if (location.match(/remote.*\((.*?)\)/i) || 
+      location.match(/remote.*-(.*)/i) || 
+      location.match(/remote[,\s]+(.*)/i)) {
     return 'Remote';
   }
   
