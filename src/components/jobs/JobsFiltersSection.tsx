@@ -10,6 +10,8 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 interface JobsFiltersSectionProps {
   onLocationDialogOpen: () => void;
@@ -24,13 +26,45 @@ export const JobsFiltersSection = ({
   onLocationDialogOpen,
   selectedLocations,
   setSortBy,
-  tags,
+  tags: propTags,
   onTagSelect,
   selectedTags
 }: JobsFiltersSectionProps) => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [searchDialogOpen, setSearchDialogOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+
+  // Fetch all tags from all job tables
+  const { data: allTags } = useQuery({
+    queryKey: ['all-tags'],
+    queryFn: async () => {
+      const [veganJobs, advocacyJobs, eaJobs, vevolutionJobs] = await Promise.all([
+        supabase.from('veganjobs').select('tags').not('tags', 'is', null),
+        supabase.from('animaladvocacy').select('tags').not('tags', 'is', null),
+        supabase.from('ea').select('tags').not('tags', 'is', null),
+        supabase.from('vevolution').select('tags').not('tags', 'is', null)
+      ]);
+
+      // Combine all tags and filter out null/undefined values
+      const allJobsData = [
+        ...(veganJobs.data || []),
+        ...(advocacyJobs.data || []),
+        ...(eaJobs.data || []),
+        ...(vevolutionJobs.data || [])
+      ];
+
+      // Extract and flatten all tags
+      const tags = allJobsData.reduce((acc: string[], job) => {
+        if (Array.isArray(job.tags)) {
+          acc.push(...job.tags);
+        }
+        return acc;
+      }, []);
+
+      // Remove duplicates and filter out empty/null values
+      return Array.from(new Set(tags)).filter(Boolean);
+    }
+  });
 
   const toggleDropdown = (name: string) => {
     setActiveDropdown(activeDropdown === name ? null : name);
@@ -41,8 +75,8 @@ export const JobsFiltersSection = ({
     setSearchDialogOpen(false);
   };
 
-  // Remove duplicate tags
-  const uniqueTags = Array.from(new Set(tags));
+  // Use the fetched tags, falling back to props if not yet loaded
+  const availableTags = allTags || propTags;
 
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -73,7 +107,7 @@ export const JobsFiltersSection = ({
               <CommandList>
                 <CommandEmpty>No tags found.</CommandEmpty>
                 <CommandGroup heading="Available Tags">
-                  {uniqueTags
+                  {availableTags
                     .filter(tag => 
                       tag.toLowerCase().includes(searchValue.toLowerCase())
                     )
