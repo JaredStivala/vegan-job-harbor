@@ -1,5 +1,4 @@
-import { Input } from "@/components/ui/input";
-import { MapPin, Tag, Building2, ChevronDown, ChevronUp } from "lucide-react";
+import { Tag, Building2, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import {
   Command,
@@ -12,6 +11,8 @@ import {
 } from "@/components/ui/command";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { LocationFilter } from "./filters/LocationFilter";
+import { Input } from "@/components/ui/input";
 
 interface JobsFiltersSectionProps {
   onLocationDialogOpen: () => void;
@@ -23,7 +24,6 @@ interface JobsFiltersSectionProps {
 }
 
 export const JobsFiltersSection = ({
-  onLocationDialogOpen,
   selectedLocations,
   setSortBy,
   tags: propTags,
@@ -71,20 +71,27 @@ export const JobsFiltersSection = ({
       if (Array.isArray(job.tags)) {
         return job.tags;
       } else if (typeof job.tags === 'string') {
-        // Split string tags by comma and trim whitespace
         return job.tags.split(',').map(tag => tag.trim());
       }
       return [];
-    }).filter(Boolean) // Remove empty/null values
+    }).filter(Boolean)
   ));
 
   // Extract all unique company names
   const companyNames = Array.from(new Set(
     allJobs
       .map(job => job.company_name)
-      .filter(Boolean) // Remove null/undefined values
-      .map(name => name.trim()) // Trim whitespace
+      .filter(Boolean)
+      .map(name => name.trim())
   )).sort();
+
+  const handleLocationSelect = (location: string) => {
+    const updatedLocations = selectedLocations.includes(location)
+      ? selectedLocations.filter(loc => loc !== location)
+      : [...selectedLocations, location];
+    // Update the parent component's state
+    setSortBy('location');
+  };
 
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -139,25 +146,10 @@ export const JobsFiltersSection = ({
           </CommandDialog>
         </div>
 
-        <div className="relative flex-1 sm:w-48">
-          <Input 
-            type="text" 
-            placeholder="Location..." 
-            className="pl-10 pr-10"
-            onClick={() => {
-              toggleDropdown('location');
-              onLocationDialogOpen();
-            }}
-            value={selectedLocations.length > 0 ? `${selectedLocations.length} selected` : ''}
-            readOnly
-          />
-          <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-          {activeDropdown === 'location' ? (
-            <ChevronUp className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-          ) : (
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-          )}
-        </div>
+        <LocationFilter 
+          selectedLocations={selectedLocations}
+          onLocationSelect={handleLocationSelect}
+        />
 
         <div className="relative flex-1 sm:w-48">
           <Input 
@@ -196,7 +188,6 @@ export const JobsFiltersSection = ({
                         key={company}
                         value={company}
                         onSelect={() => {
-                          // Handle company selection here
                           setCompanyDialogOpen(false);
                         }}
                         className="cursor-pointer"
