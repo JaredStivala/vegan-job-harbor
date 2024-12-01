@@ -23,7 +23,7 @@ export const EmailCaptureBanner = () => {
 
     toast({
       title: "Thanks for subscribing! 🌱",
-      description: "Please check your email to confirm your subscription.",
+      description: "We'll keep you updated with the latest opportunities.",
     });
     setIsVisible(false);
   };

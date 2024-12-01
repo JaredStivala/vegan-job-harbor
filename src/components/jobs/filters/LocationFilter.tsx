@@ -67,14 +67,12 @@ export const LocationFilter = ({ selectedLocations, onLocationSelect }: Location
 
   return (
     <div className="relative flex-1 sm:w-48">
-      <Input 
-        type="text" 
-        placeholder="Location" 
-        className="pl-10 pr-10 py-2.5 text-base rounded-xl border-sage hover:border-sage-dark focus:border-sage-dark transition-colors font-normal text-gray-600"
+      <button
         onClick={() => setLocationDialogOpen(true)}
-        value={selectedLocations.length > 0 ? `${selectedLocations.length} selected` : ''}
-        readOnly
-      />
+        className="w-full px-4 py-2.5 pl-10 pr-10 text-base rounded-xl border border-sage hover:border-sage-dark focus:border-sage-dark transition-colors bg-background text-gray-600 font-normal text-left"
+      >
+        {selectedLocations.length > 0 ? `${selectedLocations.length} selected` : "Location"}
+      </button>
       <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-sage" />
       <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-sage" />
 
