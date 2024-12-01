@@ -6,6 +6,7 @@ import { BackToTop } from "@/components/BackToTop";
 import { JobsHeader } from "@/components/jobs/JobsHeader";
 import { JobsHero } from "@/components/jobs/JobsHero";
 import { JobsContent } from "@/components/jobs/JobsContent";
+import { EmailCaptureBanner } from "@/components/EmailCaptureBanner";
 import type { Job } from "@/types/job";
 import { useLocations } from "@/hooks/useLocations";
 
@@ -63,6 +64,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream">
+      <EmailCaptureBanner />
       <JobsHeader 
         selectedTags={selectedTags}
         onTagRemove={handleTagRemove}
