@@ -1,3 +1,4 @@
+import { Input } from "@/components/ui/input";
 import { MapPin, ChevronDown } from "lucide-react";
 import {
   Command,
@@ -68,7 +69,7 @@ export const LocationFilter = ({ selectedLocations, onLocationSelect }: Location
     <div className="relative flex-1 sm:w-48">
       <button
         onClick={() => setLocationDialogOpen(true)}
-        className="w-full px-4 py-2.5 pl-10 pr-10 text-base rounded-full border border-sage/50 hover:border-sage focus:border-sage transition-colors bg-background text-gray-600 font-normal text-left"
+        className="w-full px-4 py-2.5 pl-10 pr-10 text-base rounded-xl border border-sage hover:border-sage-dark focus:border-sage-dark transition-colors bg-background text-gray-600 font-normal text-left"
       >
         {selectedLocations.length > 0 ? `${selectedLocations.length} selected` : "Location"}
       </button>
