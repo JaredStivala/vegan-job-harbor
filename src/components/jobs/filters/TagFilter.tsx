@@ -35,7 +35,7 @@ export const TagFilter = ({ tags, onTagSelect, selectedTags }: TagFilterProps) =
     <div className="relative flex-1 sm:w-48">
       <button
         onClick={() => setSearchDialogOpen(true)}
-        className="w-full px-4 py-2 pl-10 pr-10 text-sm rounded-xl border border-sage hover:border-sage-dark focus:border-sage-dark transition-colors bg-background text-gray-600 font-normal text-left"
+        className="w-full px-4 py-2 pl-10 pr-10 text-sm rounded-xl border border-sage hover:border-sage-dark focus:border-sage-dark transition-colors bg-background text-gray-700 font-normal text-left"
       >
         {selectedTags.length > 0 ? `${selectedTags.length} tags selected` : "Search tags"}
       </button>
