@@ -144,6 +144,7 @@ export type Database = {
           tags: string | null
           updated_at: string | null
           url: string
+          verification_end_date: string | null
           Verified: boolean | null
         }
         Insert: {
@@ -160,6 +161,7 @@ export type Database = {
           tags?: string | null
           updated_at?: string | null
           url: string
+          verification_end_date?: string | null
           Verified?: boolean | null
         }
         Update: {
@@ -176,6 +178,7 @@ export type Database = {
           tags?: string | null
           updated_at?: string | null
           url?: string
+          verification_end_date?: string | null
           Verified?: boolean | null
         }
         Relationships: []
