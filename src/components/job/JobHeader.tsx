@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { JobLogo } from "./JobLogo";
 import { supabase } from "@/integrations/supabase/client";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 interface JobHeaderProps {
   title: string;
@@ -53,14 +53,15 @@ export const JobHeader = ({
     <div className="flex justify-between items-start gap-4">
       <div className="flex items-start gap-3">
         <JobLogo logo={logo} companyName={companyName} />
-        <div className="flex items-center gap-2">
-          <h3 className="font-semibold text-lg text-black group-hover:text-sage">
+        <div className="flex items-center gap-1.5">
+          <h3 className={`font-semibold text-lg ${colored ? 'text-white' : 'text-black group-hover:text-sage'}`}>
             {title || "Untitled Position"}
           </h3>
           {verified && (
-            <CheckCircle 
-              className="w-5 h-5 text-blue-500 flex-shrink-0" 
+            <CheckCircle2
+              className="w-5 h-5 text-blue-500 flex-shrink-0 animate-pulse" 
               aria-label="Verified job posting"
+              strokeWidth={2.5}
             />
           )}
         </div>
