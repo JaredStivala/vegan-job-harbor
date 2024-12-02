@@ -3,6 +3,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { JobPostForm } from "@/components/job-post/JobPostForm";
+import { calculateTotalPrice } from "@/config/pricing";
 
 const calculateVerificationEndDate = (verificationPeriod: string): Date | null => {
   if (!verificationPeriod) return null;
@@ -48,12 +49,33 @@ const PostJob = () => {
     };
 
     try {
-      const { error } = await supabase
+      // Calculate total amount
+      const amount = calculateTotalPrice(isVerified, verificationPeriod);
+
+      // Create a new job post
+      const { data: jobPost, error: jobError } = await supabase
         .from("userSubmissions")
-        .insert(jobData);
+        .insert(jobData)
+        .select()
+        .single();
 
-      if (error) throw error;
+      if (jobError) throw jobError;
 
+      // Create a payment record
+      const { error: paymentError } = await supabase
+        .from("jobPayments")
+        .insert({
+          job_id: jobPost.id,
+          amount,
+          status: 'pending',
+          payment_type: isVerified ? 'verified_post' : 'basic_post',
+          stripe_session_id: 'pending' // This will be updated with the actual Stripe session ID
+        });
+
+      if (paymentError) throw paymentError;
+
+      // TODO: Redirect to Stripe payment page
+      // For now, we'll just show a success message
       toast({
         title: "Success!",
         description: "Your job has been posted successfully.",

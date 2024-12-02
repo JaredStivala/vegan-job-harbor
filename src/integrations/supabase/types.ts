@@ -129,6 +129,50 @@ export type Database = {
         }
         Relationships: []
       }
+      jobPayments: {
+        Row: {
+          amount: number
+          created_at: string | null
+          id: string
+          job_id: string | null
+          payment_type: string
+          status: string
+          stripe_payment_id: string | null
+          stripe_session_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          id?: string
+          job_id?: string | null
+          payment_type: string
+          status: string
+          stripe_payment_id?: string | null
+          stripe_session_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          id?: string
+          job_id?: string | null
+          payment_type?: string
+          status?: string
+          stripe_payment_id?: string | null
+          stripe_session_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jobPayments_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "userSubmissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       userSubmissions: {
         Row: {
           Colored: boolean | null
