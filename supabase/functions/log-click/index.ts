@@ -13,8 +13,10 @@ serve(async (req) => {
 
   try {
     const { jobId, source, url } = await req.json()
+    console.log('Received click data:', { jobId, source, url })
 
     if (!jobId || !source || !url) {
+      console.error('Missing required parameters:', { jobId, source, url })
       return new Response(
         JSON.stringify({ error: 'Missing required parameters' }),
         { 
@@ -29,7 +31,7 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const { error: clickError } = await supabase
+    const { data, error: clickError } = await supabase
       .from('job_clicks')
       .insert({
         job_id: jobId,
@@ -38,11 +40,12 @@ serve(async (req) => {
         user_agent: req.headers.get('user-agent'),
         ip_address: req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip')
       })
+      .select()
 
     if (clickError) {
       console.error('Error logging click:', clickError)
       return new Response(
-        JSON.stringify({ error: 'Failed to log click' }),
+        JSON.stringify({ error: 'Failed to log click', details: clickError.message }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
           status: 500 
@@ -50,8 +53,9 @@ serve(async (req) => {
       )
     }
 
+    console.log('Successfully logged click:', data)
     return new Response(
-      JSON.stringify({ success: true }),
+      JSON.stringify({ success: true, data }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
         status: 200 
@@ -60,7 +64,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Unexpected error:', error)
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
+      JSON.stringify({ error: 'Internal server error', details: error.message }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
         status: 500 
