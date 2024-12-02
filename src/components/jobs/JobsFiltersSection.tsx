@@ -96,7 +96,7 @@ export const JobsFiltersSection = ({
             onClick={() => setCompanyDialogOpen(true)}
             className="w-full h-10 px-4 py-2 pl-10 pr-10 text-sm rounded-full border border-sage hover:border-sage-dark focus:border-sage-dark transition-colors bg-background text-gray-600 font-normal text-left"
           >
-            {selectedCompany || "Company name"}
+            {selectedCompany || "Company"}
           </button>
           <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-sage" />
           <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-sage" />
