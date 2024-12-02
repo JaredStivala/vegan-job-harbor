@@ -48,6 +48,7 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
     <div 
       id={`job-${job.id}`}
       className={cn(
+        "group transition-all duration-200",
         isSelected && "scale-[1.02]"
       )}
     >
@@ -58,7 +59,7 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
       >
         <CollapsibleTrigger className="w-full text-left">
           <CardWrapper isSelected={isSelected} colored={Colored}>
-            <div>
+            <div className="space-y-2">
               <JobHeader 
                 title={page_title}
                 logo={logo}

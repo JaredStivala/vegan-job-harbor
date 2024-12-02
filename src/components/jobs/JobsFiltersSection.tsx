@@ -79,7 +79,7 @@ export const JobsFiltersSection = ({
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-start">
+      <div className="flex justify-end">
         <Link to="/post-job">
           <Button 
             variant="outline" 
