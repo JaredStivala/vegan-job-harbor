@@ -75,12 +75,14 @@ export const InfiniteJobsList = ({
   return (
     <div className="divide-y divide-gray-100">
       {jobs.map((job) => (
-        <JobCard 
-          key={job.id} 
-          job={job} 
-          isSelected={selectedJob?.id === job.id}
-          source={source}
-        />
+        <div key={job.id} className="py-4 first:pt-0 last:pb-0">
+          <JobCard 
+            key={job.id} 
+            job={job} 
+            isSelected={selectedJob?.id === job.id}
+            source={source}
+          />
+        </div>
       ))}
       
       {(isLoading || isFetchingNextPage) && (
