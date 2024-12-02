@@ -3,9 +3,10 @@ import { ImageIcon } from "lucide-react";
 interface JobLogoProps {
   logo?: string | null;
   companyName?: string | null;
+  colored?: boolean | null;
 }
 
-export const JobLogo = ({ logo, companyName }: JobLogoProps) => {
+export const JobLogo = ({ logo, companyName, colored }: JobLogoProps) => {
   return (
     <div className="w-16 h-16 rounded-lg flex items-center justify-center shrink-0 overflow-hidden">
       {logo ? (
