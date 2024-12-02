@@ -26,24 +26,6 @@ export const JobPostForm = ({
 
   return (
     <form onSubmit={onSubmit} className="space-y-6">
-      <div className="mb-6 p-4 bg-sage/5 rounded-lg">
-        <h2 className="text-lg font-semibold mb-2">Pricing</h2>
-        <div className="space-y-2">
-          <p className="text-sm">Base job posting: {formatPrice(PRICING.BASE_JOB_POSTING)}</p>
-          {isVerified && verificationPeriod && (
-            <p className="text-sm">
-              Verification ({verificationPeriod}): 
-              {formatPrice(PRICING.VERIFICATION[verificationPeriod as keyof typeof PRICING.VERIFICATION])}
-            </p>
-          )}
-          <div className="border-t pt-2 mt-2">
-            <p className="text-lg font-semibold">
-              Total: {formatPrice(totalPrice)}
-            </p>
-          </div>
-        </div>
-      </div>
-
       <div className="space-y-4">
         <label className="block">
           <span className="text-sm font-medium text-gray-700">Job Title</span>
