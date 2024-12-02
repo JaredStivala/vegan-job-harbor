@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { ReactNode } from "react";
 
 interface CardWrapperProps {
@@ -10,7 +9,7 @@ interface CardWrapperProps {
   url: string;
 }
 
-export const CardWrapper = ({ isSelected, colored, children, url }: CardWrapperProps) => {
+export const CardWrapper = ({ isSelected, colored, children }: CardWrapperProps) => {
   return (
     <Card 
       className={cn(
@@ -24,19 +23,6 @@ export const CardWrapper = ({ isSelected, colored, children, url }: CardWrapperP
       )}
     >
       {children}
-      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-        <Button 
-          variant="default"
-          size="sm"
-          onClick={(e) => {
-            e.preventDefault();
-            window.open(url, '_blank');
-          }}
-          className="bg-sage hover:bg-sage-dark text-white"
-        >
-          Apply
-        </Button>
-      </div>
     </Card>
   );
 };
