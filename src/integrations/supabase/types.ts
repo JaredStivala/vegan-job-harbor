@@ -137,7 +137,9 @@ export type Database = {
           job_id: string | null
           payment_type: string
           status: string
+          stripe_customer_id: string | null
           stripe_payment_id: string | null
+          stripe_payment_intent_id: string | null
           stripe_session_id: string
           updated_at: string | null
         }
@@ -148,7 +150,9 @@ export type Database = {
           job_id?: string | null
           payment_type: string
           status: string
+          stripe_customer_id?: string | null
           stripe_payment_id?: string | null
+          stripe_payment_intent_id?: string | null
           stripe_session_id: string
           updated_at?: string | null
         }
@@ -159,7 +163,9 @@ export type Database = {
           job_id?: string | null
           payment_type?: string
           status?: string
+          stripe_customer_id?: string | null
           stripe_payment_id?: string | null
+          stripe_payment_intent_id?: string | null
           stripe_session_id?: string
           updated_at?: string | null
         }

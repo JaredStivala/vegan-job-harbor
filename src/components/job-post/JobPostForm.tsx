@@ -4,6 +4,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { VerificationOptions } from "./VerificationOptions";
 import { PRICING, formatPrice, calculateTotalPrice } from "@/config/pricing";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 interface JobPostFormProps {
   isSubmitting: boolean;
@@ -20,12 +26,74 @@ export const JobPostForm = ({
   verificationPeriod,
   setIsVerified,
   setVerificationPeriod,
-  onSubmit
-}: JobPostFormProps) => {
-  const totalPrice = calculateTotalPrice(isVerified, verificationPeriod);
+}) => {
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsProcessing(true);
+
+    try {
+      const formData = new FormData(e.currentTarget);
+      const jobData = {
+        page_title: formData.get("title"),
+        company_name: formData.get("company"),
+        location: formData.get("location"),
+        salary: formData.get("salary"),
+        description: formData.get("description"),
+        url: formData.get("url"),
+        tags: formData.get("tags")?.toString().split(",").map(tag => tag.trim()),
+        isVerified,
+        verificationPeriod
+      };
+
+      const price = calculateTotalPrice(isVerified, verificationPeriod);
+
+      // Create checkout session
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-checkout`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({ jobData, price }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to create checkout session");
+      }
+
+      const { sessionId } = await response.json();
+      const stripe = await stripePromise;
+      
+      if (!stripe) {
+        throw new Error("Stripe failed to load");
+      }
+
+      const { error } = await stripe.redirectToCheckout({ sessionId });
+      
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      toast({
+        title: "Error",
+        description: "There was a problem processing your payment. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   return (
-    <form onSubmit={onSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-4">
         <label className="block">
           <span className="text-sm font-medium text-gray-700">Job Title</span>
@@ -109,15 +177,15 @@ export const JobPostForm = ({
       <div className="flex gap-4">
         <Button
           type="submit"
-          disabled={isSubmitting || (isVerified && !verificationPeriod)}
+          disabled={isProcessing || (isVerified && !verificationPeriod)}
           className="bg-sage hover:bg-sage-dark"
         >
-          {isSubmitting ? "Processing..." : `Pay ${formatPrice(totalPrice)}`}
+          {isProcessing ? "Processing..." : `Pay ${formatPrice(calculateTotalPrice(isVerified, verificationPeriod))}`}
         </Button>
         <Button
           type="button"
           variant="outline"
-          onClick={() => window.history.back()}
+          onClick={() => navigate(-1)}
         >
           Cancel
         </Button>
