@@ -73,7 +73,7 @@ export const InfiniteJobsList = ({
   }
 
   return (
-    <div className="space-y-0">
+    <div className="divide-y divide-gray-100">
       {jobs.map((job) => (
         <JobCard 
           key={job.id} 
@@ -84,7 +84,7 @@ export const InfiniteJobsList = ({
       ))}
       
       {(isLoading || isFetchingNextPage) && (
-        <div className="space-y-0">
+        <div className="divide-y divide-gray-100">
           {[1, 2, 3].map((i) => (
             <Skeleton key={i} className="h-32" />
           ))}
