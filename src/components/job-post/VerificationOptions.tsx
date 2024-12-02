@@ -56,13 +56,6 @@ export const VerificationOptions = ({
             </div>
             <div className="flex items-center justify-between space-x-2 p-3 rounded-md border border-sage/20 hover:border-sage/40 hover:bg-sage/5 transition-colors">
               <div className="flex items-center space-x-3">
-                <RadioGroupItem value="3d" id="3d" />
-                <Label htmlFor="3d" className="text-base">3 Days</Label>
-              </div>
-              <span className="text-base font-medium text-sage-dark">{formatPrice(PRICING.VERIFICATION['3d'])}</span>
-            </div>
-            <div className="flex items-center justify-between space-x-2 p-3 rounded-md border border-sage/20 hover:border-sage/40 hover:bg-sage/5 transition-colors">
-              <div className="flex items-center space-x-3">
                 <RadioGroupItem value="1w" id="1w" />
                 <Label htmlFor="1w" className="text-base">1 Week</Label>
               </div>
