@@ -17,7 +17,7 @@ export const VerificationOptions = ({
   setVerificationPeriod
 }: VerificationOptionsProps) => {
   return (
-    <div className="space-y-6 border rounded-lg p-6 bg-sage/5">
+    <div className="space-y-6 border rounded-lg p-6 bg-white shadow-sm">
       <div className="flex items-start space-x-3">
         <Checkbox
           id="verified"
