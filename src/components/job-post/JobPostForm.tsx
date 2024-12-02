@@ -1,15 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { VerificationOptions } from "./VerificationOptions";
 import { PRICING, formatPrice, calculateTotalPrice } from "@/config/pricing";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loadStripe } from "@stripe/stripe-js";
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 interface JobPostFormProps {
   isSubmitting: boolean;
@@ -30,65 +26,46 @@ export const JobPostForm = ({
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsProcessing(true);
+    const formData = new FormData(e.currentTarget);
+    
+    // Store form data in localStorage for retrieval after payment
+    const jobData = {
+      page_title: formData.get("title"),
+      company_name: formData.get("company"),
+      location: formData.get("location"),
+      salary: formData.get("salary"),
+      description: formData.get("description"),
+      url: formData.get("url"),
+      tags: formData.get("tags")?.toString().split(",").map(tag => tag.trim()),
+      isVerified,
+      verificationPeriod
+    };
+    
+    localStorage.setItem('pendingJobPost', JSON.stringify(jobData));
 
-    try {
-      const formData = new FormData(e.currentTarget);
-      const jobData = {
-        page_title: formData.get("title"),
-        company_name: formData.get("company"),
-        location: formData.get("location"),
-        salary: formData.get("salary"),
-        description: formData.get("description"),
-        url: formData.get("url"),
-        tags: formData.get("tags")?.toString().split(",").map(tag => tag.trim()),
-        isVerified,
-        verificationPeriod
-      };
-
-      const price = calculateTotalPrice(isVerified, verificationPeriod);
-
-      // Create checkout session
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-checkout`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          },
-          body: JSON.stringify({ jobData, price }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to create checkout session");
+    // Redirect to Stripe payment link based on verification period
+    let paymentLink = 'YOUR_BASIC_PAYMENT_LINK'; // Replace with your basic job posting payment link
+    
+    if (isVerified) {
+      switch(verificationPeriod) {
+        case '24h':
+          paymentLink = 'YOUR_24H_PAYMENT_LINK';
+          break;
+        case '3d':
+          paymentLink = 'YOUR_3D_PAYMENT_LINK';
+          break;
+        case '1w':
+          paymentLink = 'YOUR_1W_PAYMENT_LINK';
+          break;
+        case '1m':
+          paymentLink = 'YOUR_1M_PAYMENT_LINK';
+          break;
       }
-
-      const { sessionId } = await response.json();
-      const stripe = await stripePromise;
-      
-      if (!stripe) {
-        throw new Error("Stripe failed to load");
-      }
-
-      const { error } = await stripe.redirectToCheckout({ sessionId });
-      
-      if (error) {
-        throw error;
-      }
-    } catch (error) {
-      console.error("Payment error:", error);
-      toast({
-        title: "Error",
-        description: "There was a problem processing your payment. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsProcessing(false);
     }
+
+    window.location.href = paymentLink;
   };
 
   return (
