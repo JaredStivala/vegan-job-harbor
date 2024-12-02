@@ -26,7 +26,9 @@ export const VerificationOptions = ({
             if (!checked) setVerificationPeriod("");
           }}
         />
-        <Label htmlFor="verified">Verify this job posting</Label>
+        <Label htmlFor="verified">
+          Verify this job posting (only verified listings will be colored and have a verified badge)
+        </Label>
       </div>
 
       {isVerified && (
