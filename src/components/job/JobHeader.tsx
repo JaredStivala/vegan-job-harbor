@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { JobLogo } from "./JobLogo";
 import { supabase } from "@/integrations/supabase/client";
-import { CheckCircle2 } from "lucide-react";
 
 interface JobHeaderProps {
   title: string;
@@ -58,11 +57,12 @@ export const JobHeader = ({
             {title || "Untitled Position"}
           </h3>
           {verified && (
-            <CheckCircle2
-              className="w-5 h-5 text-blue-500 flex-shrink-0 animate-pulse" 
+            <span 
+              className="text-sm font-semibold bg-gradient-to-r from-blue-500 via-blue-400 to-blue-500 text-white px-2 py-0.5 rounded-full animate-pulse"
               aria-label="Verified job posting"
-              strokeWidth={2.5}
-            />
+            >
+              Verified
+            </span>
           )}
         </div>
       </div>
