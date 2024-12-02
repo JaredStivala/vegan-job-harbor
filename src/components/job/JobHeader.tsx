@@ -44,12 +44,12 @@ export const JobHeader = ({
       
       <div className="space-y-1 flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <h3 className="font-medium leading-tight text-foreground">
+          <h3 className="font-medium leading-tight text-gray-900">
             {title}
           </h3>
           {verified && (
             <span 
-              className="text-sm font-semibold bg-gradient-to-r from-blue-500 via-blue-400 to-blue-500 text-white px-2 py-0.5 rounded-full"
+              className="text-xs font-medium bg-[#3B82F6] text-white px-2 py-0.5 rounded-full"
               aria-label="Verified job posting"
             >
               Verified
@@ -57,7 +57,7 @@ export const JobHeader = ({
           )}
         </div>
         
-        <p className="text-sm text-muted-foreground truncate">
+        <p className="text-sm text-gray-600 truncate">
           {companyName}
         </p>
       </div>
