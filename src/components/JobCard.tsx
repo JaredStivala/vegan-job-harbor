@@ -17,10 +17,9 @@ interface JobCardProps {
   job: Job;
   isSelected?: boolean;
   source: string;
-  colored?: boolean;
 }
 
-export const JobCard = ({ job, isSelected, source, colored }: JobCardProps) => {
+export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
   const {
     id,
     page_title,
@@ -59,9 +58,13 @@ export const JobCard = ({ job, isSelected, source, colored }: JobCardProps) => {
       >
         <CollapsibleTrigger className="w-full text-left">
           <Card className={cn(
-            "p-6 transition-all duration-200 relative cursor-pointer hover:bg-gray-50/50",
+            "p-6 transition-all duration-200 relative cursor-pointer",
             isSelected && "ring-2 ring-sage shadow-md",
-            job.colored && "bg-accent/10 hover:bg-accent/20 border-accent/20"
+            job.colored ? (
+              "bg-accent text-white hover:bg-accent/90 border-accent"
+            ) : (
+              "hover:bg-gray-50/50"
+            )
           )}>
             <div className="space-y-4">
               <div className="space-y-2">
@@ -90,7 +93,8 @@ export const JobCard = ({ job, isSelected, source, colored }: JobCardProps) => {
               <div className="absolute right-4 top-1/2 -translate-y-1/2">
                 <ChevronDown 
                   className={cn(
-                    "h-5 w-5 text-gray-400 transition-transform duration-200",
+                    "h-5 w-5 transition-transform duration-200",
+                    job.colored ? "text-white" : "text-gray-400",
                     isOpen && "rotate-180"
                   )} 
                 />
