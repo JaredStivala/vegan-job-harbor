@@ -30,7 +30,8 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
     url,
     description,
     tags,
-    logo
+    logo,
+    colored
   } = job;
 
   const [isOpen, setIsOpen] = useState(false);
@@ -60,8 +61,8 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
           <Card className={cn(
             "p-6 transition-all duration-200 relative cursor-pointer",
             isSelected && "ring-2 ring-sage shadow-md",
-            job.colored ? (
-              "bg-accent text-white hover:bg-accent/90 border-accent"
+            colored ? (
+              "bg-[#8B5CF6] text-white hover:bg-[#7C3AED] border-[#8B5CF6]"
             ) : (
               "hover:bg-gray-50/50"
             )
@@ -94,7 +95,7 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
                 <ChevronDown 
                   className={cn(
                     "h-5 w-5 transition-transform duration-200",
-                    job.colored ? "text-white" : "text-gray-400",
+                    colored ? "text-white" : "text-gray-400",
                     isOpen && "rotate-180"
                   )} 
                 />
