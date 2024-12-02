@@ -36,7 +36,7 @@ const PostJob = () => {
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-sage-dark mb-2">Post a Job</h1>
           <p className="text-gray-600">
-            Share your vegan-friendly job opportunity with our community. All jobs posted here will be put at the top of the page.
+            Share your vegan-friendly job opportunity with our community. All jobs posted here will be put at the top of the page and sent to our email list.
           </p>
         </div>
 
