@@ -24,13 +24,13 @@ serve(async (req) => {
 
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
     switch (event.type) {
       case 'checkout.session.completed': {
-        const session = event.data.object as Stripe.Checkout.Session
-
+        const session = event.data.object as Stripe.Checkout.Session;
+        
         // Update payment record
         const { data: payment, error: paymentError } = await supabase
           .from('jobPayments')
@@ -40,28 +40,71 @@ serve(async (req) => {
           })
           .eq('stripe_session_id', session.id)
           .select()
-          .single()
+          .single();
 
-        if (paymentError) throw paymentError
+        if (paymentError) throw paymentError;
 
-        // Activate the job posting
-        const { error: jobError } = await supabase
+        // Get the pending job data from metadata
+        const pendingJobData = session.metadata?.jobData ? 
+          JSON.parse(session.metadata.jobData) : null;
+
+        if (!pendingJobData) {
+          throw new Error('No job data found in session metadata');
+        }
+
+        // Calculate verification end date if applicable
+        let verification_end_date = null;
+        if (pendingJobData.isVerified && pendingJobData.verificationPeriod) {
+          const now = new Date();
+          switch(pendingJobData.verificationPeriod) {
+            case '24h':
+              verification_end_date = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+              break;
+            case '1w':
+              verification_end_date = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+              break;
+            case '1m':
+              verification_end_date = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+              break;
+          }
+        }
+
+        // Create the job submission
+        const { data: jobSubmission, error: jobError } = await supabase
           .from('userSubmissions')
-          .update({ 
-            Verified: true,
-            verification_end_date: payment.payment_type === 'verified_post' 
-              ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days from now
-              : null
+          .insert({
+            page_title: pendingJobData.page_title,
+            company_name: pendingJobData.company_name,
+            location: pendingJobData.location,
+            salary: pendingJobData.salary,
+            description: pendingJobData.description,
+            url: pendingJobData.url,
+            logo: pendingJobData.logo,
+            tags: pendingJobData.tags,
+            date_posted: new Date().toISOString(),
+            Verified: pendingJobData.isVerified,
+            verification_end_date: verification_end_date?.toISOString(),
           })
-          .eq('id', payment.job_id)
+          .select()
+          .single();
 
-        if (jobError) throw jobError
-        break
+        if (jobError) throw jobError;
+
+        // Update payment record with job_id
+        const { error: updateError } = await supabase
+          .from('jobPayments')
+          .update({ job_id: jobSubmission.id })
+          .eq('id', payment.id);
+
+        if (updateError) throw updateError;
+
+        break;
       }
     }
 
     return new Response(JSON.stringify({ ok: true }), { status: 200 })
   } catch (err) {
+    console.error('Error processing webhook:', err);
     return new Response(err.message, { status: 400 })
   }
 })

@@ -26,11 +26,11 @@ export const JobPostForm = ({
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
-    // Store form data in localStorage for retrieval after payment
+    // Prepare job data
     const jobData = {
       page_title: formData.get("title"),
       company_name: formData.get("company"),
@@ -43,22 +43,20 @@ export const JobPostForm = ({
       isVerified,
       verificationPeriod
     };
-    
-    localStorage.setItem('pendingJobPost', JSON.stringify(jobData));
 
-    // Redirect to Stripe payment link based on verification period
-    let paymentLink = 'https://buy.stripe.com/cN28Acdzd3j29BC145'; // Standard job posting link
+    // Redirect to Stripe payment link with metadata
+    let paymentLink = `https://buy.stripe.com/cN28Acdzd3j29BC145?client_reference_id=${encodeURIComponent(JSON.stringify(jobData))}`; // Standard job posting link
     
     if (isVerified) {
       switch(verificationPeriod) {
         case '24h':
-          paymentLink = 'https://buy.stripe.com/fZe9Egdzd1aU5lm3ce';
+          paymentLink = `https://buy.stripe.com/fZe9Egdzd1aU5lm3ce?client_reference_id=${encodeURIComponent(JSON.stringify(jobData))}`;
           break;
         case '1w':
-          paymentLink = 'https://buy.stripe.com/3cs5o0dzdcTC5lmaEH';
+          paymentLink = `https://buy.stripe.com/3cs5o0dzdcTC5lmaEH?client_reference_id=${encodeURIComponent(JSON.stringify(jobData))}`;
           break;
         case '1m':
-          paymentLink = 'https://buy.stripe.com/bIY6s466L5ra0127sw';
+          paymentLink = `https://buy.stripe.com/bIY6s466L5ra0127sw?client_reference_id=${encodeURIComponent(JSON.stringify(jobData))}`;
           break;
       }
     }
