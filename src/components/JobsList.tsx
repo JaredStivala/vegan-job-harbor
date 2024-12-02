@@ -21,9 +21,9 @@ export const JobsList = ({ jobs = [], isLoading, error, selectedJob, source }: J
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
+      <div>
         {Array.from({ length: 5 }).map((_, i) => (
-          <Skeleton key={i} className="h-32" />
+          <Skeleton key={i} className="h-32 mb-4 last:mb-0" />
         ))}
       </div>
     );
@@ -38,7 +38,7 @@ export const JobsList = ({ jobs = [], isLoading, error, selectedJob, source }: J
   }
 
   return (
-    <div className="space-y-4">
+    <div>
       {jobs.map((job) => (
         <JobCard 
           key={job.id} 
