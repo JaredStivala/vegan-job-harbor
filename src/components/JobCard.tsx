@@ -30,7 +30,7 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
     description,
     tags,
     logo,
-    colored
+    Colored // Note: This matches the exact field name from the database
   } = job;
 
   const [isOpen, setIsOpen] = useState(false);
@@ -57,7 +57,7 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
         className="w-full"
       >
         <CollapsibleTrigger className="w-full text-left">
-          <CardWrapper isSelected={isSelected} colored={colored}>
+          <CardWrapper isSelected={isSelected} colored={Colored}>
             <div className="space-y-4">
               <div className="space-y-2">
                 <JobHeader 
@@ -82,7 +82,7 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
                 source={source}
               />
 
-              <CollapsibleChevron isOpen={isOpen} colored={colored} />
+              <CollapsibleChevron isOpen={isOpen} colored={Colored} />
             </div>
           </CardWrapper>
         </CollapsibleTrigger>

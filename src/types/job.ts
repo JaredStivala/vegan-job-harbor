@@ -11,5 +11,5 @@ export interface Job {
   date_closes: string | null;
   updated_at: string | null;
   logo: string | null;
-  colored?: boolean;
+  Colored?: boolean; // Updated to match the exact field name from the database
 }
