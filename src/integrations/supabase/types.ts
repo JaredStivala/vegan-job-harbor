@@ -129,6 +129,51 @@ export type Database = {
         }
         Relationships: []
       }
+      userSubmissions: {
+        Row: {
+          company_name: string | null
+          date_closes: string | null
+          date_posted: string | null
+          description: string | null
+          id: string
+          location: string | null
+          logo: string | null
+          page_title: string | null
+          salary: string | null
+          tags: string | null
+          updated_at: string | null
+          url: string
+        }
+        Insert: {
+          company_name?: string | null
+          date_closes?: string | null
+          date_posted?: string | null
+          description?: string | null
+          id?: string
+          location?: string | null
+          logo?: string | null
+          page_title?: string | null
+          salary?: string | null
+          tags?: string | null
+          updated_at?: string | null
+          url: string
+        }
+        Update: {
+          company_name?: string | null
+          date_closes?: string | null
+          date_posted?: string | null
+          description?: string | null
+          id?: string
+          location?: string | null
+          logo?: string | null
+          page_title?: string | null
+          salary?: string | null
+          tags?: string | null
+          updated_at?: string | null
+          url?: string
+        }
+        Relationships: []
+      }
       veganjobs: {
         Row: {
           company_name: string | null

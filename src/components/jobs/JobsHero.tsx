@@ -1,4 +1,7 @@
 import { SearchBar } from "@/components/SearchBar";
+import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 import type { Job } from "@/types/job";
 
 interface JobsHeroProps {
@@ -32,6 +35,19 @@ export const JobsHero = ({ allJobs, selectedTags, onTagSelect }: JobsHeroProps) 
                 Vegan Career
               </span>
             </h2>
+            
+            <Link 
+              to="/post-job"
+              className="inline-block"
+            >
+              <Button 
+                variant="outline" 
+                className="bg-white/90 hover:bg-white text-sage-dark hover:text-sage-dark border-sage hover:border-sage-dark transition-all duration-300"
+              >
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Post a Job
+              </Button>
+            </Link>
           </div>
           
           <SearchBar 
