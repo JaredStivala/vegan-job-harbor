@@ -1,4 +1,4 @@
-import { Building2, ChevronDown } from "lucide-react";
+import { Building2, ChevronDown, PlusCircle } from "lucide-react";
 import { useState } from "react";
 import {
   Command,
@@ -14,6 +14,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { LocationFilter } from "./filters/LocationFilter";
 import { TagFilter } from "./filters/TagFilter";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 interface JobsFiltersSectionProps {
   onLocationDialogOpen: () => void;
@@ -76,66 +78,80 @@ export const JobsFiltersSection = ({
   )).sort();
 
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-      <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
-      
-      <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-        <TagFilter 
-          tags={availableTags}
-          onTagSelect={onTagSelect}
-          selectedTags={selectedTags}
-        />
-
-        <LocationFilter 
-          selectedLocations={selectedLocations}
-          onLocationSelect={onLocationSelect}
-        />
-
-        <div className="relative flex-1 sm:w-48">
-          <button
-            onClick={() => setCompanyDialogOpen(true)}
-            className="w-full px-4 py-2.5 pl-10 pr-10 text-base rounded-xl border border-sage hover:border-sage-dark focus:border-sage-dark transition-colors bg-background text-gray-600 font-normal text-left"
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <Link to="/post-job">
+          <Button 
+            variant="outline" 
+            className="bg-white hover:bg-sage/5 text-sage-dark hover:text-sage-dark border-sage hover:border-sage-dark transition-all duration-300"
           >
-            {selectedCompany || "Company"}
-          </button>
-          <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-sage" />
-          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-sage" />
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Post a Job
+          </Button>
+        </Link>
+      </div>
+      
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
+        
+        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+          <TagFilter 
+            tags={availableTags}
+            onTagSelect={onTagSelect}
+            selectedTags={selectedTags}
+          />
 
-          <CommandDialog open={companyDialogOpen} onOpenChange={setCompanyDialogOpen}>
-            <Command className="rounded-lg border shadow-md">
-              <CommandInput 
-                placeholder="Search companies" 
-                value={companySearch}
-                onValueChange={setCompanySearch}
-              />
-              <CommandList>
-                <CommandEmpty>No companies found.</CommandEmpty>
-                <CommandGroup heading="Companies">
-                  {companyNames
-                    .filter(company => 
-                      company.toLowerCase().includes(companySearch.toLowerCase())
-                    )
-                    .map((company) => (
-                      <CommandItem
-                        key={company}
-                        value={company}
-                        onSelect={() => {
-                          onCompanySelect(company);
-                          setCompanyDialogOpen(false);
-                        }}
-                        className="cursor-pointer"
-                      >
-                        <Building2 className="mr-2 h-4 w-4 text-sage" />
-                        <span>{company}</span>
-                        {selectedCompany === company && (
-                          <span className="ml-auto text-sage">Selected</span>
-                        )}
-                      </CommandItem>
-                    ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </CommandDialog>
+          <LocationFilter 
+            selectedLocations={selectedLocations}
+            onLocationSelect={onLocationSelect}
+          />
+
+          <div className="relative flex-1 sm:w-48">
+            <button
+              onClick={() => setCompanyDialogOpen(true)}
+              className="w-full px-4 py-2.5 pl-10 pr-10 text-base rounded-xl border border-sage hover:border-sage-dark focus:border-sage-dark transition-colors bg-background text-gray-600 font-normal text-left"
+            >
+              {selectedCompany || "Company"}
+            </button>
+            <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-sage" />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-sage" />
+
+            <CommandDialog open={companyDialogOpen} onOpenChange={setCompanyDialogOpen}>
+              <Command className="rounded-lg border shadow-md">
+                <CommandInput 
+                  placeholder="Search companies" 
+                  value={companySearch}
+                  onValueChange={setCompanySearch}
+                />
+                <CommandList>
+                  <CommandEmpty>No companies found.</CommandEmpty>
+                  <CommandGroup heading="Companies">
+                    {companyNames
+                      .filter(company => 
+                        company.toLowerCase().includes(companySearch.toLowerCase())
+                      )
+                      .map((company) => (
+                        <CommandItem
+                          key={company}
+                          value={company}
+                          onSelect={() => {
+                            onCompanySelect(company);
+                            setCompanyDialogOpen(false);
+                          }}
+                          className="cursor-pointer"
+                        >
+                          <Building2 className="mr-2 h-4 w-4 text-sage" />
+                          <span>{company}</span>
+                          {selectedCompany === company && (
+                            <span className="ml-auto text-sage">Selected</span>
+                          )}
+                        </CommandItem>
+                      ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </CommandDialog>
+          </div>
         </div>
       </div>
     </div>
