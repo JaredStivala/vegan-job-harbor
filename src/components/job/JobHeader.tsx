@@ -44,12 +44,12 @@ export const JobHeader = ({
       
       <div className="space-y-1 flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <h3 className="font-medium leading-tight text-gray-900">
+          <h3 className="font-medium leading-tight text-gray-900 group-hover:text-sage-dark transition-colors">
             {title}
           </h3>
           {verified && (
             <span 
-              className="text-xs font-medium bg-[#3B82F6] text-white px-2 py-0.5 rounded-full"
+              className="text-xs font-medium bg-[#3B82F6] text-white px-2 py-0.5 rounded-full animate-pulse"
               aria-label="Verified job posting"
             >
               Verified
