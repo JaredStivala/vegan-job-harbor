@@ -6,12 +6,13 @@ import { useInfiniteJobs } from "@/hooks/useInfiniteJobs";
 import { useInView } from "react-intersection-observer";
 
 interface InfiniteJobsListProps {
-  source: 'veganjobs' | 'ea' | 'animaladvocacy' | 'vevolution';
+  source: 'veganjobs' | 'ea' | 'animaladvocacy' | 'vevolution' | 'userSubmissions';
   selectedLocations: string[];
   selectedTags: string[];
   selectedJob: Job | null;
   onLocationsUpdate: (locations: string[]) => void;
   selectedCompany: string | null;
+  showColored?: boolean;
 }
 
 export const InfiniteJobsList = ({ 
@@ -20,7 +21,8 @@ export const InfiniteJobsList = ({
   selectedTags,
   selectedJob,
   onLocationsUpdate,
-  selectedCompany
+  selectedCompany,
+  showColored
 }: InfiniteJobsListProps) => {
   const { ref, inView } = useInView();
 
@@ -78,6 +80,7 @@ export const InfiniteJobsList = ({
           job={job} 
           isSelected={selectedJob?.id === job.id}
           source={source}
+          colored={showColored && job.colored}
         />
       ))}
       

@@ -118,6 +118,15 @@ export const JobsContent = ({
       
       <div className="space-y-8 mt-8">
         <InfiniteJobsList
+          source="userSubmissions"
+          selectedLocations={selectedLocations}
+          selectedTags={allSelectedTags}
+          selectedJob={selectedJob}
+          onLocationsUpdate={setUniqueLocations}
+          selectedCompany={selectedCompany}
+          showColored
+        />
+        <InfiniteJobsList
           source="veganjobs"
           selectedLocations={selectedLocations}
           selectedTags={allSelectedTags}

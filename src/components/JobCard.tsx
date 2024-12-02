@@ -17,9 +17,10 @@ interface JobCardProps {
   job: Job;
   isSelected?: boolean;
   source: string;
+  colored?: boolean;
 }
 
-export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
+export const JobCard = ({ job, isSelected, source, colored }: JobCardProps) => {
   const {
     id,
     page_title,
@@ -59,7 +60,8 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
         <CollapsibleTrigger className="w-full text-left">
           <Card className={cn(
             "p-6 transition-all duration-200 relative cursor-pointer hover:bg-gray-50/50",
-            isSelected && "ring-2 ring-sage shadow-md"
+            isSelected && "ring-2 ring-sage shadow-md",
+            colored && "bg-accent/10 hover:bg-accent/20 border-accent/20"
           )}>
             <div className="space-y-4">
               <div className="space-y-2">

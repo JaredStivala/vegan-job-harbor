@@ -131,6 +131,7 @@ export type Database = {
       }
       userSubmissions: {
         Row: {
+          Colored: boolean | null
           company_name: string | null
           date_closes: string | null
           date_posted: string | null
@@ -145,6 +146,7 @@ export type Database = {
           url: string
         }
         Insert: {
+          Colored?: boolean | null
           company_name?: string | null
           date_closes?: string | null
           date_posted?: string | null
@@ -159,6 +161,7 @@ export type Database = {
           url: string
         }
         Update: {
+          Colored?: boolean | null
           company_name?: string | null
           date_closes?: string | null
           date_posted?: string | null
