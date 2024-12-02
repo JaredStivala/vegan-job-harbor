@@ -61,7 +61,7 @@ export const JobCard = ({ job, isSelected, source, colored }: JobCardProps) => {
           <Card className={cn(
             "p-6 transition-all duration-200 relative cursor-pointer hover:bg-gray-50/50",
             isSelected && "ring-2 ring-sage shadow-md",
-            colored && "bg-accent/10 hover:bg-accent/20 border-accent/20"
+            job.colored && "bg-accent/10 hover:bg-accent/20 border-accent/20"
           )}>
             <div className="space-y-4">
               <div className="space-y-2">
