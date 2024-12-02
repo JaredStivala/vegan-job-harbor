@@ -1,6 +1,4 @@
 import { SearchBar } from "@/components/SearchBar";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import type { Job } from "@/types/job";
 
 interface JobsHeroProps {
@@ -10,25 +8,6 @@ interface JobsHeroProps {
 }
 
 export const JobsHero = ({ allJobs, selectedTags, onTagSelect }: JobsHeroProps) => {
-  const { data: trustedCompanies } = useQuery({
-    queryKey: ['trustedCompanies'],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('veganjobs')
-        .select('company_name, logo')
-        .in('company_name', [
-          'ProVeg',
-          'The Good Food Institute',
-          'Mercy For Animals',
-          'PETA',
-          'The Humane League',
-          'EA Funds'
-        ])
-        .not('logo', 'is', null);
-      return data;
-    }
-  });
-
   return (
     <div 
       className="relative bg-center bg-cover py-8 flex items-center overflow-hidden" 
@@ -60,26 +39,6 @@ export const JobsHero = ({ allJobs, selectedTags, onTagSelect }: JobsHeroProps) 
             onTagSelect={onTagSelect}
             selectedTags={selectedTags}
           />
-
-          {trustedCompanies && trustedCompanies.length > 0 && (
-            <div className="mt-12 space-y-4">
-              <p className="text-cream text-sm font-medium opacity-80">Trusted by leading organizations</p>
-              <div className="grid grid-cols-3 md:grid-cols-6 gap-6 items-center justify-center">
-                {trustedCompanies.map((company, index) => (
-                  <div 
-                    key={index} 
-                    className="flex items-center justify-center transition-opacity duration-200 hover:opacity-100 opacity-80"
-                  >
-                    <img
-                      src={company.logo}
-                      alt={`${company.company_name} logo`}
-                      className="h-8 object-contain filter brightness-0 invert"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
       
