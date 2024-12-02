@@ -21,6 +21,7 @@ export const JobsHero = ({ allJobs, selectedTags, onTagSelect }: JobsHeroProps) 
         .in('company_name', companies)
         .not('logo', 'is', null);
       
+      console.log('Featured companies data:', data); // Debug log
       return data || [];
     }
   });
