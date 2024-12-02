@@ -40,13 +40,12 @@ export const JobsList = ({ jobs = [], isLoading, error, selectedJob, source }: J
   return (
     <div className="divide-y divide-gray-100">
       {jobs.map((job) => (
-        <div key={job.id} className="py-4 first:pt-0 last:pb-0">
-          <JobCard 
-            job={job} 
-            isSelected={selectedJob?.id === job.id}
-            source={source}
-          />
-        </div>
+        <JobCard 
+          key={job.id} 
+          job={job} 
+          isSelected={selectedJob?.id === job.id}
+          source={source}
+        />
       ))}
     </div>
   );
