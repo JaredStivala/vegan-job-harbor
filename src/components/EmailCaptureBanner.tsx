@@ -38,7 +38,7 @@ export const EmailCaptureBanner = () => {
             <h3 className="text-lg font-semibold">
               🌟 Get Exclusive Vegan Job Alerts!
             </h3>
-            <p className="text-cream/90 text-sm mt-1">
+            <p className="hidden sm:block text-cream/90 text-sm mt-1">
               Get updates about new opportunities in the vegan industry
             </p>
           </div>
