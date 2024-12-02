@@ -5,7 +5,7 @@ import type { Job } from "@/types/job";
 const JOBS_PER_PAGE = 10;
 
 interface FetchJobsOptions {
-  source: 'veganjobs' | 'ea' | 'animaladvocacy' | 'vevolution';
+  source: 'veganjobs' | 'ea' | 'animaladvocacy' | 'vevolution' | 'userSubmissions';
   selectedLocations?: string[];
   selectedTags?: string[];
   selectedCompany?: string | null;
