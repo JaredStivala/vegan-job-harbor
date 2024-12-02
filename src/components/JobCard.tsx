@@ -67,12 +67,14 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
                   url={url}
                   jobId={id}
                   source={source}
+                  colored={Colored}
                 />
                 
                 <JobMetadata 
                   companyName={company_name}
                   location={location}
                   formattedDate={formattedDate}
+                  colored={Colored}
                 />
               </div>
 
@@ -80,6 +82,7 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
                 salary={salary}
                 tags={tags}
                 source={source}
+                colored={Colored}
               />
 
               <CollapsibleChevron isOpen={isOpen} colored={Colored} />

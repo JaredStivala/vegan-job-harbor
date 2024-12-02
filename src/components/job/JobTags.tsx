@@ -1,12 +1,14 @@
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface JobTagsProps {
   salary: string | null;
   tags: string[] | string | null;
   source: string;
+  colored?: boolean;
 }
 
-export const JobTags = ({ salary, tags, source }: JobTagsProps) => {
+export const JobTags = ({ salary, tags, source, colored }: JobTagsProps) => {
   const shouldShowSalary = salary && 
     salary !== "N/A" && 
     salary !== "Salary not specified" &&
@@ -47,7 +49,12 @@ export const JobTags = ({ salary, tags, source }: JobTagsProps) => {
   return (
     <div className="flex flex-wrap gap-2">
       {shouldShowSalary && (
-        <Badge variant="outline" className="bg-white">
+        <Badge 
+          variant="outline" 
+          className={cn(
+            colored ? "bg-white/10 text-white border-white/20" : "bg-white"
+          )}
+        >
           {salary}
         </Badge>
       )}
@@ -55,7 +62,11 @@ export const JobTags = ({ salary, tags, source }: JobTagsProps) => {
         <Badge 
           key={index}
           variant="secondary" 
-          className="bg-sage/10 text-sage-dark"
+          className={cn(
+            colored 
+              ? "bg-white/10 text-white hover:bg-white/20" 
+              : "bg-sage/10 text-sage-dark"
+          )}
         >
           {tag}
         </Badge>

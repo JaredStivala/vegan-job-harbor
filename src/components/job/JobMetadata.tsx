@@ -1,17 +1,17 @@
 import { Building2, MapPin, Calendar } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface JobMetadataProps {
   companyName?: string | null;
   location?: string | null;
   formattedDate?: string | null;
+  colored?: boolean;
 }
 
-export const JobMetadata = ({ companyName, location, formattedDate }: JobMetadataProps) => {
+export const JobMetadata = ({ companyName, location, formattedDate, colored }: JobMetadataProps) => {
   const formatLocation = (loc: string | null) => {
     if (!loc) return null;
-    // Remove brackets, quotes, and clean up any extra whitespace
     try {
-      // Check if it's a JSON string and parse it
       if (loc.startsWith('[') && loc.endsWith(']')) {
         const parsed = JSON.parse(loc);
         return Array.isArray(parsed) ? parsed[0] : parsed;
@@ -25,7 +25,10 @@ export const JobMetadata = ({ companyName, location, formattedDate }: JobMetadat
   const formattedLocation = formatLocation(location);
 
   return (
-    <div className="flex flex-wrap gap-2 items-center text-sm text-gray-600">
+    <div className={cn(
+      "flex flex-wrap gap-2 items-center text-sm",
+      colored ? "text-white/90" : "text-gray-600"
+    )}>
       {companyName && (
         <div className="flex items-center gap-1">
           <Building2 className="w-4 h-4" />

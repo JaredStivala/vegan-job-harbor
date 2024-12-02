@@ -144,6 +144,7 @@ export type Database = {
           tags: string | null
           updated_at: string | null
           url: string
+          Verified: boolean | null
         }
         Insert: {
           Colored?: boolean | null
@@ -159,6 +160,7 @@ export type Database = {
           tags?: string | null
           updated_at?: string | null
           url: string
+          Verified?: boolean | null
         }
         Update: {
           Colored?: boolean | null
@@ -174,6 +176,7 @@ export type Database = {
           tags?: string | null
           updated_at?: string | null
           url?: string
+          Verified?: boolean | null
         }
         Relationships: []
       }

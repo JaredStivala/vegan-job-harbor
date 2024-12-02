@@ -12,10 +12,10 @@ export const CardWrapper = ({ isSelected, colored, children }: CardWrapperProps)
   return (
     <Card 
       className={cn(
-        "p-6 transition-all duration-200 relative cursor-pointer",
+        "p-6 transition-all duration-200 relative cursor-pointer border-0",
         isSelected && "ring-2 ring-sage shadow-md",
         colored ? (
-          "bg-[#8B5CF6] text-white hover:bg-[#7C3AED] border-[#8B5CF6]"
+          "bg-[#8B5CF6] hover:bg-[#7C3AED] text-white shadow-lg"
         ) : (
           "hover:bg-gray-50/50"
         )
