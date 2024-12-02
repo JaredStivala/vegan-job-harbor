@@ -43,10 +43,19 @@ export const JobHeader = ({
       <JobLogo logo={logo} companyName={companyName} />
       
       <div className="space-y-1 flex-1 min-w-0">
-        <h3 className="font-medium leading-tight text-foreground">
-          {title}
-          {verified && " ✓"}
-        </h3>
+        <div className="flex items-center gap-2">
+          <h3 className="font-medium leading-tight text-foreground">
+            {title}
+          </h3>
+          {verified && (
+            <span 
+              className="text-sm font-semibold bg-gradient-to-r from-blue-500 via-blue-400 to-blue-500 text-white px-2 py-0.5 rounded-full"
+              aria-label="Verified job posting"
+            >
+              Verified
+            </span>
+          )}
+        </div>
         
         <p className="text-sm text-muted-foreground truncate">
           {companyName}
