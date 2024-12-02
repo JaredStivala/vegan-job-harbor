@@ -58,7 +58,7 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
         className="w-full"
       >
         <CollapsibleTrigger className="w-full text-left">
-          <CardWrapper isSelected={isSelected} colored={Colored}>
+          <CardWrapper isSelected={isSelected} colored={Colored} url={url}>
             <div className="space-y-2">
               <JobHeader 
                 title={page_title}
