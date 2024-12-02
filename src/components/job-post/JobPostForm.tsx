@@ -17,7 +17,6 @@ interface JobPostFormProps {
   verificationPeriod: string;
   setIsVerified: (checked: boolean) => void;
   setVerificationPeriod: (value: string) => void;
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
 export const JobPostForm = ({
@@ -26,7 +25,7 @@ export const JobPostForm = ({
   verificationPeriod,
   setIsVerified,
   setVerificationPeriod,
-}) => {
+}: JobPostFormProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);

@@ -30,69 +30,6 @@ const PostJob = () => {
   const [isVerified, setIsVerified] = useState(false);
   const [verificationPeriod, setVerificationPeriod] = useState<string>("");
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    const formData = new FormData(e.currentTarget);
-    const jobData = {
-      page_title: String(formData.get("title") || ""),
-      company_name: String(formData.get("company") || ""),
-      location: String(formData.get("location") || ""),
-      salary: String(formData.get("salary") || ""),
-      description: String(formData.get("description") || ""),
-      url: String(formData.get("url") || ""),
-      tags: formData.get("tags")?.toString() || null,
-      date_posted: new Date().toISOString().split("T")[0],
-      Verified: isVerified,
-      verification_end_date: isVerified ? calculateVerificationEndDate(verificationPeriod)?.toISOString() : null,
-    };
-
-    try {
-      // Calculate total amount
-      const amount = calculateTotalPrice(isVerified, verificationPeriod);
-
-      // Create a new job post
-      const { data: jobPost, error: jobError } = await supabase
-        .from("userSubmissions")
-        .insert(jobData)
-        .select()
-        .single();
-
-      if (jobError) throw jobError;
-
-      // Create a payment record
-      const { error: paymentError } = await supabase
-        .from("jobPayments")
-        .insert({
-          job_id: jobPost.id,
-          amount,
-          status: 'pending',
-          payment_type: isVerified ? 'verified_post' : 'basic_post',
-          stripe_session_id: 'pending' // This will be updated with the actual Stripe session ID
-        });
-
-      if (paymentError) throw paymentError;
-
-      // TODO: Redirect to Stripe payment page
-      // For now, we'll just show a success message
-      toast({
-        title: "Success!",
-        description: "Your job has been posted successfully.",
-      });
-      
-      navigate("/");
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "There was a problem posting your job. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream py-12">
       <div className="container max-w-2xl">
@@ -109,7 +46,6 @@ const PostJob = () => {
           verificationPeriod={verificationPeriod}
           setIsVerified={setIsVerified}
           setVerificationPeriod={setVerificationPeriod}
-          onSubmit={handleSubmit}
         />
       </div>
     </div>
