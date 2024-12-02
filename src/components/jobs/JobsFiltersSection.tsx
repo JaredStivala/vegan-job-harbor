@@ -79,7 +79,7 @@ export const JobsFiltersSection = ({
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-end">
         <Link to="/post-job">
           <Button 
             variant="outline" 
@@ -89,10 +89,11 @@ export const JobsFiltersSection = ({
             Post a Job
           </Button>
         </Link>
-        <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
       </div>
       
-      <div className="flex flex-col sm:flex-row justify-end items-start sm:items-center gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
+        
         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
           <TagFilter 
             tags={availableTags}
