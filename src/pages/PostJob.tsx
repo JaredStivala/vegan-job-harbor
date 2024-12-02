@@ -5,11 +5,13 @@ import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const PostJob = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,6 +27,7 @@ const PostJob = () => {
       url: String(formData.get("url") || ""),
       tags: formData.get("tags")?.toString() || null,
       date_posted: new Date().toISOString().split("T")[0],
+      Verified: isVerified,
     };
 
     try {
@@ -57,7 +60,7 @@ const PostJob = () => {
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-sage-dark mb-2">Post a Job</h1>
           <p className="text-gray-600">
-            Share your vegan-friendly job opportunity with our community
+            Share your vegan-friendly job opportunity with our community. All jobs posted here will be put at the top of the page.
           </p>
         </div>
 
@@ -133,6 +136,20 @@ const PostJob = () => {
                 className="mt-1 h-48"
               />
             </label>
+
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="verified"
+                checked={isVerified}
+                onCheckedChange={(checked) => setIsVerified(checked as boolean)}
+              />
+              <label
+                htmlFor="verified"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Verified
+              </label>
+            </div>
           </div>
 
           <div className="flex gap-4">
