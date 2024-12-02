@@ -27,7 +27,7 @@ export const JobMetadata = ({ companyName, location, formattedDate, colored }: J
   return (
     <div className={cn(
       "flex flex-wrap gap-2 items-center text-sm",
-      colored ? "text-white/90" : "text-gray-600"
+      colored ? "text-gray-900" : "text-gray-600"
     )}>
       {companyName && (
         <div className="flex items-center gap-1">

@@ -52,7 +52,7 @@ export const JobTags = ({ salary, tags, source, colored }: JobTagsProps) => {
         <Badge 
           variant="outline" 
           className={cn(
-            colored ? "bg-white/10 text-white border-white/20" : "bg-white"
+            colored ? "bg-white text-gray-900 border-gray-200" : "bg-white"
           )}
         >
           {salary}
@@ -64,7 +64,7 @@ export const JobTags = ({ salary, tags, source, colored }: JobTagsProps) => {
           variant="secondary" 
           className={cn(
             colored 
-              ? "bg-white/10 text-white hover:bg-white/20" 
+              ? "bg-white/90 text-gray-900 hover:bg-white" 
               : "bg-sage/10 text-sage-dark"
           )}
         >
