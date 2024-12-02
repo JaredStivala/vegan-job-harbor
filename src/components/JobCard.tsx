@@ -1,17 +1,16 @@
-import { Card } from "@/components/ui/card";
 import type { Job } from "@/types/job";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
 import {
   Collapsible,
-  CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { JobHeader } from "./job/JobHeader";
 import { JobMetadata } from "./job/JobMetadata";
 import { JobTags } from "./job/JobTags";
-import { JobDescription } from "./job/JobDescription";
+import { CardWrapper } from "./job/CardWrapper";
+import { CollapsibleChevron } from "./job/CollapsibleChevron";
+import { CollapsibleContent } from "./job/CollapsibleContent";
 
 interface JobCardProps {
   job: Job;
@@ -58,15 +57,7 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
         className="w-full"
       >
         <CollapsibleTrigger className="w-full text-left">
-          <Card className={cn(
-            "p-6 transition-all duration-200 relative cursor-pointer",
-            isSelected && "ring-2 ring-sage shadow-md",
-            colored ? (
-              "bg-[#8B5CF6] text-white hover:bg-[#7C3AED] border-[#8B5CF6]"
-            ) : (
-              "hover:bg-gray-50/50"
-            )
-          )}>
+          <CardWrapper isSelected={isSelected} colored={colored}>
             <div className="space-y-4">
               <div className="space-y-2">
                 <JobHeader 
@@ -91,22 +82,12 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
                 source={source}
               />
 
-              <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                <ChevronDown 
-                  className={cn(
-                    "h-5 w-5 transition-transform duration-200",
-                    colored ? "text-white" : "text-gray-400",
-                    isOpen && "rotate-180"
-                  )} 
-                />
-              </div>
+              <CollapsibleChevron isOpen={isOpen} colored={colored} />
             </div>
-          </Card>
+          </CardWrapper>
         </CollapsibleTrigger>
         
-        <CollapsibleContent className="px-8 py-6 bg-white border-x border-b rounded-b-lg">
-          <JobDescription description={description} />
-        </CollapsibleContent>
+        <CollapsibleContent description={description} />
       </Collapsible>
     </div>
   );
