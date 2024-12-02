@@ -46,21 +46,18 @@ export const JobPostForm = ({
     localStorage.setItem('pendingJobPost', JSON.stringify(jobData));
 
     // Redirect to Stripe payment link based on verification period
-    let paymentLink = 'YOUR_BASIC_PAYMENT_LINK'; // Replace with your basic job posting payment link
+    let paymentLink = 'https://buy.stripe.com/cN28Acdzd3j29BC145'; // Standard job posting link
     
     if (isVerified) {
       switch(verificationPeriod) {
         case '24h':
-          paymentLink = 'YOUR_24H_PAYMENT_LINK';
-          break;
-        case '3d':
-          paymentLink = 'YOUR_3D_PAYMENT_LINK';
+          paymentLink = 'https://buy.stripe.com/fZe9Egdzd1aU5lm3ce';
           break;
         case '1w':
-          paymentLink = 'YOUR_1W_PAYMENT_LINK';
+          paymentLink = 'https://buy.stripe.com/3cs5o0dzdcTC5lmaEH';
           break;
         case '1m':
-          paymentLink = 'YOUR_1M_PAYMENT_LINK';
+          paymentLink = 'https://buy.stripe.com/bIY6s466L5ra0127sw';
           break;
       }
     }
