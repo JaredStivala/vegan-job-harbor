@@ -79,20 +79,19 @@ export const JobsFiltersSection = ({
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
-        <Link to="/post-job">
-          <Button 
-            variant="outline" 
-            className="bg-white hover:bg-sage/5 text-sage-dark hover:text-sage-dark border-sage hover:border-sage-dark transition-all duration-300"
-          >
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Post a Job
-          </Button>
-        </Link>
-      </div>
-      
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
+        <div className="flex items-center gap-4">
+          <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
+          <Link to="/post-job">
+            <Button 
+              variant="outline" 
+              className="bg-white hover:bg-sage/5 text-sage-dark hover:text-sage-dark border-sage hover:border-sage-dark transition-all duration-300"
+            >
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Post a Job
+            </Button>
+          </Link>
+        </div>
         
         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
           <TagFilter 
