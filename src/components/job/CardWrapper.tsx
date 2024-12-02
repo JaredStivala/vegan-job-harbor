@@ -8,9 +8,18 @@ interface CardWrapperProps {
   colored?: boolean;
   children: ReactNode;
   url: string;
+  source?: string;
 }
 
-export const CardWrapper = ({ isSelected, colored, children, url }: CardWrapperProps) => {
+export const CardWrapper = ({ isSelected, colored, children, url, source }: CardWrapperProps) => {
+  const handleApplyClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const redirectUrl = source === 'ea' 
+      ? 'https://jobs.80000hours.org/?refinementList%5Btags_area%5D%5B0%5D=Animal%20welfare'
+      : url;
+    window.open(redirectUrl, '_blank');
+  };
+
   return (
     <Card 
       className={cn(
@@ -28,10 +37,7 @@ export const CardWrapper = ({ isSelected, colored, children, url }: CardWrapperP
         <Button 
           variant="default"
           size="sm"
-          onClick={(e) => {
-            e.preventDefault();
-            window.open(url, '_blank');
-          }}
+          onClick={handleApplyClick}
           className="bg-sage hover:bg-sage-dark text-white"
         >
           Apply
