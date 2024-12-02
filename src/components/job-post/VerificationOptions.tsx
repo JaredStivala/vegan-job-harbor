@@ -17,8 +17,8 @@ export const VerificationOptions = ({
   setVerificationPeriod
 }: VerificationOptionsProps) => {
   return (
-    <div className="space-y-4">
-      <div className="flex items-center space-x-3">
+    <div className="space-y-6 border rounded-lg p-6 bg-sage/5">
+      <div className="flex items-start space-x-3">
         <Checkbox
           id="verified"
           checked={isVerified}
@@ -26,47 +26,54 @@ export const VerificationOptions = ({
             setIsVerified(checked as boolean);
             if (!checked) setVerificationPeriod("");
           }}
+          className="mt-1"
         />
-        <Label htmlFor="verified" className="text-sm font-medium text-gray-700 cursor-pointer">
-          Verify this job posting (only verified listings will be colored and have a verified badge)
+        <Label 
+          htmlFor="verified" 
+          className="text-base font-medium text-sage-dark cursor-pointer leading-relaxed"
+        >
+          Verify this job posting
+          <p className="text-sm font-normal text-gray-600 mt-1">
+            Verified listings are highlighted and display a verified badge, increasing visibility and trust
+          </p>
         </Label>
       </div>
 
       {isVerified && (
-        <div className="ml-6 space-y-3">
-          <Label className="text-sm font-medium text-gray-700">Select verification period:</Label>
+        <div className="ml-7 space-y-4">
+          <Label className="text-base font-medium text-sage-dark block mb-3">Select verification period:</Label>
           <RadioGroup
             value={verificationPeriod}
             onValueChange={setVerificationPeriod}
-            className="space-y-2"
+            className="space-y-3"
           >
-            <div className="flex items-center justify-between space-x-2 p-2 rounded-md hover:bg-sage/5 transition-colors">
-              <div className="flex items-center space-x-2">
+            <div className="flex items-center justify-between space-x-2 p-3 rounded-md border border-sage/20 hover:border-sage/40 hover:bg-sage/5 transition-colors">
+              <div className="flex items-center space-x-3">
                 <RadioGroupItem value="24h" id="24h" />
-                <Label htmlFor="24h" className="text-sm">24 Hours</Label>
+                <Label htmlFor="24h" className="text-base">24 Hours</Label>
               </div>
-              <span className="text-sm font-medium text-sage-dark">{formatPrice(PRICING.VERIFICATION['24h'])}</span>
+              <span className="text-base font-medium text-sage-dark">{formatPrice(PRICING.VERIFICATION['24h'])}</span>
             </div>
-            <div className="flex items-center justify-between space-x-2 p-2 rounded-md hover:bg-sage/5 transition-colors">
-              <div className="flex items-center space-x-2">
+            <div className="flex items-center justify-between space-x-2 p-3 rounded-md border border-sage/20 hover:border-sage/40 hover:bg-sage/5 transition-colors">
+              <div className="flex items-center space-x-3">
                 <RadioGroupItem value="3d" id="3d" />
-                <Label htmlFor="3d" className="text-sm">3 Days</Label>
+                <Label htmlFor="3d" className="text-base">3 Days</Label>
               </div>
-              <span className="text-sm font-medium text-sage-dark">{formatPrice(PRICING.VERIFICATION['3d'])}</span>
+              <span className="text-base font-medium text-sage-dark">{formatPrice(PRICING.VERIFICATION['3d'])}</span>
             </div>
-            <div className="flex items-center justify-between space-x-2 p-2 rounded-md hover:bg-sage/5 transition-colors">
-              <div className="flex items-center space-x-2">
+            <div className="flex items-center justify-between space-x-2 p-3 rounded-md border border-sage/20 hover:border-sage/40 hover:bg-sage/5 transition-colors">
+              <div className="flex items-center space-x-3">
                 <RadioGroupItem value="1w" id="1w" />
-                <Label htmlFor="1w" className="text-sm">1 Week</Label>
+                <Label htmlFor="1w" className="text-base">1 Week</Label>
               </div>
-              <span className="text-sm font-medium text-sage-dark">{formatPrice(PRICING.VERIFICATION['1w'])}</span>
+              <span className="text-base font-medium text-sage-dark">{formatPrice(PRICING.VERIFICATION['1w'])}</span>
             </div>
-            <div className="flex items-center justify-between space-x-2 p-2 rounded-md hover:bg-sage/5 transition-colors">
-              <div className="flex items-center space-x-2">
+            <div className="flex items-center justify-between space-x-2 p-3 rounded-md border border-sage/20 hover:border-sage/40 hover:bg-sage/5 transition-colors">
+              <div className="flex items-center space-x-3">
                 <RadioGroupItem value="1m" id="1m" />
-                <Label htmlFor="1m" className="text-sm">1 Month</Label>
+                <Label htmlFor="1m" className="text-base">1 Month</Label>
               </div>
-              <span className="text-sm font-medium text-sage-dark">{formatPrice(PRICING.VERIFICATION['1m'])}</span>
+              <span className="text-base font-medium text-sage-dark">{formatPrice(PRICING.VERIFICATION['1m'])}</span>
             </div>
           </RadioGroup>
         </div>
