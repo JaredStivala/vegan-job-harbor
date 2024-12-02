@@ -84,10 +84,9 @@ export const JobsFiltersSection = ({
           <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
           <Link to="/post-job">
             <Button 
-              variant="outline" 
-              className="bg-white hover:bg-sage/5 text-sage-dark hover:text-sage-dark border-sage hover:border-sage-dark transition-all duration-300"
+              className="bg-sage hover:bg-sage-dark text-white font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 px-6"
             >
-              <PlusCircle className="mr-2 h-4 w-4" />
+              <PlusCircle className="mr-2 h-5 w-5" />
               Post a Job
             </Button>
           </Link>
