@@ -15,7 +15,7 @@ export const CardWrapper = ({ isSelected, colored, children }: CardWrapperProps)
         "p-4 transition-all duration-200 relative cursor-pointer border-0",
         isSelected && "ring-2 ring-sage shadow-md",
         colored ? (
-          "bg-[#8B5CF6] hover:bg-[#7C3AED] text-white shadow-lg hover:shadow-xl"
+          "bg-blue-500 hover:bg-blue-600 text-white shadow-lg hover:shadow-xl"
         ) : (
           "hover:bg-gray-50/50"
         )
