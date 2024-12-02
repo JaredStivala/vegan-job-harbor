@@ -23,13 +23,13 @@ const PostJob = () => {
       salary: String(formData.get("salary") || ""),
       description: String(formData.get("description") || ""),
       url: String(formData.get("url") || ""),
-      tags: formData.get("tags")?.toString().split(",").map(tag => tag.trim()) || [],
+      tags: formData.get("tags")?.toString() || null,
       date_posted: new Date().toISOString().split("T")[0],
     };
 
     try {
       const { error } = await supabase
-        .from("veganjobs")
+        .from("userSubmissions")
         .insert(jobData);
 
       if (error) throw error;
