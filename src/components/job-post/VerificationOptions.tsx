@@ -26,7 +26,7 @@ export const VerificationOptions = ({
             setIsVerified(checked as boolean);
             if (!checked) setVerificationPeriod("");
           }}
-          className="mt-1"
+          className="mt-1 h-5 w-5"
         />
         <Label 
           htmlFor="verified" 
