@@ -10,12 +10,12 @@ interface JobsHeroProps {
 
 export const JobsHero = ({ allJobs, selectedTags, onTagSelect }: JobsHeroProps) => {
   const featuredCompanies = [
-    { name: "ProVeg", logo: "https://proveg.com/wp-content/uploads/2019/11/ProVeg_Logo_Horizontal_White.png" },
-    { name: "Good Food Institute", logo: "https://gfi.org/wp-content/uploads/2021/02/GFI-logo-2021.png" },
-    { name: "Mercy For Animals", logo: "https://mercyforanimals.org/wp-content/uploads/2020/09/MFA_Logo_White.png" },
-    { name: "PETA", logo: "https://www.peta.org/wp-content/uploads/2013/03/peta-logo-white.png" },
-    { name: "The Humane League", logo: "https://thehumaneleague.org/wp-content/uploads/2020/09/THL-logo-white.png" },
-    { name: "EA Funds", logo: "https://funds.effectivealtruism.org/images/ea-funds-white.png" }
+    { name: "ProVeg", logo: "/lovable-uploads/proveg.png" },
+    { name: "Good Food Institute", logo: "/lovable-uploads/gfi.png" },
+    { name: "Mercy For Animals", logo: "/lovable-uploads/mfa.png" },
+    { name: "PETA", logo: "/lovable-uploads/peta.png" },
+    { name: "The Humane League", logo: "/lovable-uploads/thl.png" },
+    { name: "EA Funds", logo: "/lovable-uploads/ea-funds.png" }
   ];
 
   return (
@@ -62,7 +62,7 @@ export const JobsHero = ({ allJobs, selectedTags, onTagSelect }: JobsHeroProps) 
                     src={company.logo}
                     alt={`${company.name} logo`}
                     className={cn(
-                      "h-8 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity filter brightness-0 invert",
+                      "h-8 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity",
                     )}
                   />
                 </div>
