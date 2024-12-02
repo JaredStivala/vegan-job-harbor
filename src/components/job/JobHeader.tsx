@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { JobLogo } from "./JobLogo";
 import { supabase } from "@/integrations/supabase/client";
+import { CheckCircle } from "lucide-react";
 
 interface JobHeaderProps {
   title: string;
@@ -9,9 +10,20 @@ interface JobHeaderProps {
   url: string;
   jobId: string;
   source: string;
+  colored?: boolean;
+  verified?: boolean;
 }
 
-export const JobHeader = ({ title, logo, companyName, url, jobId, source }: JobHeaderProps) => {
+export const JobHeader = ({ 
+  title, 
+  logo, 
+  companyName, 
+  url, 
+  jobId, 
+  source,
+  colored,
+  verified 
+}: JobHeaderProps) => {
   const handleApply = (e: React.MouseEvent) => {
     e.stopPropagation();
     window.open(url, '_blank', 'noopener,noreferrer');
@@ -41,9 +53,17 @@ export const JobHeader = ({ title, logo, companyName, url, jobId, source }: JobH
     <div className="flex justify-between items-start gap-4">
       <div className="flex items-start gap-3">
         <JobLogo logo={logo} companyName={companyName} />
-        <h3 className="font-semibold text-lg text-black group-hover:text-sage">
-          {title || "Untitled Position"}
-        </h3>
+        <div className="flex items-center gap-2">
+          <h3 className="font-semibold text-lg text-black group-hover:text-sage">
+            {title || "Untitled Position"}
+          </h3>
+          {verified && (
+            <CheckCircle 
+              className="w-5 h-5 text-blue-500 flex-shrink-0" 
+              aria-label="Verified job posting"
+            />
+          )}
+        </div>
       </div>
       <Button
         variant="outline"

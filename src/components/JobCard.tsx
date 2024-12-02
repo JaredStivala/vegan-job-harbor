@@ -30,7 +30,8 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
     description,
     tags,
     logo,
-    Colored // Note: This matches the exact field name from the database
+    Colored,
+    Verified
   } = job;
 
   const [isOpen, setIsOpen] = useState(false);
@@ -68,6 +69,7 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
                   jobId={id}
                   source={source}
                   colored={Colored}
+                  verified={Verified}
                 />
                 
                 <JobMetadata 

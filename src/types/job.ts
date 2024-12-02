@@ -6,10 +6,11 @@ export interface Job {
   location: string | null;
   salary: string | null;
   description: string | null;
-  tags: string[] | null;
+  tags: string[] | string | null;
   date_posted: string | null;
   date_closes: string | null;
   updated_at: string | null;
   logo: string | null;
-  Colored?: boolean; // Updated to match the exact field name from the database
+  Colored?: boolean;
+  Verified?: boolean;
 }
