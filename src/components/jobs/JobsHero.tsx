@@ -1,6 +1,8 @@
 import { SearchBar } from "@/components/SearchBar";
 import type { Job } from "@/types/job";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 interface JobsHeroProps {
   allJobs: Job[];
@@ -9,14 +11,19 @@ interface JobsHeroProps {
 }
 
 export const JobsHero = ({ allJobs, selectedTags, onTagSelect }: JobsHeroProps) => {
-  const featuredCompanies = [
-    { name: "ProVeg", logo: "/lovable-uploads/proveg.png" },
-    { name: "Good Food Institute", logo: "/lovable-uploads/gfi.png" },
-    { name: "Mercy For Animals", logo: "/lovable-uploads/mfa.png" },
-    { name: "PETA", logo: "/lovable-uploads/peta.png" },
-    { name: "The Humane League", logo: "/lovable-uploads/thl.png" },
-    { name: "EA Funds", logo: "/lovable-uploads/ea-funds.png" }
-  ];
+  const { data: featuredCompanies } = useQuery({
+    queryKey: ['featuredCompanies'],
+    queryFn: async () => {
+      const companies = ['ProVeg', 'Good Food Institute', 'Mercy For Animals', 'PETA', 'The Humane League', 'EA Funds'];
+      const { data } = await supabase
+        .from('veganjobs')
+        .select('company_name, logo')
+        .in('company_name', companies)
+        .not('logo', 'is', null);
+      
+      return data || [];
+    }
+  });
 
   return (
     <div 
@@ -50,25 +57,27 @@ export const JobsHero = ({ allJobs, selectedTags, onTagSelect }: JobsHeroProps) 
             selectedTags={selectedTags}
           />
 
-          <div className="pt-8">
-            <p className="text-white/60 text-sm mb-6">Trusted by leading organizations</p>
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-8 items-center justify-center">
-              {featuredCompanies.map((company) => (
-                <div 
-                  key={company.name}
-                  className="flex items-center justify-center"
-                >
-                  <img
-                    src={company.logo}
-                    alt={`${company.name} logo`}
-                    className={cn(
-                      "h-8 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity",
-                    )}
-                  />
-                </div>
-              ))}
+          {featuredCompanies && featuredCompanies.length > 0 && (
+            <div className="pt-8">
+              <p className="text-white/60 text-sm mb-6">Trusted by leading organizations</p>
+              <div className="grid grid-cols-3 md:grid-cols-6 gap-8 items-center justify-center">
+                {featuredCompanies.map((company) => (
+                  <div 
+                    key={company.company_name}
+                    className="flex items-center justify-center"
+                  >
+                    <img
+                      src={company.logo}
+                      alt={`${company.company_name} logo`}
+                      className={cn(
+                        "h-8 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity",
+                      )}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
       
