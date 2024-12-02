@@ -38,6 +38,7 @@ export const JobPostForm = ({
       salary: formData.get("salary"),
       description: formData.get("description"),
       url: formData.get("url"),
+      logo: formData.get("logo"),
       tags: formData.get("tags")?.toString().split(",").map(tag => tag.trim()),
       isVerified,
       verificationPeriod
@@ -84,6 +85,16 @@ export const JobPostForm = ({
             name="company"
             required
             placeholder="Your company name"
+            className="mt-1"
+          />
+        </label>
+
+        <label className="block">
+          <span className="text-sm font-medium text-gray-700">Company Logo URL</span>
+          <Input
+            name="logo"
+            type="url"
+            placeholder="https://... (optional)"
             className="mt-1"
           />
         </label>
