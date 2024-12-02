@@ -21,8 +21,8 @@ export const JobTags = ({ salary, tags, source, colored }: JobTagsProps) => {
   const processedTags = (() => {
     if (!tags) return [];
     
-    // For vevolution and animaladvocacy, tags are stored as a string
-    if ((source === 'vevolution' || source === 'animaladvocacy') && typeof tags === 'string') {
+    // For vevolution, animaladvocacy, and userSubmissions, tags are stored as a string
+    if ((source === 'vevolution' || source === 'animaladvocacy' || source === 'userSubmissions') && typeof tags === 'string') {
       return tags
         .replace(/[\[\]"{}]/g, '') // Remove brackets, quotes, and curly braces
         .split(',')
