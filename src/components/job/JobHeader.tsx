@@ -1,6 +1,4 @@
-import { Button } from "@/components/ui/button";
 import { JobLogo } from "./JobLogo";
-import { ExternalLink } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface JobHeaderProps {
@@ -21,7 +19,6 @@ export const JobHeader = ({
   url,
   jobId,
   source,
-  colored,
   verified
 }: JobHeaderProps) => {
   const handleClick = async () => {
@@ -61,23 +58,6 @@ export const JobHeader = ({
           {companyName}
         </p>
       </div>
-
-      <Button
-        variant="ghost"
-        size="icon"
-        className="opacity-0 group-hover/job:opacity-100 transition-opacity absolute -right-2 -top-2"
-        asChild
-      >
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={handleClick}
-        >
-          <ExternalLink className="w-4 h-4" />
-          <span className="sr-only">Open job posting</span>
-        </a>
-      </Button>
     </div>
   );
 };
