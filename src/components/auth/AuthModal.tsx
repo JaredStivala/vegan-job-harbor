@@ -2,7 +2,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 
@@ -19,38 +18,22 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submit clicked with email:", email);
     setIsLoading(true);
 
     try {
-      console.log("Starting auth process...");
-      const { error } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          emailRedirectTo: window.location.origin,
-        }
+      // Store email in localStorage or state management if needed
+      localStorage.setItem('userEmail', email);
+      
+      // Show success message
+      toast({
+        title: "Success!",
+        description: "You can now continue browsing jobs.",
       });
-
-      console.log("Auth response received:", error ? "Error" : "Success");
-
-      if (error) {
-        console.error("Auth error:", error);
-        toast({
-          title: "Error",
-          description: error.message,
-          variant: "destructive",
-        });
-      } else {
-        console.log("Auth successful, closing modal...");
-        toast({
-          title: "Success!",
-          description: "You can now continue browsing jobs.",
-        });
-        onClose();
-        navigate('/');
-      }
+      
+      // Close modal and redirect
+      onClose();
+      navigate('/');
     } catch (err) {
-      console.error("Unexpected error:", err);
       toast({
         title: "Error",
         description: "An unexpected error occurred",
