@@ -4,7 +4,6 @@ import { useState } from "react";
 import { JobsContent } from "@/components/jobs/JobsContent";
 import { JobsHeader } from "@/components/jobs/JobsHeader";
 import { JobsHero } from "@/components/jobs/JobsHero";
-import { PostJobButton } from "@/components/PostJobButton";
 import { Logo } from "@/components/Logo";
 import type { Job } from "@/types/job";
 import { useLocations } from "@/hooks/useLocations";
@@ -75,7 +74,6 @@ const Index = () => {
             selectedLocations={selectedLocations}
             onLocationRemove={handleLocationRemove}
           />
-          <PostJobButton />
         </div>
         <JobsContent 
           selectedJob={selectedJob}
