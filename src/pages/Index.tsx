@@ -7,6 +7,7 @@ import { JobsHeader } from "@/components/jobs/JobsHeader";
 import { JobsHero } from "@/components/jobs/JobsHero";
 import { JobsContent } from "@/components/jobs/JobsContent";
 import { EmailCaptureBanner } from "@/components/EmailCaptureBanner";
+import { Logo } from "@/components/Logo";
 import type { Job } from "@/types/job";
 import { useLocations } from "@/hooks/useLocations";
 
@@ -19,7 +20,6 @@ const Index = () => {
   const { data: allJobs = [], isLoading, error } = useQuery({
     queryKey: ['all-jobs'],
     queryFn: async () => {
-      // Fetch from all job tables with explicit error handling
       const [veganJobs, advocacyJobs, eaJobs, vevolutionJobs] = await Promise.all([
         supabase.from('veganjobs').select('*'),
         supabase.from('animaladvocacy').select('*'),
@@ -27,7 +27,6 @@ const Index = () => {
         supabase.from('vevolution').select('*')
       ]);
       
-      // Combine all jobs and filter out any null results
       const allJobsData = [
         ...(veganJobs.data || []),
         ...(advocacyJobs.data || []),
@@ -57,13 +56,15 @@ const Index = () => {
     setSelectedTags(prev => prev.filter(t => t !== tag));
   };
 
-  // Extract all unique tags from jobs
   const allTags = Array.from(new Set(
     allJobs.flatMap(job => Array.isArray(job.tags) ? job.tags : [])
   ));
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream">
+      <div className="absolute top-4 left-4 z-50">
+        <Logo />
+      </div>
       <EmailCaptureBanner />
       <JobsHeader 
         selectedTags={selectedTags}
