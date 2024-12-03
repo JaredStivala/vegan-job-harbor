@@ -80,8 +80,8 @@ export const JobsContent = ({
   );
 
   return (
-    <div id="jobs-section" className="container max-w-none py-8 px-4 md:px-8">
-      <div className="space-y-4">
+    <div id="jobs-section" className="container max-w-none py-4 px-4 md:px-8">
+      <div className="space-y-3">
         {/* Active Filters Display */}
         <div className="flex flex-wrap gap-2">
           {heroSelectedTags.map((tag) => 
@@ -119,7 +119,7 @@ export const JobsContent = ({
         onLocationSelect={handleLocationSelect}
       />
       
-      <div className="space-y-8 mt-8">
+      <div className="space-y-6 mt-6">
         <InfiniteJobsList
           source="userSubmissions"
           selectedLocations={selectedLocations}
