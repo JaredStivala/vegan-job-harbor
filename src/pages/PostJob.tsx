@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { JobPostForm } from "@/components/job-post/JobPostForm";
 import { calculateTotalPrice } from "@/config/pricing";
+import { Logo } from "@/components/Logo";
 
 const calculateVerificationEndDate = (verificationPeriod: string): Date | null => {
   if (!verificationPeriod) return null;
@@ -32,21 +33,26 @@ const PostJob = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream py-12">
-      <div className="container max-w-2xl">
+      <div className="container">
         <div className="mb-8">
+          <Logo />
+        </div>
+        <div className="max-w-2xl mx-auto">
           <h1 className="text-4xl font-bold text-sage-dark mb-2">Post a Job</h1>
           <p className="text-gray-600">
             Share your vegan-friendly job opportunity with our community. All jobs posted here will be put at the top of the page and sent to our email list.
           </p>
         </div>
 
-        <JobPostForm
-          isSubmitting={isSubmitting}
-          isVerified={isVerified}
-          verificationPeriod={verificationPeriod}
-          setIsVerified={setIsVerified}
-          setVerificationPeriod={setVerificationPeriod}
-        />
+        <div className="max-w-2xl mx-auto">
+          <JobPostForm
+            isSubmitting={isSubmitting}
+            isVerified={isVerified}
+            verificationPeriod={verificationPeriod}
+            setIsVerified={setIsVerified}
+            setVerificationPeriod={setVerificationPeriod}
+          />
+        </div>
       </div>
     </div>
   );
