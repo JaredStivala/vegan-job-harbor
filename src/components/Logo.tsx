@@ -3,12 +3,11 @@ import { Link } from "react-router-dom";
 export const Logo = () => {
   return (
     <Link to="/" className="flex items-center gap-0.5">
-      <span className="text-2xl font-extrabold text-cream">
-        Work
-      </span>
-      <span className="text-2xl font-extrabold text-cream italic">
-        Veg
-      </span>
+      <img 
+        src="/lovable-uploads/dcad0a79-71e5-4918-8b78-7638d2329569.png" 
+        alt="WorkVeg Logo" 
+        className="h-12 object-contain"
+      />
     </Link>
   );
 };
