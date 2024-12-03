@@ -19,20 +19,29 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Submit clicked with email:", email);
     setIsLoading(true);
 
     try {
+      console.log("Starting auth process...");
       const { error } = await supabase.auth.signInWithOtp({
         email,
+        options: {
+          emailRedirectTo: window.location.origin,
+        }
       });
 
+      console.log("Auth response received:", error ? "Error" : "Success");
+
       if (error) {
+        console.error("Auth error:", error);
         toast({
           title: "Error",
           description: error.message,
           variant: "destructive",
         });
       } else {
+        console.log("Auth successful, closing modal...");
         toast({
           title: "Success!",
           description: "You can now continue browsing jobs.",
@@ -41,7 +50,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         navigate('/');
       }
     } catch (err) {
-      console.error("Auth error:", err);
+      console.error("Unexpected error:", err);
       toast({
         title: "Error",
         description: "An unexpected error occurred",
