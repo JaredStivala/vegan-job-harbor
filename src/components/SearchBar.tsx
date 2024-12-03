@@ -64,10 +64,12 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
         </div>
 
         {selectedTags.length > 0 && (
-          <SelectedTags 
-            tags={selectedTags} 
-            onRemoveTag={onTagSelect}
-          />
+          <div className="absolute top-full left-0 right-0 mt-2">
+            <SelectedTags 
+              tags={selectedTags} 
+              onRemoveTag={onTagSelect}
+            />
+          </div>
         )}
       </div>
 

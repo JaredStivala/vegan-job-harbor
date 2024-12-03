@@ -41,15 +41,6 @@ export const JobsHero = ({ allJobs, selectedTags, onTagSelect }: JobsHeroProps) 
               onTagSelect={onTagSelect}
               selectedTags={selectedTags}
             />
-            
-            {selectedTags.length > 0 && (
-              <div className="mt-4">
-                <SelectedTags 
-                  tags={selectedTags}
-                  onRemoveTag={onTagSelect}
-                />
-              </div>
-            )}
           </div>
         </div>
       </div>
