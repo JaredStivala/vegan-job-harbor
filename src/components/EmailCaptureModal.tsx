@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface EmailCaptureModalProps {
   isOpen: boolean;
@@ -14,9 +15,11 @@ interface EmailCaptureModalProps {
 export const EmailCaptureModal = ({ isOpen, onClose, onSubmit, action }: EmailCaptureModalProps) => {
   const [email, setEmail] = useState("");
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -25,12 +28,49 @@ export const EmailCaptureModal = ({ isOpen, onClose, onSubmit, action }: EmailCa
         description: "Please enter a valid email address",
         variant: "destructive",
       });
+      setIsSubmitting(false);
       return;
     }
 
-    localStorage.setItem('userEmail', email);
-    onSubmit(email);
-    onClose();
+    try {
+      // Check if profile with email exists
+      const { data: existingProfiles } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('email', email)
+        .maybeSingle();
+
+      if (!existingProfiles) {
+        // If no profile exists with this email, create one
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert([
+            { email: email }
+          ]);
+
+        if (insertError) {
+          throw insertError;
+        }
+      }
+
+      localStorage.setItem('userEmail', email);
+      onSubmit(email);
+      onClose();
+      
+      toast({
+        title: "Success",
+        description: "Email saved successfully",
+      });
+    } catch (error) {
+      console.error('Error saving email:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save email. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -48,11 +88,11 @@ export const EmailCaptureModal = ({ isOpen, onClose, onSubmit, action }: EmailCa
             required
           />
           <div className="flex justify-end space-x-2">
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
               Cancel
             </Button>
-            <Button type="submit" className="bg-sage hover:bg-sage-dark">
-              Continue
+            <Button type="submit" className="bg-sage hover:bg-sage-dark" disabled={isSubmitting}>
+              {isSubmitting ? "Saving..." : "Continue"}
             </Button>
           </div>
         </form>
