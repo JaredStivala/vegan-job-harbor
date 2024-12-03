@@ -14,8 +14,9 @@ interface CardWrapperProps {
 export const CardWrapper = ({ isSelected, colored, children, url, source }: CardWrapperProps) => {
   const handleApplyClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    // For EA jobs, redirect to the animal welfare jobs page
     const redirectUrl = source === 'ea' 
-      ? 'https://jobs.80000hours.org/?refinementList%5Btags_area%5D%5B0%5D=Animal%20welfare'
+      ? 'https://jobs.80000hours.org/jobs?refinementList%5Btags_area%5D%5B0%5D=Animal%20welfare'
       : url;
     window.open(redirectUrl, '_blank');
   };
