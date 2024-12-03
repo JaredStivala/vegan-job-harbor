@@ -41,7 +41,10 @@ export const EmailCaptureModal = ({ isOpen, onClose, onSubmit, action }: EmailCa
         // Insert new email if it doesn't exist
         const { error } = await supabase
           .from('profiles')
-          .insert({ email });
+          .insert({ 
+            id: crypto.randomUUID(),
+            email: email 
+          });
 
         if (error) throw error;
       }
