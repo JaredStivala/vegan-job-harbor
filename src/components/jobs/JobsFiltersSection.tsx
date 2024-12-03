@@ -13,9 +13,9 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { LocationFilter } from "./filters/LocationFilter";
 import { TagFilter } from "./filters/TagFilter";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { EmailCaptureModal } from "@/components/EmailCaptureModal";
 
 interface JobsFiltersSectionProps {
   onLocationDialogOpen: () => void;
@@ -39,6 +39,8 @@ export const JobsFiltersSection = ({
 }: JobsFiltersSectionProps) => {
   const [companyDialogOpen, setCompanyDialogOpen] = useState(false);
   const [companySearch, setCompanySearch] = useState("");
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const navigate = useNavigate();
 
   const { data: allJobs = [] } = useQuery({
     queryKey: ['all-jobs'],
@@ -58,6 +60,19 @@ export const JobsFiltersSection = ({
       ];
     }
   });
+
+  const handlePostJobClick = () => {
+    const userEmail = localStorage.getItem('userEmail');
+    if (!userEmail) {
+      setShowEmailModal(true);
+      return;
+    }
+    navigate('/post-job');
+  };
+
+  const handleEmailSubmit = (email: string) => {
+    navigate('/post-job');
+  };
 
   const availableTags = Array.from(new Set(
     allJobs.flatMap(job => {
@@ -82,14 +97,13 @@ export const JobsFiltersSection = ({
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-4">
           <h2 className="text-xl font-semibold text-sage-dark">Latest Jobs</h2>
-          <Link to="/post-job">
-            <Button 
-              className="bg-sage hover:bg-sage-dark text-white font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 px-6"
-            >
-              <PlusCircle className="mr-2 h-5 w-5" />
-              Post a Job
-            </Button>
-          </Link>
+          <Button 
+            onClick={handlePostJobClick}
+            className="bg-sage hover:bg-sage-dark text-white font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 px-6"
+          >
+            <PlusCircle className="mr-2 h-5 w-5" />
+            Post a Job
+          </Button>
         </div>
         
         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
@@ -152,6 +166,13 @@ export const JobsFiltersSection = ({
           </div>
         </div>
       </div>
+
+      <EmailCaptureModal
+        isOpen={showEmailModal}
+        onClose={() => setShowEmailModal(false)}
+        onSubmit={handleEmailSubmit}
+        action="post"
+      />
     </div>
   );
 };
