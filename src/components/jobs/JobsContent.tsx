@@ -119,7 +119,7 @@ export const JobsContent = ({
         onLocationSelect={handleLocationSelect}
       />
       
-      <div className="space-y-8 mt-8">
+      <div className="mt-4"> {/* Changed from space-y-8 mt-8 to just mt-4 */}
         <InfiniteJobsList
           source="userSubmissions"
           selectedLocations={selectedLocations}
