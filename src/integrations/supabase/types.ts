@@ -99,6 +99,27 @@ export type Database = {
         }
         Relationships: []
       }
+      email_captures: {
+        Row: {
+          action: string
+          created_at: string
+          email: string
+          id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          email: string
+          id?: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          email?: string
+          id?: string
+        }
+        Relationships: []
+      }
       job_clicks: {
         Row: {
           clicked_at: string | null

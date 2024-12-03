@@ -30,10 +30,24 @@ export const EmailCaptureModal = ({ isOpen, onClose, onSubmit, action }: EmailCa
     }
 
     try {
+      // Store email in Supabase
+      const { error } = await supabase
+        .from('email_captures')
+        .insert([
+          { email, action }
+        ]);
+
+      if (error) throw error;
+
       // Store email in localStorage and proceed
       localStorage.setItem('userEmail', email);
       onSubmit(email);
       onClose();
+
+      toast({
+        title: "Success",
+        description: "Email saved successfully",
+      });
 
     } catch (error) {
       console.error('Error:', error);
