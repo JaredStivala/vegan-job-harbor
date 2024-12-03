@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface EmailCaptureModalProps {
   isOpen: boolean;
@@ -15,7 +16,7 @@ export const EmailCaptureModal = ({ isOpen, onClose, onSubmit, action }: EmailCa
   const [email, setEmail] = useState("");
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -28,9 +29,41 @@ export const EmailCaptureModal = ({ isOpen, onClose, onSubmit, action }: EmailCa
       return;
     }
 
-    localStorage.setItem('userEmail', email);
-    onSubmit(email);
-    onClose();
+    try {
+      // Store email in Supabase profiles table
+      const { error } = await supabase
+        .from('profiles')
+        .insert([{ email }])
+        .select();
+
+      if (error) {
+        // If insert fails because profile might already exist, try updating
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update({ email })
+          .eq('email', email);
+
+        if (updateError) {
+          throw updateError;
+        }
+      }
+
+      localStorage.setItem('userEmail', email);
+      onSubmit(email);
+      onClose();
+      
+      toast({
+        title: "Success",
+        description: "Email saved successfully",
+      });
+    } catch (error) {
+      console.error('Error saving email:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save email. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
