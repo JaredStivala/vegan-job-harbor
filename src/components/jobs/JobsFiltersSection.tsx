@@ -70,7 +70,8 @@ export const JobsFiltersSection = ({
     navigate('/post-job');
   };
 
-  const handleEmailSubmit = () => {
+  const handleEmailSubmit = (email: string) => {
+    localStorage.setItem('userEmail', email);
     navigate('/post-job');
   };
 
