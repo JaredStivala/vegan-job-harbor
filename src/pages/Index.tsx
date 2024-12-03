@@ -68,7 +68,7 @@ const Index = () => {
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 hover:bg-sage/10 text-sage-dark hover:text-sage transition-colors"
+          className="h-8 w-8 text-cream"
           onClick={() => window.location.href = 'mailto:jaredworkveg@gmail.com'}
           title="Contact Us"
         >
