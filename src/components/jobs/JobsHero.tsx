@@ -27,9 +27,9 @@ export const JobsHero = ({ allJobs, selectedTags, onTagSelect }: JobsHeroProps) 
       <div className="container relative z-10">
         <div className="max-w-2xl mx-auto space-y-8 text-center">
           <div className="space-y-4">
-            <h2 className="text-5xl font-bold text-white leading-tight tracking-tight drop-shadow-lg">
-              Find Your Next{' '}
-              <span className="text-white font-extrabold bg-gradient-to-r from-sage via-sage-dark to-sage bg-clip-text text-transparent drop-shadow-[0_4px_4px_rgba(0,0,0,0.6)]">
+            <h2 className="text-5xl font-bold leading-tight tracking-tight drop-shadow-lg">
+              <span className="text-white">Find Your Next</span>{' '}
+              <span className="font-extrabold bg-gradient-to-r from-[#86A789] via-[#4F6F52] to-[#86A789] bg-clip-text text-transparent drop-shadow-[0_4px_4px_rgba(0,0,0,0.6)]">
                 Vegan Career
               </span>
             </h2>
