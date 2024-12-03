@@ -21,29 +21,15 @@ export const JobsHero = ({ allJobs, selectedTags, onTagSelect }: JobsHeroProps) 
       <div 
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0.4))'
+          background: 'linear-gradient(to right, rgba(0,0,0,0.2), rgba(0,0,0,0.2))'
         }}
       />
       <div className="container relative z-10">
         <div className="max-w-2xl mx-auto space-y-8 text-center">
           <div className="space-y-4">
-            <h2 className="text-5xl font-bold text-white leading-tight tracking-tight">
+            <h2 className="text-5xl font-bold text-white leading-tight tracking-tight drop-shadow-lg">
               Find Your Next{' '}
-              <span 
-                className="font-extrabold"
-                style={{
-                  background: 'linear-gradient(to right, #86A789, #4F6F52)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  textShadow: `
-                    -1px -1px 0 #fff,
-                    1px -1px 0 #fff,
-                    -1px 1px 0 #fff,
-                    1px 1px 0 #fff
-                  `,
-                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
-                }}
-              >
+              <span className="text-cream font-extrabold bg-gradient-to-r from-sage to-cream bg-clip-text text-transparent drop-shadow-[0_3px_3px_rgba(0,0,0,0.4)]">
                 Vegan Career
               </span>
             </h2>
