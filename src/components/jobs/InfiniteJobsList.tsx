@@ -91,7 +91,7 @@ export const InfiniteJobsList = ({
         </div>
       )}
       
-      <div ref={ref} className="h-10" />
+      <div ref={ref} />
     </div>
   );
 };
