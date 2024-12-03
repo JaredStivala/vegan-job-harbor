@@ -9,12 +9,16 @@ import { JobsContent } from "@/components/jobs/JobsContent";
 import { Logo } from "@/components/Logo";
 import type { Job } from "@/types/job";
 import { useLocations } from "@/hooks/useLocations";
+import { useNavigate } from "react-router-dom";
+import { EmailCaptureModal } from "@/components/EmailCaptureModal";
 
 const Index = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<'latest' | 'salary' | 'location'>('latest');
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [showEmailModal, setShowEmailModal] = useState(false);
 
   const { data: allJobs = [], isLoading, error } = useQuery({
     queryKey: ['all-jobs'],
@@ -55,6 +59,19 @@ const Index = () => {
     setSelectedTags(prev => prev.filter(t => t !== tag));
   };
 
+  const handlePostJobClick = () => {
+    const userEmail = localStorage.getItem('userEmail');
+    if (!userEmail) {
+      setShowEmailModal(true);
+      return;
+    }
+    navigate('/post-job');
+  };
+
+  const handleEmailSubmit = () => {
+    navigate('/post-job');
+  };
+
   const allTags = Array.from(new Set(
     allJobs.flatMap(job => Array.isArray(job.tags) ? job.tags : [])
   ));
@@ -69,6 +86,7 @@ const Index = () => {
         onTagRemove={handleTagRemove}
         selectedLocations={selectedLocations}
         onLocationRemove={handleLocationRemove}
+        onPostJobClick={handlePostJobClick}
       />
       <JobsHero 
         allJobs={allJobs}
@@ -85,6 +103,12 @@ const Index = () => {
         allTags={allTags}
       />
       <BackToTop />
+      <EmailCaptureModal
+        isOpen={showEmailModal}
+        onClose={() => setShowEmailModal(false)}
+        onSubmit={handleEmailSubmit}
+        action="post"
+      />
     </div>
   );
 };
