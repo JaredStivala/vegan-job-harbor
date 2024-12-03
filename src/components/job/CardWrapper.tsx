@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ReactNode } from "react";
+import { Lock } from "lucide-react";
 
 interface CardWrapperProps {
   isSelected?: boolean;
@@ -9,9 +10,17 @@ interface CardWrapperProps {
   children: ReactNode;
   url: string;
   source?: string;
+  requiresAuth?: boolean;
 }
 
-export const CardWrapper = ({ isSelected, colored, children, url, source }: CardWrapperProps) => {
+export const CardWrapper = ({ 
+  isSelected, 
+  colored, 
+  children, 
+  url, 
+  source,
+  requiresAuth 
+}: CardWrapperProps) => {
   const handleApplyClick = (e: React.MouseEvent) => {
     e.preventDefault();
     // For EA jobs, redirect to the animal welfare jobs page
@@ -35,14 +44,21 @@ export const CardWrapper = ({ isSelected, colored, children, url, source }: Card
     >
       {children}
       <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-        <Button 
-          variant="default"
-          size="sm"
-          onClick={handleApplyClick}
-          className="bg-sage hover:bg-sage-dark text-white"
-        >
-          Apply
-        </Button>
+        {requiresAuth ? (
+          <div className="flex items-center gap-2 text-sage">
+            <Lock className="w-4 h-4" />
+            <span className="text-sm font-medium">Sign in to apply</span>
+          </div>
+        ) : (
+          <Button 
+            variant="default"
+            size="sm"
+            onClick={handleApplyClick}
+            className="bg-sage hover:bg-sage-dark text-white"
+          >
+            Apply
+          </Button>
+        )}
       </div>
     </Card>
   );

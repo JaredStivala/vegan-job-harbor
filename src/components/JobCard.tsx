@@ -11,6 +11,8 @@ import { JobTags } from "./job/JobTags";
 import { CardWrapper } from "./job/CardWrapper";
 import { CollapsibleChevron } from "./job/CollapsibleChevron";
 import { CollapsibleContent } from "./job/CollapsibleContent";
+import { AuthModal } from "./auth/AuthModal";
+import { useAuth } from "@/App";
 
 interface JobCardProps {
   job: Job;
@@ -35,6 +37,7 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
   } = job;
 
   const [isOpen, setIsOpen] = useState(false);
+  const { session, isAuthModalOpen, setIsAuthModalOpen } = useAuth();
 
   const formattedDate = date_posted
     ? new Date(date_posted).toLocaleDateString('en-US', {
@@ -44,6 +47,15 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
       })
     : null;
 
+  const handleInteraction = (e: React.MouseEvent) => {
+    if (!session) {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsAuthModalOpen(true);
+      return;
+    }
+  };
+
   return (
     <div 
       id={`job-${job.id}`}
@@ -51,6 +63,7 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
         "group transition-all duration-200 mb-4 last:mb-0",
         isSelected && "scale-[1.02]"
       )}
+      onClick={handleInteraction}
     >
       <Collapsible
         open={isOpen}
@@ -58,7 +71,13 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
         className="w-full"
       >
         <CollapsibleTrigger className="w-full text-left">
-          <CardWrapper isSelected={isSelected} colored={Colored} url={url}>
+          <CardWrapper 
+            isSelected={isSelected} 
+            colored={Colored} 
+            url={url}
+            source={source}
+            requiresAuth={!session}
+          >
             <div className="space-y-2">
               <JobHeader 
                 title={page_title}
@@ -69,6 +88,7 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
                 source={source}
                 colored={Colored}
                 verified={Verified}
+                requiresAuth={!session}
               />
               
               <JobMetadata 
@@ -92,6 +112,11 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
         
         <CollapsibleContent description={description} />
       </Collapsible>
+
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)} 
+      />
     </div>
   );
 };
