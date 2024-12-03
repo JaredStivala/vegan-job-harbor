@@ -21,28 +21,41 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     e.preventDefault();
     setIsLoading(true);
 
-    const { data, error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        shouldCreateUser: true,
-      },
-    });
+    try {
+      const { data, error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          shouldCreateUser: true,
+          emailRedirectTo: window.location.origin,
+        },
+      });
 
-    if (error) {
+      console.log("Auth response:", { data, error });
+
+      if (error) {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Success!",
+          description: "You can now continue browsing jobs.",
+        });
+        onClose();
+        navigate('/');
+      }
+    } catch (err) {
+      console.error("Auth error:", err);
       toast({
         title: "Error",
-        description: error.message,
+        description: "An unexpected error occurred",
         variant: "destructive",
       });
-    } else {
-      toast({
-        title: "Success!",
-        description: "You can now continue browsing jobs.",
-      });
-      onClose();
-      navigate('/');
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   return (
