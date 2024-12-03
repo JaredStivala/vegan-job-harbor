@@ -9,7 +9,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { SelectedTags } from "@/components/SelectedTags";
 
 interface SearchBarProps {
   tags: string[];
@@ -52,25 +51,14 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
 
   return (
     <div className="relative w-full max-w-2xl mx-auto hidden md:block">
-      <div className="space-y-4">
-        <div className="relative">
-          <button
-            onClick={() => setOpen(true)}
-            className="w-full px-6 py-4 pl-14 text-lg rounded-full border-2 border-sage focus:border-sage focus:ring-2 focus:ring-sage/20 outline-none transition-all bg-white shadow-lg text-left text-muted-foreground"
-          >
-            Search vegan jobs...
-          </button>
-          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-sage w-6 h-6" />
-        </div>
-
-        {selectedTags.length > 0 && (
-          <div className="absolute top-full left-0 right-0 mt-2">
-            <SelectedTags 
-              tags={selectedTags} 
-              onRemoveTag={onTagSelect}
-            />
-          </div>
-        )}
+      <div className="relative">
+        <button
+          onClick={() => setOpen(true)}
+          className="w-full px-6 py-4 pl-14 text-lg rounded-full border-2 border-sage focus:border-sage focus:ring-2 focus:ring-sage/20 outline-none transition-all bg-white shadow-lg text-left text-muted-foreground"
+        >
+          Search vegan jobs...
+        </button>
+        <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-sage w-6 h-6" />
       </div>
 
       <CommandDialog open={open} onOpenChange={setOpen}>

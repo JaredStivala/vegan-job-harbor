@@ -84,6 +84,9 @@ export const JobsContent = ({
       <div className="space-y-4">
         {/* Active Filters Display */}
         <div className="flex flex-wrap gap-2">
+          {heroSelectedTags.map((tag) => 
+            renderFilterBadge(tag, () => heroTagRemove(tag))
+          )}
           {filterSelectedTags.map((tag) => 
             renderFilterBadge(tag, () => handleFilterTagSelect(tag))
           )}
