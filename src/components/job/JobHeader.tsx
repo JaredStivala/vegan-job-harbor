@@ -11,7 +11,6 @@ interface JobHeaderProps {
   source: string;
   colored?: boolean;
   verified?: boolean;
-  requiresAuth?: boolean;
 }
 
 export const JobHeader = ({ 
@@ -22,8 +21,7 @@ export const JobHeader = ({
   jobId,
   source,
   colored,
-  verified,
-  requiresAuth
+  verified
 }: JobHeaderProps) => {
   const { toast } = useToast();
 
