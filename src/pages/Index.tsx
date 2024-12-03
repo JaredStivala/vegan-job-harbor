@@ -1,26 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
-import { BackToTop } from "@/components/BackToTop";
+import { JobsContent } from "@/components/jobs/JobsContent";
 import { JobsHeader } from "@/components/jobs/JobsHeader";
 import { JobsHero } from "@/components/jobs/JobsHero";
-import { JobsContent } from "@/components/jobs/JobsContent";
 import { Logo } from "@/components/Logo";
 import type { Job } from "@/types/job";
 import { useLocations } from "@/hooks/useLocations";
-import { useNavigate } from "react-router-dom";
-import { EmailCaptureModal } from "@/components/EmailCaptureModal";
 
 const Index = () => {
-  const { toast } = useToast();
-  const navigate = useNavigate();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<'latest' | 'salary' | 'location'>('latest');
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-  const [showEmailModal, setShowEmailModal] = useState(false);
 
-  const { data: allJobs = [], isLoading, error } = useQuery({
+  const { data: allJobs = [], isLoading } = useQuery({
     queryKey: ['all-jobs'],
     queryFn: async () => {
       const [veganJobs, advocacyJobs, eaJobs, vevolutionJobs] = await Promise.all([
@@ -59,19 +52,6 @@ const Index = () => {
     setSelectedTags(prev => prev.filter(t => t !== tag));
   };
 
-  const handlePostJobClick = () => {
-    const userEmail = localStorage.getItem('userEmail');
-    if (!userEmail) {
-      setShowEmailModal(true);
-      return;
-    }
-    navigate('/post-job');
-  };
-
-  const handleEmailSubmit = () => {
-    navigate('/post-job');
-  };
-
   const allTags = Array.from(new Set(
     allJobs.flatMap(job => Array.isArray(job.tags) ? job.tags : [])
   ));
@@ -81,34 +61,30 @@ const Index = () => {
       <div className="absolute top-4 left-4 z-50">
         <Logo />
       </div>
-      <JobsHeader 
-        selectedTags={selectedTags}
-        onTagRemove={handleTagRemove}
-        selectedLocations={selectedLocations}
-        onLocationRemove={handleLocationRemove}
-        onPostJobClick={handlePostJobClick}
-      />
       <JobsHero 
         allJobs={allJobs}
         selectedTags={selectedTags}
         onTagSelect={handleTagSelect}
       />
-      <JobsContent 
-        selectedJob={selectedJob}
-        selectedTags={selectedTags}
-        onTagRemove={handleTagRemove}
-        onTagSelect={handleTagSelect}
-        sortBy={sortBy}
-        setSortBy={setSortBy}
-        allTags={allTags}
-      />
-      <BackToTop />
-      <EmailCaptureModal
-        isOpen={showEmailModal}
-        onClose={() => setShowEmailModal(false)}
-        onSubmit={handleEmailSubmit}
-        action="post"
-      />
+      <div className="container py-8">
+        <div className="flex justify-between items-center mb-8">
+          <JobsHeader 
+            selectedTags={selectedTags}
+            onTagRemove={handleTagRemove}
+            selectedLocations={selectedLocations}
+            onLocationRemove={handleLocationRemove}
+          />
+        </div>
+        <JobsContent 
+          selectedJob={selectedJob}
+          selectedTags={selectedTags}
+          onTagRemove={handleTagRemove}
+          onTagSelect={handleTagSelect}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          allTags={allTags}
+        />
+      </div>
     </div>
   );
 };
