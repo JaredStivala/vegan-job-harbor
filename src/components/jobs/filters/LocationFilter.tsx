@@ -16,10 +16,9 @@ import { supabase } from "@/integrations/supabase/client";
 interface LocationFilterProps {
   selectedLocations: string[];
   onLocationSelect: (location: string) => void;
-  disabled?: boolean;
 }
 
-export const LocationFilter = ({ selectedLocations, onLocationSelect, disabled }: LocationFilterProps) => {
+export const LocationFilter = ({ selectedLocations, onLocationSelect }: LocationFilterProps) => {
   const [locationDialogOpen, setLocationDialogOpen] = useState(false);
   const [locationSearch, setLocationSearch] = useState("");
 
@@ -62,18 +61,15 @@ export const LocationFilter = ({ selectedLocations, onLocationSelect, disabled }
   });
 
   const handleLocationSelection = (location: string) => {
-    if (!disabled) {
-      onLocationSelect(location);
-      setLocationDialogOpen(false);
-    }
+    onLocationSelect(location);
+    setLocationDialogOpen(false);
   };
 
   return (
     <div className="relative flex-1 sm:w-48">
       <button
-        onClick={() => !disabled && setLocationDialogOpen(true)}
-        className={`w-full px-4 py-2.5 pl-10 pr-10 text-base rounded-xl border border-sage hover:border-sage-dark focus:border-sage-dark transition-colors bg-background text-gray-600 font-normal text-left ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-        disabled={disabled}
+        onClick={() => setLocationDialogOpen(true)}
+        className="w-full px-4 py-2.5 pl-10 pr-10 text-base rounded-xl border border-sage hover:border-sage-dark focus:border-sage-dark transition-colors bg-background text-gray-600 font-normal text-left"
       >
         {selectedLocations.length > 0 ? `${selectedLocations.length} selected` : "Location"}
       </button>
