@@ -30,14 +30,22 @@ export const EmailCaptureModal = ({ isOpen, onClose, onSubmit, action }: EmailCa
     }
 
     try {
+      console.log('Attempting to insert email:', email, 'with action:', action);
+      
       // Store email in Supabase
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('email_captures')
         .insert([
           { email, action }
-        ]);
+        ])
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
+
+      console.log('Supabase insert response:', data);
 
       // Store email in localStorage and proceed
       localStorage.setItem('userEmail', email);
