@@ -50,7 +50,7 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
   };
 
   return (
-    <div className="relative w-full max-w-2xl mx-auto">
+    <div className="relative w-full max-w-2xl mx-auto hidden md:block">
       <div className="relative">
         <button
           onClick={() => setOpen(true)}
