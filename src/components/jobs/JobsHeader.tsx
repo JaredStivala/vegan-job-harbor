@@ -1,4 +1,3 @@
-import { SelectedTags } from "@/components/SelectedTags";
 import { SelectedLocations } from "./SelectedLocations";
 
 interface JobsHeaderProps {
@@ -15,12 +14,7 @@ export const JobsHeader = ({
   onLocationRemove
 }: JobsHeaderProps) => {
   return (
-    <div className="space-y-4">
-      <SelectedTags 
-        tags={selectedTags} 
-        onRemoveTag={onTagRemove} 
-      />
-      
+    <div className="space-y-4">      
       {selectedLocations.length > 0 && (
         <SelectedLocations
           locations={selectedLocations}
