@@ -7,6 +7,8 @@ import { JobsHeader } from "@/components/jobs/JobsHeader";
 import { JobsHero } from "@/components/jobs/JobsHero";
 import { JobsContent } from "@/components/jobs/JobsContent";
 import { Logo } from "@/components/Logo";
+import { Mail } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import type { Job } from "@/types/job";
 import { useLocations } from "@/hooks/useLocations";
 
@@ -63,6 +65,17 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream">
       <div className="absolute top-4 left-4 z-50">
         <Logo />
+      </div>
+      <div className="absolute top-4 right-4 z-50">
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex items-center gap-2 bg-white/80 backdrop-blur-sm hover:bg-white"
+          onClick={() => window.location.href = 'mailto:jaredworkveg@gmail.com'}
+        >
+          <Mail className="h-4 w-4" />
+          Contact Us
+        </Button>
       </div>
       <JobsHeader 
         selectedTags={selectedTags}
