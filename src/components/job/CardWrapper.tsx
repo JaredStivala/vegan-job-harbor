@@ -1,8 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ReactNode, useState } from "react";
-import { EmailCaptureModal } from "@/components/EmailCaptureModal";
+import { ReactNode } from "react";
 
 interface CardWrapperProps {
   isSelected?: boolean;
@@ -13,25 +12,8 @@ interface CardWrapperProps {
 }
 
 export const CardWrapper = ({ isSelected, colored, children, url, source }: CardWrapperProps) => {
-  const [showEmailModal, setShowEmailModal] = useState(false);
-
   const handleApplyClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    const userEmail = localStorage.getItem('userEmail');
-    
-    if (!userEmail) {
-      setShowEmailModal(true);
-      return;
-    }
-
-    // For EA jobs, redirect to the animal welfare jobs page
-    const redirectUrl = source === 'ea' 
-      ? 'https://jobs.80000hours.org/jobs?refinementList%5Btags_area%5D%5B0%5D=Animal%20welfare'
-      : url;
-    window.open(redirectUrl, '_blank');
-  };
-
-  const handleEmailSubmit = () => {
     // For EA jobs, redirect to the animal welfare jobs page
     const redirectUrl = source === 'ea' 
       ? 'https://jobs.80000hours.org/jobs?refinementList%5Btags_area%5D%5B0%5D=Animal%20welfare'
@@ -62,13 +44,6 @@ export const CardWrapper = ({ isSelected, colored, children, url, source }: Card
           Apply
         </Button>
       </div>
-
-      <EmailCaptureModal
-        isOpen={showEmailModal}
-        onClose={() => setShowEmailModal(false)}
-        onSubmit={handleEmailSubmit}
-        action="apply"
-      />
     </Card>
   );
 };
