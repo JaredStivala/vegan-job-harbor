@@ -1,4 +1,5 @@
 import { SearchBar } from "@/components/SearchBar";
+import { SelectedTags } from "@/components/SelectedTags";
 import type { Job } from "@/types/job";
 
 interface JobsHeroProps {
@@ -34,11 +35,22 @@ export const JobsHero = ({ allJobs, selectedTags, onTagSelect }: JobsHeroProps) 
             </h2>
           </div>
           
-          <SearchBar 
-            tags={allJobs.flatMap(job => job.tags || [])}
-            onTagSelect={onTagSelect}
-            selectedTags={selectedTags}
-          />
+          <div className="space-y-4">
+            <SearchBar 
+              tags={allJobs.flatMap(job => job.tags || [])}
+              onTagSelect={onTagSelect}
+              selectedTags={selectedTags}
+            />
+            
+            {selectedTags.length > 0 && (
+              <div className="mt-4">
+                <SelectedTags 
+                  tags={selectedTags}
+                  onRemoveTag={onTagSelect}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
       
