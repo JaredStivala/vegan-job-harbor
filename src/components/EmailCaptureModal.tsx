@@ -30,25 +30,20 @@ export const EmailCaptureModal = ({ isOpen, onClose, onSubmit, action }: EmailCa
     }
 
     try {
-      // First check if a profile with this email already exists
-      const { data: existingProfile } = await supabase
+      // Check for duplicate email
+      const { data: existingEmail } = await supabase
         .from('profiles')
-        .select('*')
+        .select('email')
         .eq('email', email)
         .single();
 
-      if (!existingProfile) {
-        // If no profile exists, create a new one with a generated UUID
-        const { error: insertError } = await supabase
+      if (!existingEmail) {
+        // Insert new email if it doesn't exist
+        const { error } = await supabase
           .from('profiles')
-          .insert({
-            id: crypto.randomUUID(), // Generate a new UUID
-            email: email,
-          });
+          .insert({ email });
 
-        if (insertError) {
-          throw insertError;
-        }
+        if (error) throw error;
       }
 
       localStorage.setItem('userEmail', email);
