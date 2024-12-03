@@ -162,7 +162,7 @@ export const JobPostForm = ({
           disabled={isProcessing || (isVerified && !verificationPeriod)}
           className="bg-sage hover:bg-sage-dark"
         >
-          {isProcessing ? "Processing..." : `Pay ${formatPrice(calculateTotalPrice(isVerified, verificationPeriod))}`}
+          {isProcessing ? "Processing..." : `Post for ${formatPrice(calculateTotalPrice(isVerified, verificationPeriod))}`}
         </Button>
         <Button
           type="button"
