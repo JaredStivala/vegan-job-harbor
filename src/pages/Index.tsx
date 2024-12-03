@@ -63,10 +63,8 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage/5 to-cream">
-      <div className="absolute top-4 left-4 z-50">
+      <div className="absolute top-0 left-0 right-0 flex justify-between items-center p-4 z-50">
         <Logo />
-      </div>
-      <div className="absolute top-4 right-4 z-50">
         <Button
           variant="ghost"
           size="icon"
