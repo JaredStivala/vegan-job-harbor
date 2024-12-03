@@ -11,11 +11,11 @@ interface JobsHeroProps {
 export const JobsHero = ({ allJobs, selectedTags, onTagSelect }: JobsHeroProps) => {
   return (
     <div 
-      className="relative bg-center bg-cover pt-20 sm:pt-16 pb-6 flex items-center overflow-hidden" 
+      className="relative bg-center bg-cover pt-24 sm:pt-20 pb-8 flex items-center overflow-hidden" 
       style={{ 
         backgroundImage: 'url("https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=2400&q=80")',
         backgroundPosition: 'center 40%',
-        minHeight: '300px'
+        minHeight: '350px'
       }}
     >
       <div 
@@ -25,7 +25,7 @@ export const JobsHero = ({ allJobs, selectedTags, onTagSelect }: JobsHeroProps) 
         }}
       />
       <div className="container relative z-10">
-        <div className="max-w-2xl mx-auto space-y-6 text-center">
+        <div className="max-w-2xl mx-auto space-y-8 text-center">
           <div className="space-y-4">
             <h2 className="text-5xl font-bold text-white leading-tight tracking-tight drop-shadow-lg">
               Find Your Next{' '}
@@ -37,7 +37,7 @@ export const JobsHero = ({ allJobs, selectedTags, onTagSelect }: JobsHeroProps) 
           
           <div className="space-y-4">
             <SearchBar 
-              tags={allJobs?.flatMap(job => job?.tags || [])}
+              tags={allJobs.flatMap(job => job.tags || [])}
               onTagSelect={onTagSelect}
               selectedTags={selectedTags}
             />
@@ -49,7 +49,7 @@ export const JobsHero = ({ allJobs, selectedTags, onTagSelect }: JobsHeroProps) 
         <svg 
           viewBox="0 0 1200 120" 
           preserveAspectRatio="none" 
-          className="relative block w-full h-[20px]"
+          className="relative block w-full h-[40px]"
           style={{ transform: 'rotate(180deg)' }}
         >
           <path 
