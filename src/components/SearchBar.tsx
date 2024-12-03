@@ -12,9 +12,15 @@ export const SearchBar = () => {
     <div className="relative w-full max-w-2xl mx-auto">
       <button
         onClick={scrollToJobs}
-        className="w-full flex items-center justify-center gap-2 text-cream group"
+        className="group flex flex-col items-center justify-center gap-3 text-cream transition-all duration-300 hover:scale-110"
       >
-        <ChevronDown className="h-12 w-12 animate-bounce" />
+        <span className="text-lg font-light tracking-wide opacity-80 group-hover:opacity-100">
+          Explore Opportunities
+        </span>
+        <div className="relative">
+          <ChevronDown className="h-16 w-16 animate-bounce opacity-80 group-hover:opacity-100" strokeWidth={1.5} />
+          <div className="absolute inset-0 blur-lg bg-sage/20 rounded-full animate-pulse" />
+        </div>
         <span className="sr-only">Scroll to jobs</span>
       </button>
     </div>
