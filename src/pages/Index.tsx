@@ -1,19 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
-import { JobsContent } from "@/components/jobs/JobsContent";
+import { BackToTop } from "@/components/BackToTop";
 import { JobsHeader } from "@/components/jobs/JobsHeader";
 import { JobsHero } from "@/components/jobs/JobsHero";
+import { JobsContent } from "@/components/jobs/JobsContent";
 import { Logo } from "@/components/Logo";
 import type { Job } from "@/types/job";
 import { useLocations } from "@/hooks/useLocations";
 
 const Index = () => {
+  const { toast } = useToast();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<'latest' | 'salary' | 'location'>('latest');
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
-  const { data: allJobs = [], isLoading } = useQuery({
+  const { data: allJobs = [], isLoading, error } = useQuery({
     queryKey: ['all-jobs'],
     queryFn: async () => {
       const [veganJobs, advocacyJobs, eaJobs, vevolutionJobs] = await Promise.all([
@@ -61,30 +64,27 @@ const Index = () => {
       <div className="absolute top-4 left-4 z-50">
         <Logo />
       </div>
+      <JobsHeader 
+        selectedTags={selectedTags}
+        onTagRemove={handleTagRemove}
+        selectedLocations={selectedLocations}
+        onLocationRemove={handleLocationRemove}
+      />
       <JobsHero 
         allJobs={allJobs}
         selectedTags={selectedTags}
         onTagSelect={handleTagSelect}
       />
-      <div className="container py-8">
-        <div className="flex justify-between items-center mb-8">
-          <JobsHeader 
-            selectedTags={selectedTags}
-            onTagRemove={handleTagRemove}
-            selectedLocations={selectedLocations}
-            onLocationRemove={handleLocationRemove}
-          />
-        </div>
-        <JobsContent 
-          selectedJob={selectedJob}
-          selectedTags={selectedTags}
-          onTagRemove={handleTagRemove}
-          onTagSelect={handleTagSelect}
-          sortBy={sortBy}
-          setSortBy={setSortBy}
-          allTags={allTags}
-        />
-      </div>
+      <JobsContent 
+        selectedJob={selectedJob}
+        selectedTags={selectedTags}
+        onTagRemove={handleTagRemove}
+        onTagSelect={handleTagSelect}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        allTags={allTags}
+      />
+      <BackToTop />
     </div>
   );
 };

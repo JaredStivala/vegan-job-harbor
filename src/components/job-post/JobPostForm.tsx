@@ -33,7 +33,6 @@ export const JobPostForm = ({
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     
-    // Check if email exists in localStorage first
     const userEmail = localStorage.getItem('userEmail');
     if (!userEmail) {
       setFormData(data);
