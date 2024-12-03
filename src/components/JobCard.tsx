@@ -48,7 +48,7 @@ export const JobCard = ({ job, isSelected, source }: JobCardProps) => {
     <div 
       id={`job-${job.id}`}
       className={cn(
-        "group transition-all duration-200 mb-2", // Changed from mb-4 to mb-2
+        "group transition-all duration-200 mb-2",
         isSelected && "scale-[1.02]"
       )}
     >
