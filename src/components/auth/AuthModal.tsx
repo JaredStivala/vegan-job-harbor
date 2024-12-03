@@ -22,49 +22,20 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     setIsLoading(true);
 
     try {
-      // First try to sign in
-      console.log("Attempting to sign in with:", email);
-      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithOtp({
         email,
-        password: email, // Using email as password for simplicity
       });
 
-      console.log("Sign in response:", { signInData, signInError });
-
-      if (signInError) {
-        console.log("Sign in failed, attempting signup");
-        // If sign in fails, try to sign up
-        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-          email,
-          password: email,
-          options: {
-            data: {
-              email: email,
-            }
-          }
-        });
-
-        console.log("Sign up response:", { signUpData, signUpError });
-
-        if (signUpError) {
-          toast({
-            title: "Error",
-            description: signUpError.message,
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: "Success!",
-            description: "Account created. You can now continue browsing jobs.",
-          });
-          onClose();
-          navigate('/');
-        }
-      } else {
-        // Successful sign in
+      if (error) {
         toast({
-          title: "Welcome back!",
-          description: "Successfully signed in.",
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Success!",
+          description: "You can now continue browsing jobs.",
         });
         onClose();
         navigate('/');
