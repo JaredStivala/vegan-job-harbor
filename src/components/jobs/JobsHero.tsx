@@ -21,7 +21,7 @@ export const JobsHero = ({ allJobs, selectedTags, onTagSelect }: JobsHeroProps) 
       <div 
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(to right, rgba(0,0,0,0.2), rgba(0,0,0,0.2))'
+          background: 'linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0.4))'
         }}
       />
       <div className="container relative z-10">
