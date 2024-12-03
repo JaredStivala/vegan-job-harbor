@@ -68,13 +68,13 @@ const Index = () => {
       </div>
       <div className="absolute top-4 right-4 z-50">
         <Button
-          variant="outline"
-          size="sm"
-          className="flex items-center gap-2 bg-white/80 backdrop-blur-sm hover:bg-white"
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 bg-white/80 backdrop-blur-sm hover:bg-white"
           onClick={() => window.location.href = 'mailto:jaredworkveg@gmail.com'}
+          title="Contact Us"
         >
           <Mail className="h-4 w-4" />
-          Contact Us
         </Button>
       </div>
       <JobsHeader 
