@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface EmailCaptureModalProps {
   isOpen: boolean;
@@ -15,7 +16,7 @@ export const EmailCaptureModal = ({ isOpen, onClose, onSubmit, action }: EmailCa
   const [email, setEmail] = useState("");
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -28,9 +29,38 @@ export const EmailCaptureModal = ({ isOpen, onClose, onSubmit, action }: EmailCa
       return;
     }
 
-    localStorage.setItem('userEmail', email);
-    onSubmit(email);
-    onClose();
+    try {
+      // Insert email into profiles table
+      const { error } = await supabase
+        .from('profiles')
+        .insert({
+          id: crypto.randomUUID(),
+          email: email,
+        });
+
+      if (error) {
+        console.error('Error storing email:', error);
+        toast({
+          title: "Error",
+          description: "Failed to save email. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Store in localStorage and proceed
+      localStorage.setItem('userEmail', email);
+      onSubmit(email);
+      onClose();
+
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
