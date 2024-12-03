@@ -6,7 +6,6 @@ import { BackToTop } from "@/components/BackToTop";
 import { JobsHeader } from "@/components/jobs/JobsHeader";
 import { JobsHero } from "@/components/jobs/JobsHero";
 import { JobsContent } from "@/components/jobs/JobsContent";
-import { EmailCaptureBanner } from "@/components/EmailCaptureBanner";
 import { Logo } from "@/components/Logo";
 import type { Job } from "@/types/job";
 import { useLocations } from "@/hooks/useLocations";
@@ -65,7 +64,6 @@ const Index = () => {
       <div className="absolute top-4 left-4 z-50">
         <Logo />
       </div>
-      <EmailCaptureBanner />
       <JobsHeader 
         selectedTags={selectedTags}
         onTagRemove={handleTagRemove}
