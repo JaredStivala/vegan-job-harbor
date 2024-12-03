@@ -54,11 +54,11 @@ export const SearchBar = ({ tags, onTagSelect, selectedTags }: SearchBarProps) =
       <div className="relative">
         <button
           onClick={() => setOpen(true)}
-          className="w-full px-6 py-4 pl-14 text-lg rounded-full border-2 border-sage focus:border-sage focus:ring-2 focus:ring-sage/20 outline-none transition-all bg-white shadow-lg text-left text-muted-foreground"
+          className="hidden md:block w-full px-6 py-4 pl-14 text-lg rounded-full border-2 border-sage focus:border-sage focus:ring-2 focus:ring-sage/20 outline-none transition-all bg-white shadow-lg text-left text-muted-foreground"
         >
           Search vegan jobs...
         </button>
-        <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-sage w-6 h-6" />
+        <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-sage w-6 h-6 hidden md:block" />
       </div>
 
       <CommandDialog open={open} onOpenChange={setOpen}>
