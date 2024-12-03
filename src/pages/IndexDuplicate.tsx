@@ -10,7 +10,7 @@ import { Logo } from "@/components/Logo";
 import type { Job } from "@/types/job";
 import { useLocations } from "@/hooks/useLocations";
 
-const Index = () => {
+const IndexDuplicate = () => {
   const { toast } = useToast();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<'latest' | 'salary' | 'location'>('latest');
@@ -89,4 +89,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default IndexDuplicate;

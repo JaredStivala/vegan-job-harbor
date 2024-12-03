@@ -14,7 +14,6 @@ interface TagFilterProps {
   tags: string[];
   onTagSelect: (tag: string) => void;
   selectedTags: string[];
-  disabled?: boolean;
 }
 
 const processTag = (tag: string): string => {
@@ -23,23 +22,20 @@ const processTag = (tag: string): string => {
     .trim();
 };
 
-export const TagFilter = ({ tags, onTagSelect, selectedTags, disabled }: TagFilterProps) => {
+export const TagFilter = ({ tags, onTagSelect, selectedTags }: TagFilterProps) => {
   const [searchDialogOpen, setSearchDialogOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
   const handleTagSelect = (tag: string) => {
-    if (!disabled) {
-      onTagSelect(tag);
-      setSearchDialogOpen(false);
-    }
+    onTagSelect(tag);
+    setSearchDialogOpen(false);
   };
 
   return (
     <div className="relative flex-1 sm:w-48">
       <button
-        onClick={() => !disabled && setSearchDialogOpen(true)}
-        className={`w-full px-4 py-2.5 pl-10 pr-10 text-base rounded-xl border border-sage hover:border-sage-dark focus:border-sage-dark transition-colors bg-background text-gray-600 font-normal text-left ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-        disabled={disabled}
+        onClick={() => setSearchDialogOpen(true)}
+        className="w-full px-4 py-2.5 pl-10 pr-10 text-base rounded-xl border border-sage hover:border-sage-dark focus:border-sage-dark transition-colors bg-background text-gray-600 font-normal text-left"
       >
         {selectedTags.length > 0 ? `${selectedTags.length} tags selected` : "Search tags"}
       </button>
