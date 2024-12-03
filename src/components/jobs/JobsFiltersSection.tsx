@@ -26,6 +26,7 @@ interface JobsFiltersSectionProps {
   onTagSelect: (tag: string) => void;
   selectedCompany: string | null;
   onCompanySelect: (company: string) => void;
+  isInteractionDisabled?: boolean;
 }
 
 export const JobsFiltersSection = ({
@@ -35,7 +36,8 @@ export const JobsFiltersSection = ({
   selectedTags,
   onTagSelect,
   selectedCompany,
-  onCompanySelect
+  onCompanySelect,
+  isInteractionDisabled
 }: JobsFiltersSectionProps) => {
   const [companyDialogOpen, setCompanyDialogOpen] = useState(false);
   const [companySearch, setCompanySearch] = useState("");
@@ -85,6 +87,7 @@ export const JobsFiltersSection = ({
           <Link to="/post-job">
             <Button 
               className="bg-sage hover:bg-sage-dark text-white font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 px-6"
+              disabled={isInteractionDisabled}
             >
               <PlusCircle className="mr-2 h-5 w-5" />
               Post a Job
@@ -97,17 +100,20 @@ export const JobsFiltersSection = ({
             tags={availableTags}
             onTagSelect={onTagSelect}
             selectedTags={selectedTags}
+            disabled={isInteractionDisabled}
           />
 
           <LocationFilter 
             selectedLocations={selectedLocations}
             onLocationSelect={onLocationSelect}
+            disabled={isInteractionDisabled}
           />
 
           <div className="relative flex-1 sm:w-48">
             <button
-              onClick={() => setCompanyDialogOpen(true)}
-              className="w-full px-4 py-2.5 pl-10 pr-10 text-base rounded-xl border border-sage hover:border-sage-dark focus:border-sage-dark transition-colors bg-background text-gray-600 font-normal text-left"
+              onClick={() => !isInteractionDisabled && setCompanyDialogOpen(true)}
+              className={`w-full px-4 py-2.5 pl-10 pr-10 text-base rounded-xl border border-sage hover:border-sage-dark focus:border-sage-dark transition-colors bg-background text-gray-600 font-normal text-left ${isInteractionDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+              disabled={isInteractionDisabled}
             >
               {selectedCompany || "Company"}
             </button>

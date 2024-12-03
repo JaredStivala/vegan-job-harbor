@@ -16,6 +16,7 @@ interface JobsContentProps {
   sortBy: 'latest' | 'salary' | 'location';
   setSortBy: (sort: 'latest' | 'salary' | 'location') => void;
   allTags: string[];
+  isInteractionDisabled?: boolean;
 }
 
 export const JobsContent = ({ 
@@ -25,7 +26,8 @@ export const JobsContent = ({
   onTagSelect: heroTagSelect,
   sortBy,
   setSortBy,
-  allTags
+  allTags,
+  isInteractionDisabled
 }: JobsContentProps) => {
   const [filterSelectedTags, setFilterSelectedTags] = useState<string[]>([]);
   const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
@@ -82,19 +84,18 @@ export const JobsContent = ({
   return (
     <div id="jobs-section" className="container max-w-none py-8 px-4 md:px-8">
       <div className="space-y-4">
-        {/* Active Filters Display */}
         <div className="flex flex-wrap gap-2">
           {heroSelectedTags.map((tag) => 
-            renderFilterBadge(tag, () => heroTagRemove(tag))
+            renderFilterBadge(tag, () => !isInteractionDisabled && heroTagRemove(tag))
           )}
           {filterSelectedTags.map((tag) => 
-            renderFilterBadge(tag, () => handleFilterTagSelect(tag))
+            renderFilterBadge(tag, () => !isInteractionDisabled && handleFilterTagSelect(tag))
           )}
           {selectedLocations.map((location) => 
-            renderFilterBadge(location, () => handleLocationRemove(location))
+            renderFilterBadge(location, () => !isInteractionDisabled && handleLocationRemove(location))
           )}
           {selectedCompany && 
-            renderFilterBadge(selectedCompany, handleCompanyRemove)
+            renderFilterBadge(selectedCompany, () => !isInteractionDisabled && handleCompanyRemove())
           }
         </div>
         
@@ -107,6 +108,7 @@ export const JobsContent = ({
           onTagSelect={handleFilterTagSelect}
           selectedCompany={selectedCompany}
           onCompanySelect={handleCompanySelect}
+          isInteractionDisabled={isInteractionDisabled}
         />
       </div>
       

@@ -9,12 +9,15 @@ import { JobsContent } from "@/components/jobs/JobsContent";
 import { Logo } from "@/components/Logo";
 import type { Job } from "@/types/job";
 import { useLocations } from "@/hooks/useLocations";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const { toast } = useToast();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<'latest' | 'salary' | 'location'>('latest');
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [email, setEmail] = useState('');
 
   const { data: allJobs = [], isLoading, error } = useQuery({
     queryKey: ['all-jobs'],
@@ -43,6 +46,14 @@ const Index = () => {
   } = useLocations();
 
   const handleTagSelect = (tag: string) => {
+    if (!email) {
+      toast({
+        title: "Email Required",
+        description: "Please enter your email to interact with job filters",
+        variant: "destructive"
+      });
+      return;
+    }
     setSelectedTags(prev => {
       if (prev.includes(tag)) {
         return prev.filter(t => t !== tag);
@@ -52,7 +63,34 @@ const Index = () => {
   };
 
   const handleTagRemove = (tag: string) => {
+    if (!email) {
+      toast({
+        title: "Email Required",
+        description: "Please enter your email to interact with job filters",
+        variant: "destructive"
+      });
+      return;
+    }
     setSelectedTags(prev => prev.filter(t => t !== tag));
+  };
+
+  const handleEmailSubmit = async () => {
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Store email in localStorage
+    localStorage.setItem('userEmail', email);
+    
+    toast({
+      title: "Success!",
+      description: "You can now interact with all features",
+    });
   };
 
   const allTags = Array.from(new Set(
@@ -64,6 +102,25 @@ const Index = () => {
       <div className="absolute top-4 left-4 z-50">
         <Logo />
       </div>
+
+      {/* Email Input Section */}
+      <div className="fixed top-4 right-4 z-50 flex gap-2 items-center bg-white/80 backdrop-blur-sm p-2 rounded-lg shadow-lg">
+        <Input
+          type="email"
+          placeholder="Enter your email to continue"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-64"
+        />
+        <Button 
+          onClick={handleEmailSubmit}
+          disabled={!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)}
+          className="bg-sage hover:bg-sage-dark"
+        >
+          Submit
+        </Button>
+      </div>
+
       <JobsHeader 
         selectedTags={selectedTags}
         onTagRemove={handleTagRemove}
@@ -83,6 +140,7 @@ const Index = () => {
         sortBy={sortBy}
         setSortBy={setSortBy}
         allTags={allTags}
+        isInteractionDisabled={!email}
       />
       <BackToTop />
     </div>
