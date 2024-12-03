@@ -22,19 +22,29 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      // First try to sign in
+      console.log("Attempting to sign in with:", email);
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password: email, // Using email as password for simplicity
       });
 
-      console.log("Auth response:", { data, error });
+      console.log("Sign in response:", { signInData, signInError });
 
-      if (error) {
-        // If login fails, try to sign up
+      if (signInError) {
+        console.log("Sign in failed, attempting signup");
+        // If sign in fails, try to sign up
         const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
           email,
           password: email,
+          options: {
+            data: {
+              email: email,
+            }
+          }
         });
+
+        console.log("Sign up response:", { signUpData, signUpError });
 
         if (signUpError) {
           toast({
@@ -45,15 +55,16 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         } else {
           toast({
             title: "Success!",
-            description: "You can now continue browsing jobs.",
+            description: "Account created. You can now continue browsing jobs.",
           });
           onClose();
           navigate('/');
         }
       } else {
+        // Successful sign in
         toast({
-          title: "Success!",
-          description: "You can now continue browsing jobs.",
+          title: "Welcome back!",
+          description: "Successfully signed in.",
         });
         onClose();
         navigate('/');
