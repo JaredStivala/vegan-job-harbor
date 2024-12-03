@@ -30,13 +30,29 @@ export const EmailCaptureModal = ({ isOpen, onClose, onSubmit, action }: EmailCa
     }
 
     try {
-      // Insert email into profiles table
+      // First check if email already exists
+      const { data: existingProfiles } = await supabase
+        .from('profiles')
+        .select('email')
+        .eq('email', email);
+
+      if (existingProfiles && existingProfiles.length > 0) {
+        // Email already exists, just proceed
+        localStorage.setItem('userEmail', email);
+        onSubmit(email);
+        onClose();
+        return;
+      }
+
+      // If email doesn't exist, insert new profile
       const { error } = await supabase
         .from('profiles')
-        .insert({
+        .insert([{
           id: crypto.randomUUID(),
           email: email,
-        });
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }]);
 
       if (error) {
         console.error('Error storing email:', error);
@@ -48,7 +64,6 @@ export const EmailCaptureModal = ({ isOpen, onClose, onSubmit, action }: EmailCa
         return;
       }
 
-      // Store in localStorage and proceed
       localStorage.setItem('userEmail', email);
       onSubmit(email);
       onClose();
